@@ -947,7 +947,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
       b.addEventListener("click", function () { tkSect = z; tkOpen = null; tkEdit = null; tkDisarm(); try { localStorage.setItem("stock-pistes-tksect", z); } catch (e) {} renderTaches(); });
       tabs.appendChild(b);
     });
-    v.appendChild(tabs);
+    v.appendChild(tabs); keepStrip(tabs, "tk");
     var all = every.filter(function (t) { return !tkSect || tkZoneOf(t) === tkSect; });
     var todo = all.filter(function (t) { return t.state !== "fait"; }).sort(function (a, b) { return (a.prio !== "urgent") - (b.prio !== "urgent") || a.created - b.created; });
     var done = all.filter(function (t) { return t.state === "fait" && Date.now() - t.doneAt < TK_KEEP; }).sort(function (a, b) { return b.doneAt - a.doneAt; });
@@ -1043,6 +1043,20 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
     setTimeout(function () { URL.revokeObjectURL(u); }, 60000); return Promise.resolve();
   }
   function d2b(u) { return new Promise(function (res, rej) { try { var m = /^data:([^;,]*)(;base64)?,(.*)$/.exec(String(u)); if (!m) throw new Error("image illisible"); var s = m[2] ? atob(m[3]) : decodeURIComponent(m[3]), a = new Uint8Array(s.length); for (var i = 0; i < s.length; i++) a[i] = s.charCodeAt(i); res(new Blob([a], { type: m[1] || "application/octet-stream" })); } catch (e) { rej(e); } }); }
+  // Barres d'onglets qui défilent : garder la position quand l'écran se redessine, et montrer l'onglet choisi
+  var stripPos = {};
+  function keepStrip(bar, key) {
+    bar.scrollLeft = stripPos[key] || 0;
+    bar.addEventListener("scroll", function () { stripPos[key] = bar.scrollLeft; }, { passive: true });
+    requestAnimationFrame(function () {
+      bar.scrollLeft = stripPos[key] || 0;
+      var a = bar.querySelector('[aria-pressed="true"]'); if (!a) return;
+      var l = a.getBoundingClientRect().left - bar.getBoundingClientRect().left + bar.scrollLeft, r = l + a.offsetWidth;
+      if (l < bar.scrollLeft + 8) bar.scrollLeft = Math.max(0, l - 24);
+      else if (r > bar.scrollLeft + bar.clientWidth - 8) bar.scrollLeft = r - bar.clientWidth + 24;
+      stripPos[key] = bar.scrollLeft;
+    });
+  }
   function why(e) { return String(e && (e.code ? e.code + (e.message ? " – " + e.message : "") : e.message) || e || "erreur inconnue").replace(/^Error:\s*/, "").slice(0, 120); }
   function busyBtn(btn, on) { if (on) { btn.dataset.l = btn.textContent; btn.textContent = "Préparation…"; btn.disabled = true; } else { btn.textContent = btn.dataset.l; btn.disabled = false; } }
   function dmSavePhoto(d, btn) {
@@ -1714,7 +1728,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
       var b = el("button", null, c); b.type = "button"; b.setAttribute("aria-pressed", filter === c ? "true" : "false");
       b.addEventListener("click", function () { filter = c; renderStock(); }); fl.appendChild(b);
     });
-    v.appendChild(fl);
+    v.appendChild(fl); keepStrip(fl, "cat");
     lieuSel = validLieu(lieuSel);
     var lz = el("div", "lieux"); lz.setAttribute("role", "group"); lz.setAttribute("aria-label", "Lieu");
     [{ name: "" }].concat(data.lieux).forEach(function (l) {
@@ -1722,7 +1736,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
       b.addEventListener("click", function () { lieuSel = l.name; try { localStorage.setItem("stock-pistes-lieu", lieuSel); } catch (e) {} panel = null; renderStock(); });
       lz.appendChild(b);
     });
-    v.appendChild(lz);
+    v.appendChild(lz); keepStrip(lz, "lieu");
     if (!data.stock.length) v.appendChild(el("p", "empty", "Aucun article. Ajoute le premier ci-dessous."));
     CATS.forEach(function (c) {
       if (filter !== "Tous" && filter !== c) return;
