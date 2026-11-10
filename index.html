@@ -4,6 +4,7 @@
 <base target="_top">
 <meta charset="utf-8">
 <title>Glacier 3000 Pisteurs</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=Caveat:wght@500;700&display=swap">
 <style>
@@ -467,7 +468,6 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
 .gate h1 { font-family: var(--display); font-weight: 800; font-size: 28px; margin: 0; }
 .gate input { font: 22px var(--body); text-align: center; padding: 12px; border-radius: 12px; border: 2px solid var(--line); background: var(--paper); color: var(--ink); }
 </style>
-<script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
 <div class="topbar"><div class="homebar" id="homebar"></div><nav class="tabs" id="tabs" role="tablist" aria-label="Pages"></nav></div>
@@ -629,7 +629,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
     $("tabs").textContent = ""; $("homebar").textContent = "";
     var v = $("view"); v.textContent = "";
     var g = el("form", "gate"), ic = el("div"); ic.style.cssText = "justify-self:center;color:var(--accent)"; ic.appendChild(icon("lock")); ic.firstChild.style.cssText = "width:48px;height:48px";
-    g.appendChild(ic); g.appendChild(el("h1", null, "Stock pistes"));
+    g.appendChild(ic); g.appendChild(el("h1", null, "Glacier 3000 Pisteurs"));
     g.appendChild(el("p", null, wrong && code ? "Code incorrect. Demande le code d'équipe à ton chef de secteur." : "Tape le code d'équipe. Il ne sera demandé qu'une fois sur ce téléphone."));
     var inp = document.createElement("input"); inp.id = "gate-code"; inp.autocomplete = "off"; inp.setAttribute("aria-label", "Code d'équipe"); inp.required = true;
     var b = el("button", "btn", "Entrer"); b.type = "submit"; b.style.setProperty("--tc", "var(--accent)");
