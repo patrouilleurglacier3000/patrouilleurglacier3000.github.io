@@ -525,7 +525,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794344844";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794345518";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -998,7 +998,6 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var tabs = el("div", "tk-tabs");
     [""].concat(zones).forEach(function (z) {
       var open = every.filter(function (t) { return t.state !== "fait" && (!z || tkZoneOf(t) === z); }), u = open.filter(function (t) { return t.prio === "urgent"; }).length;
-      if (z && !open.length && z !== tkSect) return;
       var b = el("button", null, z || "Tout"); b.type = "button"; b.setAttribute("aria-pressed", tkSect === z ? "true" : "false");
       if (open.length) { var c = el("span", "c" + (u ? " u" : ""), String(open.length)); b.appendChild(c); }
       b.addEventListener("click", function () { tkSect = z; tkOpen = null; tkEdit = null; tkDisarm(); try { localStorage.setItem("stock-pistes-tksect", z); } catch (e) {} renderTaches(); });
