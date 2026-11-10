@@ -508,6 +508,14 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 @media (min-width: 900px) { .cards.list { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cards.list .card.srow:nth-child(2) { border-top: 0; } .cards.list .card.srow:nth-child(odd) { border-right: 1px solid var(--line); } }
 .pl-back, .pl-add, .strip button[aria-current="date"], .tg-dh.today .n { color: #1c2a23 !important; }
 .pbtn.main.acc { background: var(--accent) !important; border-color: var(--accent) !important; color: #1c2a23 !important; }
+
+/* Accueil : lignes sobres, icône en couleur dans un petit carré */
+.tiles { gap: 10px; }
+.tile, .tile.light { background: var(--paper); color: var(--ink); box-shadow: none; border: 1px solid var(--line); min-height: 0; padding: 16px; grid-template-columns: 56px minmax(0, 1fr) auto; border-radius: 16px; }
+.tile > svg { box-sizing: content-box; width: 30px; height: 30px; padding: 12px; border-radius: 14px; color: color-mix(in srgb, var(--tc) 62%, #fff); background: color-mix(in srgb, var(--tc) 26%, transparent); }
+.tile b { font-size: 21px; }
+.tile span { color: var(--muted); opacity: 1; font-size: 14px; }
+.tile::after { content: "›"; font: 700 28px var(--body); color: var(--muted); }
 /* Ordinateur et tablette : l'appli prend la largeur de l'écran, en plus grand */
 @media (min-width: 1000px) {
   .wrap, .tabs, .homebar { max-width: 1180px; }
@@ -525,7 +533,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794345518";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794346038";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
