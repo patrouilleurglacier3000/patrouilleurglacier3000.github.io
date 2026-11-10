@@ -611,7 +611,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
   function handleError(e) {
     var m = String(e && e.message || e);
     if (/CODE/.test(m)) { data = null; try { localStorage.removeItem(CACHE_KEY); } catch (x) {} renderGate(true); return; }
-    showStatus(/Article introuvable|Préparation introuvable|Commande introuvable|Événement introuvable|Format non pris en charge|Lecture du PDF|Demande introuvable|Tâche introuvable|Écris ce qu|Choisis une zone|titre à la demande|heure|Donne un nom|Format de photo|liste est vide|mêmes|YouTube|rubrique/.test(m) ? m.replace(/^Error:\s*/, "") : "Pas enregistré : pas de connexion ou erreur. Réessaie dans un moment.", true);
+    showStatus(/Article introuvable|Préparation introuvable|Commande introuvable|Événement introuvable|Format non pris en charge|Lecture du PDF|Demande introuvable|Tâche introuvable|Écris ce qu|Choisis une zone|titre à la demande|heure|Donne un nom|Format de photo|liste est vide|mêmes|YouTube|rubrique/.test(m) ? m.replace(/^Error:\s*/, "") : "Pas de connexion ou erreur. Réessaie dans un moment. (" + m.replace(/^Error:\s*/, "").slice(0, 60) + ")", true);
   }
   function load(silent) {
     if (!silent) busy++;
