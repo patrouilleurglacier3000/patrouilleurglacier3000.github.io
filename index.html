@@ -483,7 +483,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794343258";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794344187";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -720,11 +720,11 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
     var openCmd = (data.orders || []).filter(function (o) { return o.status !== "livree"; }).length;
     var subS = openCmd ? openCmd + " transfert" + (openCmd > 1 ? "s" : "") + " à monter" : data.stock.length + " articles · " + data.lieux.length + " locaux";
     var nx = nextEvents(1)[0], pj = data.planjour;
-    g.appendChild(bigTile("team", "#2e9461", "Planning", pj && pj.pages && pj.pages.length ? "Qui travaille · mis à jour le " + shortDate(pj.updated) : "Qui travaille · pas encore de planning", function () { goArea("presence"); }));
     var tkOpenN = (data.taches || []).filter(function (t) { return t.state !== "fait"; }), tkUrg = tkOpenN.filter(function (t) { return t.prio === "urgent"; }).length;
     g.appendChild(bigTile("tasks", "#6b4fbb", "Tâches équipe", tkOpenN.length ? tkOpenN.length + " à faire" + (tkUrg ? " · dont " + tkUrg + " urgente" + (tkUrg > 1 ? "s" : "") : "") : "Rien à faire pour l'instant", function () { goArea("taches"); }));
-    g.appendChild(bigTile("cal", "#0e8a9a", "Agenda", nx ? "Prochain : " + nx.title + " · " + dayShort(nx.date) + (nx.start ? " " + nx.start : "") : "Rien de prévu pour l'instant", function () { goArea("plan"); }));
     g.appendChild(bigTile("box", "#d63a3a", "Stock matériel", subS, function () { goArea("stock"); }));
+    g.appendChild(bigTile("cal", "#0e8a9a", "Agenda", nx ? "Prochain : " + nx.title + " · " + dayShort(nx.date) + (nx.start ? " " + nx.start : "") : "Rien de prévu pour l'instant", function () { goArea("plan"); }));
+    g.appendChild(bigTile("team", "#2e9461", "Planning", pj && pj.pages && pj.pages.length ? "Qui travaille · mis à jour le " + shortDate(pj.updated) : "Qui travaille · pas encore de planning", function () { goArea("presence"); }));
     var dmOpen = (data.demandes || []).filter(function (x) { return x.status !== "fait"; });
     var subA = dmOpen.length ? dmOpen.length + " à faire" + (dmOpen[0] ? " · " + dmOpen[0].title : "") : "Rien à acheter ni à fabriquer";
     g.appendChild(bigTile("tool", "#c27a12", "Achats & fabrication", subA, function () { goArea("achat"); }));
