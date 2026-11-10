@@ -91,7 +91,7 @@ body { background: radial-gradient(ellipse at 20% 0%, rgba(255,255,255,.05), tra
 .go { background: var(--accent); color: #fff; border: 0; border-radius: 8px; font: 700 15px var(--body); padding: 9px; cursor: pointer; }
 .go:disabled { opacity: .5; }
 .stepper { display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px; gap: 4px; }
-.stepper button { border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: 800 20px var(--body); border-radius: 8px; cursor: pointer; min-height: 40px; }
+.stepper button { border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: 800 20px var(--body); border-radius: 8px; cursor: pointer; touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; min-height: 40px; }
 .stepper input { width: 100%; min-width: 0; text-align: center; font: 800 17px var(--body); color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 8px; }
 .want { font-size: 13px; font-weight: 700; color: var(--accent); }
 .want.warn, .warn { color: var(--red); }
@@ -483,7 +483,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794342469";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794343258";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -644,7 +644,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
   /* ---------- Code d'équipe ---------- */
   function renderGate(wrong) {
     $("tabs").textContent = ""; $("homebar").textContent = "";
-    var v = $("view"); v.textContent = "";
+    var v = clearView();
     var g = el("form", "gate"), ic = el("div"); ic.style.cssText = "justify-self:center;color:var(--accent)"; ic.appendChild(icon("lock")); ic.firstChild.style.cssText = "width:48px;height:48px";
     g.appendChild(ic); g.appendChild(el("h1", null, "Glacier 3000 Pisteurs"));
     g.appendChild(el("p", null, wrong && code ? "Code incorrect. Demande le code d'équipe à ton chef de secteur." : "Tape le code d'équipe. Il ne sera demandé qu'une fois sur ce téléphone."));
@@ -672,7 +672,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
             : t[0] === "count" ? data.lieux.filter(late).length
             : t[0] === "cmd" ? (data.orders || []).filter(function (o) { return o.status !== "livree"; }).length : 0;
       if (n) b.appendChild(el("span", "badge", String(n)));
-      b.addEventListener("click", function () { current = t[0]; panel = null; try { localStorage.setItem("stock-pistes-tab", current); } catch (e) {} renderAll(); window.scrollTo(0, 0); });
+      b.addEventListener("click", function () { current = t[0]; panel = null; try { localStorage.setItem("stock-pistes-tab", current); } catch (e) {} renderAll(); goTop(); });
       nav.appendChild(b);
     });
   }
@@ -680,7 +680,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
   try { area = localStorage.getItem("stock-pistes-area") || "home"; } catch (e) {}
   function goArea(a, rub) {
     area = a; formRub = rub || null; panel = null; lowOpen = false; try { localStorage.setItem("stock-pistes-area", a); } catch (e) {}
-    renderAll(); window.scrollTo(0, 0);
+    renderAll(); goTop();
   }
   function renderHomebar() {
     var b = $("homebar"); b.textContent = "";
@@ -714,7 +714,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
   }
   function videosOf(r) { return (data.formation || []).filter(function (x) { return x.rub === r && x.url; }); }
   function renderHome() {
-    var v = $("view"); v.textContent = ""; v.style.setProperty("--tc", "#17324a");
+    var v = clearView(); v.style.setProperty("--tc", "#17324a");
     var g = el("div", "tiles");
     var red = data.stock.filter(function (s) { return status(s) === "red"; }).length;
     var openCmd = (data.orders || []).filter(function (o) { return o.status !== "livree"; }).length;
@@ -821,7 +821,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
     }).then(function () { busyBtn(btn, false); }, function (e) { busyBtn(btn, false); if (!e || e.code !== "declined") showStatus("Partage impossible : " + why(e), true); });
   }
   function renderPresence() {
-    var v = $("view"); v.textContent = ""; renderHomebar();
+    var v = clearView(); renderHomebar();
     var pj = data.planjour, has = pj && pj.pages && pj.pages.length;
     var fi = document.createElement("input"); fi.type = "file"; fi.accept = "image/*,application/pdf"; fi.hidden = true; fi.id = "pj-file";
     var up = el("button", has ? "pbtn" : "dm-add", has ? "Remplacer le planning (photo ou PDF)" : "+ Ajouter le planning (photo ou PDF)"); up.type = "button";
@@ -942,7 +942,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
   }
   function tkZoneOf(t) { return !t.zone || t.zone === "Tableau" ? TK_NONE : t.zone; }
   function renderTaches() {
-    var v = $("view"); v.textContent = ""; renderHomebar();
+    var v = clearView(); renderHomebar();
     v.classList.toggle("chalk", tkChalk);
     var zones = data.zones || [], every = data.taches || [];
     if (tkSect && zones.indexOf(tkSect) < 0) tkSect = "";
@@ -1066,6 +1066,52 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
       stripPos[key] = bar.scrollLeft;
     });
   }
+  // Redessiner l'écran sans faire sauter la page : on garde la position, sauf quand on change de page (goTop)
+  var wantTop = false, keepY = null;
+  function clearView() {
+    var v = $("view");
+    if (keepY === null) {
+      keepY = window.scrollY; v.style.minHeight = v.offsetHeight + "px";
+      Promise.resolve().then(function () {
+        var y = keepY; keepY = null; v.style.minHeight = "";
+        if (wantTop) { wantTop = false; window.scrollTo(0, 0); return; }
+        window.scrollTo(0, y);
+        // la ligne qu'on vient de toucher reste exactement sous le doigt
+        var A = lastTap; if (!A || Date.now() - A.at > 4000) return;
+        var best = null, bd = 1e9;
+        leaves(v).forEach(function (e) { if (e.textContent.trim() !== A.t) return; var d = Math.abs(e.getBoundingClientRect().top - A.top); if (d < bd) { bd = d; best = e; } });
+        if (best) { var dy = best.getBoundingClientRect().top - A.top; if (Math.abs(dy) > 2) window.scrollBy(0, dy); A.top = best.getBoundingClientRect().top; }
+      });
+    }
+    v.textContent = ""; return v;
+  }
+  var lastTap = null;
+  function leaves(root) { var out = []; root.querySelectorAll("span,b,strong,h2,h3,h4,p,div,label,button,a,li").forEach(function (e) { if (!e.children.length && e.textContent.trim().length > 2) out.push(e); }); return out; }
+  document.addEventListener("click", function (ev) {
+    var t = ev.target; if (!t || !t.closest || !t.closest("#view")) return;
+    var row = t.closest(".card,.tk,.crow,.dm,.ev,li,.prow,.row,.cmd,.order") || t;
+    var L = leaves(row)[0] || (t.textContent.trim().length > 2 ? t : null); if (!L) return;
+    lastTap = { t: L.textContent.trim(), top: L.getBoundingClientRect().top, at: Date.now() };
+  }, true);
+  function goTop() { if (keepY !== null) wantTop = true; window.scrollTo(0, 0); }
+  // Appui long sur + ou − : le chiffre défile (de plus en plus vite)
+  (function () {
+    var timer = null, n = 0, label = null, fired = false;
+    function stop() { clearTimeout(timer); timer = null; label = null; }
+    function step() {
+      var b = label && [].slice.call(document.querySelectorAll(".stepper button, .panel .stepper button")).filter(function (x) { return x.getAttribute("aria-label") === label; })[0];
+      if (!b || b.disabled) return stop();
+      fired = true; b.click(); n++;
+      timer = setTimeout(step, n < 5 ? 160 : n < 15 ? 90 : 45);
+    }
+    document.addEventListener("pointerdown", function (e) {
+      var b = e.target.closest && e.target.closest(".stepper button"); if (!b) return;
+      stop(); fired = false; n = 0; label = b.getAttribute("aria-label"); timer = setTimeout(step, 420);
+    });
+    ["pointerup", "pointercancel", "pointerleave", "blur"].forEach(function (t) { (t === "blur" ? window : document).addEventListener(t, stop); });
+    document.addEventListener("contextmenu", function (e) { if (e.target.closest && e.target.closest(".stepper button")) e.preventDefault(); });
+    document.addEventListener("click", function (e) { if (fired && e.isTrusted && e.target.closest && e.target.closest(".stepper button")) { fired = false; e.preventDefault(); e.stopPropagation(); } }, true);
+  })();
   function why(e) { return String(e && (e.code ? e.code + (e.message ? " – " + e.message : "") : e.message) || e || "erreur inconnue").replace(/^Error:\s*/, "").slice(0, 120); }
   function busyBtn(btn, on) { if (on) { btn.dataset.l = btn.textContent; btn.textContent = "Préparation…"; btn.disabled = true; } else { btn.textContent = btn.dataset.l; btn.disabled = false; } }
   function dmSavePhoto(d, btn) {
@@ -1204,7 +1250,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
       var id = dmEdit.id, file = dmFile, isNew = !dmEdit.created;
       act("enregistrerDemande", [dmEdit], isNew ? "Demande d'achat enregistrée" : "Demande modifiée").then(function () {
         // nouvelle demande : retour à la liste des demandes, menu des articles refermé ; modification : retour à la fiche
-        dmEdit = null; dmFile = null; dmOpen = isNew ? null : id; lowOpen = false; renderAchat(); window.scrollTo(0, 0);
+        dmEdit = null; dmFile = null; dmOpen = isNew ? null : id; lowOpen = false; renderAchat(); goTop();
         if (file) { showStatus("Envoi de la photo…", false, true); shrink(file).then(function (u) { return act("ajouterPhotoDemande", [id, u], "Photo ajoutée"); }).catch(function (er) { if (er && /Format/.test(er.message)) showStatus(er.message, true); }); }
       }, function () { save.disabled = false; });
     });
@@ -1222,11 +1268,11 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
     if (d.qty > 1) mt.appendChild(el("span", null, "× " + d.qty));
     if (d.owner) mt.appendChild(el("span", null, "→ " + d.owner));
     tx.appendChild(mt); b.appendChild(tx);
-    b.addEventListener("click", function () { dmOpen = d.id; renderAchat(); window.scrollTo(0, 0); });
+    b.addEventListener("click", function () { dmOpen = d.id; renderAchat(); goTop(); });
     return b;
   }
   function renderAchat() {
-    var v = $("view"); v.textContent = ""; renderHomebar();
+    var v = clearView(); renderHomebar();
     var all = data.demandes || [], open = all.filter(function (x) { return x.status !== "fait"; });
     header(v, "tool", "#c27a12", "Achats & fabrication", "");
     if (dmEdit) { v.appendChild(dmForm()); setTimeout(function () { var t = $("dm-title"); if (t && !dmEdit.created) t.focus(); }, 50); return; }
@@ -1268,7 +1314,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
     }
     dmOpen = null;
     // Un seul bouton « Nouvelle demande », puis on choisit : un article du stock, ou autre chose
-    var newBlank = function () { dmEdit = { id: "d" + Date.now().toString(36), title: "", type: "fabriquer", qty: 1, by: "", owner: "", note: "", status: "demande" }; dmFile = null; lowOpen = false; renderAchat(); window.scrollTo(0, 0); };
+    var newBlank = function () { dmEdit = { id: "d" + Date.now().toString(36), title: "", type: "fabriquer", qty: 1, by: "", owner: "", note: "", status: "demande" }; dmFile = null; lowOpen = false; renderAchat(); goTop(); };
     if (!lowOpen) {
       var add = el("button", "dm-add", "+ Nouvelle demande"); add.type = "button";
       add.addEventListener("click", function () { lowOpen = data.stock.length ? "choix" : false; if (lowOpen) renderAchat(); else newBlank(); });
@@ -1294,7 +1340,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
           c.appendChild(tx); c.appendChild(el("span", "go2", already ? "Déjà demandé ✓" : "Choisir ›"));
           c.addEventListener("click", function () {
             dmEdit = { id: "d" + Date.now().toString(36), title: "Acheter : " + s.name, type: "acheter", qty: 1, by: "", owner: "", note: "Il en reste " + s.qty + " en stock.", status: "demande" };
-            dmFile = null; lowOpen = false; renderAchat(); window.scrollTo(0, 0); setTimeout(function () { var q = $("dm-qty"); if (q) { q.focus(); q.select(); } }, 80);
+            dmFile = null; lowOpen = false; renderAchat(); goTop(); setTimeout(function () { var q = $("dm-qty"); if (q) { q.focus(); q.select(); } }, 80);
           });
           lw.appendChild(c);
         });
@@ -1336,7 +1382,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
       .sort(function (a, b) { return (a.date + (a.start || "")) < (b.date + (b.start || "")) ? -1 : 1; }).slice(0, n);
   }
   var plView = "semaine", plDate = new Date(), evEdit = null, plFrom = null, plAnim = 0;
-  function goDay(d, from) { plDate = d; plFrom = from; plView = "jour"; renderPlan(); window.scrollTo(0, 0); }
+  function goDay(d, from) { plDate = d; plFrom = from; plView = "jour"; renderPlan(); goTop(); }
   try { plView = localStorage.getItem("stock-pistes-plview") || "semaine"; } catch (e) {}
   function evCard(e, big) {
     var b = el("button", "ev" + (big ? " big" : "")); b.type = "button"; b.style.setProperty("--ec", CAT_COL[e.cat] || CAT_COL.autre);
@@ -1355,7 +1401,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
   }
   function openEv(e, date) {
     evEdit = e ? JSON.parse(JSON.stringify(e)) : { id: "", title: "", date: date || dkey(plDate), start: "", end: "", cat: "piste", imp: false, who: "", note: "" };
-    renderPlan(); window.scrollTo(0, 0);
+    renderPlan(); goTop();
     setTimeout(function () { var t = $("ev-title"); if (t && !evEdit.id) t.focus(); }, 50);
   }
   function evForm() {
@@ -1508,7 +1554,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
     }
   }
   function renderPlan() {
-    var v = $("view"); v.textContent = ""; renderHomebar();
+    var v = clearView(); renderHomebar();
     var tb = document.querySelector(".topbar"); if (tb) document.documentElement.style.setProperty("--tb", tb.offsetHeight + "px");
     if (evEdit) { v.appendChild(evForm()); return; }
     var bar = el("div", "pl-bar"), seg = el("div", "pl-seg");
@@ -1598,7 +1644,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
     return m ? m[1] : null;
   }
   function renderForm() {
-    var v = $("view"); v.textContent = "";
+    var v = clearView();
     if (!formRub) {
       header(v, "grad", "#2f7fb8", "Formation", "");
       var g = el("div", "tiles");
@@ -1676,13 +1722,14 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
 
   /* ---------- Photos ---------- */
   var photoIdx = {};
+  var badPhoto = {};
   function photoBox(d) {
-    if (!d.photos.length) return null;
+    if (!d.photos.length || d.photos.every(function (x) { return badPhoto[x]; })) return null;
     var i = (photoIdx[d.id] || 0) % d.photos.length;
     var b = el("button", "photo"); b.type = "button";
     b.setAttribute("aria-label", d.photos.length > 1 ? "Photo de " + d.name + ", touche pour la suivante" : "Photo de " + d.name);
     var img = document.createElement("img"); img.src = photoUrl(d.photos[i]); img.alt = d.name; img.loading = "lazy";
-    img.addEventListener("error", function () { b.style.display = "none"; });
+    img.addEventListener("error", function () { badPhoto[d.photos[i]] = 1; b.style.display = "none"; });
     b.appendChild(img);
     if (d.photos.length > 1) {
       var cnt = el("span", "count", (i + 1) + " / " + d.photos.length); b.appendChild(cnt);
@@ -1729,7 +1776,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
   var CATS = ["Jalons", "Banderoles", "Panneaux", "Filets", "Autre"];
   var filter = "Tous", panel = null;
   function renderStock() {
-    var v = $("view"); v.textContent = ""; renderHomebar();
+    var v = clearView(); renderHomebar();
     header(v, "box", "#d63a3a", "Stock matériel", "");
     var by = { red: [], yel: [], grn: [] }; data.stock.forEach(function (s) { by[status(s)].push(s); });
     var fl = el("div", "filters"); fl.setAttribute("role", "group"); fl.setAttribute("aria-label", "Catégorie");
@@ -1835,24 +1882,35 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
       var minus = el("button", null, "−"); minus.type = "button"; minus.setAttribute("aria-label", "Moins");
       var q = document.createElement("input"); q.type = "number"; q.min = "1"; q.value = panel.qty; q.id = "p-qty"; q.setAttribute("aria-label", "Quantité");
       var plus = el("button", null, "+"); plus.type = "button"; plus.setAttribute("aria-label", "Plus");
-      minus.addEventListener("click", function () { panel.qty = Math.max(1, panel.qty - 1); q.value = panel.qty; });
-      plus.addEventListener("click", function () { panel.qty = panel.qty + 1; q.value = panel.qty; });
-      q.addEventListener("input", function () { panel.qty = Math.max(1, parseInt(q.value, 10) || 1); });
+      var isOut = panel.mode === "out", maxQ = function () { return isOut ? (s.par[panel.lieu] || 0) : 9999; };
+      var fix = function () { panel.qty = Math.max(1, Math.min(maxQ() || 1, panel.qty)); q.value = panel.qty; refresh(); };
+      minus.addEventListener("click", function () { panel.qty = Math.max(1, panel.qty - 1); q.value = panel.qty; refresh(); });
+      plus.addEventListener("click", function () { panel.qty = Math.min(Math.max(1, maxQ()), panel.qty + 1); q.value = panel.qty; refresh(); });
+      q.addEventListener("input", function () { var n = parseInt(q.value, 10) || 1; panel.qty = Math.max(1, n); if (isOut && n > maxQ()) { panel.qty = Math.max(1, maxQ()); } refresh(); });
+      q.addEventListener("change", fix);
       stp.appendChild(minus); stp.appendChild(q); stp.appendChild(plus); p.appendChild(stp);
       var ll = el("label", null, panel.mode === "out" ? "Pris dans le local" : "Rangé dans le local"), ls = lieuSelect("p-lieu", panel.lieu);
-      ls.addEventListener("change", function () { panel.lieu = ls.value; hint.textContent = s.par[ls.value] + " dans ce local"; });
+      ls.addEventListener("change", function () { panel.lieu = ls.value; fix(); });
       ll.appendChild(ls); p.appendChild(ll);
-      var hint = el("div", "sub2", (s.par[panel.lieu] || 0) + " dans ce local"); p.appendChild(hint);
+      var hint = el("div", "sub2", ""); p.appendChild(hint);
       var lw = el("label", null, panel.mode === "out" ? "Pour où ? (facultatif)" : "D'où ? (facultatif)"), w = document.createElement("input");
       w.type = "text"; w.id = "p-where"; w.maxLength = 80; w.placeholder = panel.mode === "out" ? "Ex. : piste bleue" : "Ex. : retour piste, livraison"; w.value = panel.where;
       w.addEventListener("input", function () { panel.where = w.value; }); lw.appendChild(w); p.appendChild(lw);
       var ok = el("button", "go", panel.mode === "out" ? "Valider la sortie" : "Valider l'entrée"); ok.type = "button";
+      var refresh = function () {
+        var here = s.par[panel.lieu] || 0;
+        if (!isOut) { hint.textContent = here + " dans ce local · après : " + (here + panel.qty); hint.className = "sub2"; ok.disabled = false; return; }
+        if (!here) { hint.textContent = "Il n'y en a plus dans ce local : choisis-en un autre."; hint.className = "sub2 warn"; ok.disabled = true; return; }
+        hint.textContent = here + " dans ce local · il en restera " + (here - Math.min(panel.qty, here)) + (panel.qty >= here ? " (maximum atteint)" : ""); hint.className = "sub2"; ok.disabled = false;
+      };
       ok.addEventListener("click", function () {
         ok.disabled = true;
+        if (isOut) panel.qty = Math.min(panel.qty, s.par[panel.lieu] || 0);
+        if (!panel.qty) { ok.disabled = false; return; }
         act("mouvement", [s.id, panel.mode === "out" ? -panel.qty : panel.qty, panel.where.trim(), panel.lieu], panel.mode === "out" ? "Sortie enregistrée" : "Entrée enregistrée")
           .then(closePanel, function () { ok.disabled = false; });
       });
-      p.appendChild(ok);
+      p.appendChild(ok); fix();
     }
     var cancel = el("button", "edit", "Annuler"); cancel.type = "button"; cancel.addEventListener("click", closePanel); p.appendChild(cancel);
     return p;
@@ -1876,8 +1934,8 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
     try { navigator.clipboard.writeText(txt).then(function () { showStatus("Liste copiée"); }, fallback); } catch (e) { fallback(); }
   }
   function renderPrep() {
-    var v = $("view"); v.textContent = "";
-    header(v, "flag", "#e8622c", "Préparation piste", "Choisis le matériel, la liste se fait toute seule");
+    var v = clearView();
+    header(v, "flag", "#e8622c", "Préparation piste", "");
     var f = el("form", "addbox"), inp = document.createElement("input");
     inp.id = "prep-title"; inp.placeholder = "Pour quoi ? Ex. : ouverture piste bleue"; inp.maxLength = 80; inp.value = prepTitle; inp.setAttribute("aria-label", "Nom de la préparation");
     inp.addEventListener("input", function () { prepTitle = inp.value; });
@@ -1919,7 +1977,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
         var minus = el("button", null, "−"); minus.type = "button"; minus.setAttribute("aria-label", "Moins de " + s.name);
         var qi = document.createElement("input"); qi.type = "number"; qi.min = "0"; qi.value = q; qi.id = "pq-" + s.id; qi.setAttribute("aria-label", "Quantité de " + s.name);
         var plus = el("button", null, "+"); plus.type = "button"; plus.setAttribute("aria-label", "Plus de " + s.name);
-        var setQ = function (n) { prepQty[s.id] = Math.max(0, n || 0); var y = window.scrollY; renderPrep(); window.scrollTo(0, y); };
+        var setQ = function (n) { prepQty[s.id] = Math.max(0, Math.min(s.qty, n || 0)); var y = window.scrollY; renderPrep(); window.scrollTo(0, y); };
         minus.addEventListener("click", function () { setQ((prepQty[s.id] || 0) - 1); });
         plus.addEventListener("click", function () { setQ((prepQty[s.id] || 0) + 1); });
         qi.addEventListener("change", function () { setQ(parseInt(qi.value, 10)); });
@@ -1960,8 +2018,15 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
         var lp = el("label", "sub2", "Matériel pris dans le local : "), ps = lieuSelect("pl-" + p.id, data.lieux[0].name);
         ps.style.cssText = "font:15px var(--body);padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--paper);color:var(--ink);max-width:100%";
         lp.appendChild(ps); card3.appendChild(lp);
+        var short = el("div", "sub2 warn"); card3.appendChild(short);
         var go2 = el("button", "pbtn main", "Valider la sortie (retire du stock)"); go2.type = "button";
+        var chk = function () {
+          var miss = (p.lines || []).map(function (l) { var a = data.stock.filter(function (x) { return x.id === l.id; })[0], h = a ? (a.par[ps.value] || 0) : 0; return h < l.qty ? l.name + " : " + h + " sur " + l.qty : null; }).filter(Boolean);
+          short.textContent = miss.length ? "Pas assez à " + ps.value + " — " + miss.join(" · ") : ""; short.hidden = !miss.length; go2.disabled = !!miss.length;
+        };
+        ps.addEventListener("change", chk); chk();
         go2.addEventListener("click", function () {
+          if (go2.disabled) return;
           if (!twoStep(go2, "Confirmer : retirer du stock")) return;
           go2.disabled = true; act("validerPrep", [p.id, ps.value], "Stock mis à jour").catch(function () { go2.disabled = false; });
         });
@@ -1983,9 +2048,9 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
   function ago2(ms) { var m = Math.round((Date.now() - ms) / 6e4); return m < 1 ? "à l'instant" : m < 60 ? "il y a " + m + " min" : m < 1440 ? "il y a " + Math.round(m / 60) + " h" : "il y a " + Math.round(m / 1440) + " j"; }
   var cmdShowDone = false;
   function renderCmd() {
-    var v = $("view"); v.textContent = ""; renderHomebar();
+    var v = clearView(); renderHomebar();
     var orders = data.orders || [], open = orders.filter(function (o) { return o.status !== "livree"; });
-    header(v, "truck", "#8a5cc2", "Transferts", "Matériel à monter d'un local à l'autre (demandes radio).");
+    header(v, "truck", "#8a5cc2", "Transferts", "");
     if (!cmdOpen) {
       var nb = el("button", "bigbtn", "+ Nouveau transfert"); nb.type = "button";
       nb.addEventListener("click", function () {
@@ -2028,7 +2093,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
       var minus = el("button", null, "−"); minus.type = "button"; minus.setAttribute("aria-label", "Moins de " + s.name);
       var qi = document.createElement("input"); qi.type = "number"; qi.min = "0"; qi.inputMode = "numeric"; qi.value = q; qi.id = "co-" + s.id; qi.setAttribute("aria-label", "Nombre de " + s.name + " à monter");
       var plus = el("button", null, "+"); plus.type = "button"; plus.setAttribute("aria-label", "Plus de " + s.name);
-      var setQ = function (n2) { n2 = Math.max(0, n2 || 0); if (n2) cmd.qty[s.id] = n2; else delete cmd.qty[s.id]; var y = window.scrollY; renderCmd(); window.scrollTo(0, y); };
+      var setQ = function (n2) { n2 = Math.max(0, Math.min(have, n2 || 0)); if (n2) cmd.qty[s.id] = n2; else delete cmd.qty[s.id]; var y = window.scrollY; renderCmd(); window.scrollTo(0, y); };
       minus.addEventListener("click", function () { setQ((cmd.qty[s.id] || 0) - 1); });
       plus.addEventListener("click", function () { setQ((cmd.qty[s.id] || 0) + 1); });
       qi.addEventListener("change", function () { setQ(parseInt(qi.value, 10)); });
@@ -2078,7 +2143,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
 
   /* ---------- Comptage de la semaine ---------- */
   function renderCount() {
-    var v = $("view"); v.textContent = "";
+    var v = clearView();
     var nLate = data.lieux.filter(late).length;
     header(v, "count", "#2f7fb8", "Comptage", nLate ? (nLate > 1 ? nLate + " locaux" : "1 local") + " à compter cette semaine" : "Tous les locaux ont été comptés cette semaine");
     countLieu = validLieu(countLieu) || (data.lieux.filter(late)[0] || data.lieux[0]).name;
@@ -2147,8 +2212,8 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
 
   /* ---------- Historique ---------- */
   function renderHist() {
-    var v = $("view"); v.textContent = "";
-    header(v, "clock", "#5b6c78", "Historique", "Les 60 derniers mouvements.");
+    var v = clearView();
+    header(v, "clock", "#5b6c78", "Historique", "");
     if (!data.moves.length) { v.appendChild(el("p", "empty", "Aucun mouvement pour l'instant.")); return; }
     var h = el("ul", "hist");
     data.moves.forEach(function (m) {
