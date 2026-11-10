@@ -1,7 +1,7 @@
 {
   "name": "Glacier 3000 Pisteurs",
   "short_name": "Pisteurs",
-  "start_url": "/",
+  "start_url": "/?app=1",
   "scope": "/",
   "display": "standalone",
   "background_color": "#24332c",
