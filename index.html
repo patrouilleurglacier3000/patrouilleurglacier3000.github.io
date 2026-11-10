@@ -483,7 +483,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794344187";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794344507";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -889,7 +889,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
     var tg = el("div", "tags");
     if (urg && !done) tg.appendChild(el("span", "tag2 p", "URGENT"));
     if (done) tg.appendChild(el("span", "tag2 ok", "Fait le " + tkDate(t.doneAt)));
-    if (!tkSect && t.zone && t.zone !== TK_NONE && t.zone !== "Tableau") tg.appendChild(el("span", "tag2", "📍 " + t.zone));
+    if (!tkSect && tkZoneOf(t) !== TK_NONE) tg.appendChild(el("span", "tag2", "📍 " + tkZoneOf(t)));
     if (!done && t.created) {
       var days = Math.floor((new Date().setHours(0, 0, 0, 0) - new Date(t.created).setHours(0, 0, 0, 0)) / 864e5);
       tg.appendChild(el("span", "tag2" + (days >= 7 ? " old" : ""), days <= 0 ? "aujourd'hui" : days === 1 ? "hier" : "il y a " + days + " j"));
@@ -921,7 +921,7 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
         var ed = el("button", "pbtn", "Modifier"); ed.type = "button"; ed.addEventListener("click", function () { tkEdit = { id: t.id, text: t.text, zone: t.zone, prio: t.prio }; renderTaches(); });
         r3.appendChild(ub); r3.appendChild(ed);
         var zs = document.createElement("select"); zs.className = "tk-sel"; zs.setAttribute("aria-label", "Secteur");
-        [TK_NONE].concat(data.zones || []).forEach(function (z) { var o = el("option", null, z === TK_NONE ? "Sans secteur" : "📍 " + z); o.value = z; if (z === (t.zone === "Tableau" ? TK_NONE : t.zone)) o.selected = true; zs.appendChild(o); });
+        ((data.zones || []).indexOf("Autres") >= 0 ? data.zones : [TK_NONE].concat(data.zones || [])).forEach(function (z) { var o = el("option", null, z === TK_NONE ? "Sans secteur" : "📍 " + z); o.value = z; if (z === tkZoneOf(t)) o.selected = true; zs.appendChild(o); });
         zs.addEventListener("change", function () { tkSave({ id: t.id, text: t.text, zone: zs.value, prio: t.prio }, "Secteur changé"); });
         r3.appendChild(zs);
       }
@@ -940,7 +940,11 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
     }
     return row;
   }
-  function tkZoneOf(t) { return !t.zone || t.zone === "Tableau" ? TK_NONE : t.zone; }
+  function tkZoneOf(t) {
+    var z = data.zones || [];
+    if (t.zone && t.zone !== "Tableau" && z.indexOf(t.zone) >= 0) return t.zone;
+    return z.indexOf("Autres") >= 0 ? "Autres" : TK_NONE; // secteur inconnu ou ancien : rangé dans « Autres »
+  }
   function renderTaches() {
     var v = clearView(); renderHomebar();
     v.classList.toggle("chalk", tkChalk);
