@@ -261,7 +261,8 @@ textarea.copy { width: 100%; min-height: 120px; font: 15px var(--body); border: 
 .tg-ev { position: absolute; border: 0; border-radius: 5px; background: var(--ec); color: #fff; font: 700 10.5px/1.2 var(--body); text-align: left; padding: 2px 3px; overflow: hidden; cursor: pointer; box-shadow: 0 0 0 1px var(--paper); }
 .tg-ev.imp { box-shadow: 0 0 0 1px var(--paper), inset 3px 0 0 #d63a3a; padding-left: 6px; }
 .tg-ev .h { display: block; font-weight: 400; opacity: .9; }
-.tg.one .tg-ev { font-size: 14px; padding: 4px 8px; }
+.tg.one .tg-ev { font-size: 15px; padding: 5px 9px; overflow: visible; z-index: 2; }
+.tg.one .tg-ev .nt { display: block; font-weight: 400; font-size: 14px; margin-top: 3px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .tg.one .tg-ev.imp { padding-left: 10px; }
 .tg-now { position: absolute; left: 0; right: 0; height: 2px; background: #d63a3a; pointer-events: none; }
 .tg-now::before { content: ""; position: absolute; left: -5px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: #d63a3a; }
@@ -544,7 +545,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794398857";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794399134";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1581,10 +1582,11 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
         gr.items.forEach(function (t) {
           var b = el("button", "tg-ev" + (t.e.imp ? " imp" : "")); b.type = "button";
           b.style.setProperty("--ec", CAT_COL[t.e.cat] || CAT_COL.autre);
-          b.style.top = ((t.a - h0 * 60) / 60 * H + 1) + "px"; b.style.height = ((t.b - t.a) / 60 * H - 2) + "px";
+          b.style.top = ((t.a - h0 * 60) / 60 * H + 1) + "px"; b.style[one ? "minHeight" : "height"] = ((t.b - t.a) / 60 * H - 2) + "px";
           b.style.left = "calc(" + (t.lane * 100 / n) + "% + 1px)"; b.style.width = "calc(" + (100 / n) + "% - 2px)";
           b.appendChild(document.createTextNode(t.e.title));
           b.appendChild(el("span", "h", t.e.start + (t.e.end ? "–" + t.e.end : "") + (one && t.e.who ? " · " + t.e.who : "")));
+          if (one && t.e.note) b.appendChild(el("span", "nt", t.e.note));
           b.setAttribute("aria-label", t.e.title + ", " + t.e.start);
           b.addEventListener("click", function () { showEv(t.e); });
           col.appendChild(b);
@@ -1673,7 +1675,6 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       })(addDays(m0d, s));
       stage.appendChild(strip);
       var evs = evsOn(dkey(plDate));
-      if (evs.length) { var dl = el("div", "daylist"); evs.forEach(function (e) { dl.appendChild(evCard(e, true)); }); stage.appendChild(dl); }
       stage.appendChild(timeGrid([plDate]));
       if (!evs.length) stage.appendChild(el("p", "tg-hint", "Rien de prévu. Touche une heure pour ajouter un événement."));
     } else if (plView === "semaine") {
