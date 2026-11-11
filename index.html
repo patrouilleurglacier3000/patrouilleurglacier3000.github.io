@@ -446,6 +446,17 @@ button.low { width: 100%; text-align: left; font: inherit; color: var(--ink); cu
 .tk-hist div { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 14.5px; }
 .tk-hist small { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
 .dm-add { width: 100%; font: 800 17px var(--body); padding: 14px; border-radius: 14px; border: 2px dashed #c27a12; background: var(--paper); color: #c27a12; cursor: pointer; margin-bottom: 14px; }
+.evdetail { background: var(--paper); border: 1px solid var(--line); border-left: 8px solid var(--ec); border-radius: 14px; padding: 16px; display: grid; gap: 8px; margin-bottom: 16px; }
+.evdetail .cat { font-size: 13px; font-weight: 800; color: var(--ec); text-transform: uppercase; letter-spacing: .04em; }
+.evdetail h2 { margin: 0; font: 800 22px/1.25 var(--display); overflow-wrap: anywhere; }
+.evdetail h2 .imp, .evdetail .impl { color: var(--red); }
+.evdetail .impl { font-weight: 800; font-size: 14px; }
+.evdetail .when { font-size: 17px; font-weight: 700; }
+.evdetail .lab { font-size: 13px; font-weight: 700; color: var(--muted); margin-top: 6px; }
+.evdetail p { margin: 0; font-size: 17px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
+.daylist { display: grid; gap: 8px; margin: 10px 0 12px; }
+.daylist .ev .nt { white-space: pre-wrap; }
+.daylist .ev .mt b { font: 800 15px var(--body); }
 .evform { background: var(--paper); border: 2px solid var(--accent); border-radius: 14px; padding: 14px; display: grid; gap: 10px; margin-bottom: 16px; }
 .evform h2 { margin: 0; font: 800 20px var(--display); color: var(--accent); }
 .evform label { display: grid; gap: 4px; font-size: 13px; font-weight: 700; color: var(--muted); }
@@ -533,7 +544,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794346038";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794398857";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -729,7 +740,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   var area = "home", formRub = null;
   try { area = localStorage.getItem("stock-pistes-area") || "home"; } catch (e) {}
   function goArea(a, rub) {
-    area = a; formRub = rub || null; panel = null; lowOpen = false; try { localStorage.setItem("stock-pistes-area", a); } catch (e) {}
+    area = a; formRub = rub || null; panel = null; evView = null; lowOpen = false; try { localStorage.setItem("stock-pistes-area", a); } catch (e) {}
     renderAll(); goTop();
   }
   function renderHomebar() {
@@ -741,7 +752,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var back = el("button"); back.type = "button";
     var up = null;
     if (area === "form" && formRub) up = ["‹ Formation", function () { goArea("form"); }];
-    else if (area === "plan" && evEdit) up = ["‹ Agenda", function () { evEdit = null; renderPlan(); }];
+    else if (area === "plan" && (evEdit || evView)) up = ["‹ Agenda", function () { evEdit = null; evView = null; renderPlan(); }];
     else if (area === "plan" && plView === "jour") up = ["‹ " + (plFrom === "mois" ? "Mois" : "Semaine"), function () { plView = plFrom || "semaine"; plFrom = null; renderPlan(); }];
     else if (area === "stock" && panel) up = ["‹ Stock", function () { closePanel(); }];
     else if (area === "stock" && current === "cmd" && cmdOpen) up = ["‹ Transferts", function () { cmdOpen = false; renderAll(); }];
@@ -1416,7 +1427,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   }
 
   /* ---------- Planning ---------- */
-  var EV_CATS = [["soiree", "Soirée", "#8a5cc2"], ["piste", "Piste", "#e8622c"], ["formation", "Formation", "#2f7fb8"], ["reunion", "Réunion", "#2e9461"], ["materiel", "Matériel", "#d63a3a"], ["autre", "Autre", "#5b6c78"]];
+  var EV_CATS = [["formation", "Formation", "#2f7fb8"], ["reunion", "Réunion", "#2e9461"], ["autre", "Autre", "#5b6c78"]];
   var CAT_COL = {}; EV_CATS.forEach(function (c) { CAT_COL[c[0]] = c[2]; });
   var CAT_LBL = {}; EV_CATS.forEach(function (c) { CAT_LBL[c[0]] = c[1]; });
   var JOURS = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
@@ -1436,7 +1447,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     return (data.events || []).filter(function (e) { return e.date > k || (e.date === k && (!e.end || e.end >= hm)); })
       .sort(function (a, b) { return (a.date + (a.start || "")) < (b.date + (b.start || "")) ? -1 : 1; }).slice(0, n);
   }
-  var plView = "semaine", plDate = new Date(), evEdit = null, plFrom = null, plAnim = 0;
+  var plView = "semaine", plDate = new Date(), evEdit = null, evView = null, plFrom = null, plAnim = 0;
   function goDay(d, from) { plDate = d; plFrom = from; plView = "jour"; renderPlan(); goTop(); }
   try { plView = localStorage.getItem("stock-pistes-plview") || "semaine"; } catch (e) {}
   function evCard(e, big) {
@@ -1451,11 +1462,27 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     box.appendChild(mt);
     if (big && e.note) box.appendChild(el("div", "nt", e.note));
     b.appendChild(box);
-    b.addEventListener("click", function () { openEv(e); });
+    b.addEventListener("click", function () { showEv(e); });
     return b;
   }
+  function showEv(e) { evView = e; renderPlan(); goTop(); }
+  function evDetail() {
+    var e = evView, d = el("div", "evdetail"); d.style.setProperty("--ec", CAT_COL[e.cat] || CAT_COL.autre);
+    d.appendChild(el("div", "cat", CAT_LBL[e.cat] || "Autre"));
+    var h = el("h2"); if (e.imp) h.appendChild(el("span", "imp", "● ")); h.appendChild(document.createTextNode(e.title)); d.appendChild(h);
+    d.appendChild(el("div", "when", dayLong(dparse(e.date)) + " · " + (e.start ? e.start + (e.end ? " – " + e.end : "") : "Toute la journée")));
+    if (e.imp) d.appendChild(el("div", "impl", "Important"));
+    if (e.who) { d.appendChild(el("div", "lab", "Qui")); d.appendChild(el("p", null, e.who)); }
+    if (e.note) { d.appendChild(el("div", "lab", "Précisions")); d.appendChild(el("p", null, e.note)); }
+    var bt = el("div", "pbtns");
+    var back = el("button", "pbtn main acc", "Retour à l\u2019agenda"); back.type = "button"; back.addEventListener("click", function () { evView = null; renderPlan(); });
+    var ed = el("button", "pbtn", "Modifier"); ed.type = "button"; ed.addEventListener("click", function () { evView = null; openEv(e); });
+    bt.appendChild(back); bt.appendChild(ed); d.appendChild(bt);
+    return d;
+  }
   function openEv(e, date) {
-    evEdit = e ? JSON.parse(JSON.stringify(e)) : { id: "", title: "", date: date || dkey(plDate), start: "", end: "", cat: "piste", imp: false, who: "", note: "" };
+    evEdit = e ? JSON.parse(JSON.stringify(e)) : { id: "", title: "", date: date || dkey(plDate), start: "", end: "", cat: "reunion", imp: false, who: "", note: "" };
+    if (CAT_LBL[evEdit.cat] === undefined) evEdit.cat = "autre";
     renderPlan(); goTop();
     setTimeout(function () { var t = $("ev-title"); if (t && !evEdit.id) t.focus(); }, 50);
   }
@@ -1463,7 +1490,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var f = el("form", "evform");
     f.appendChild(el("h2", null, evEdit.id ? "Modifier" : "Nouvel événement"));
     var lt = el("label", null, "Quoi"), ti = document.createElement("input"); ti.id = "ev-title"; ti.maxLength = 80; ti.required = true; ti.value = evEdit.title;
-    ti.placeholder = "Ex. : Soirée restaurant 3000, 2 patrouilleurs"; ti.addEventListener("input", function () { evEdit.title = ti.value; });
+    ti.placeholder = "Ex. : Réunion de saison"; ti.addEventListener("input", function () { evEdit.title = ti.value; });
     lt.appendChild(ti); f.appendChild(lt);
     var three = el("div", "three");
     [["Jour", "date", "date"], ["Début", "start", "time"], ["Fin", "end", "time"]].forEach(function (x) {
@@ -1529,7 +1556,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
         anyAll = true;
         var c = el("button", "chipev" + (e.imp ? " imp" : ""), e.title); c.type = "button"; c.style.setProperty("--ec", CAT_COL[e.cat] || CAT_COL.autre);
         c.style.border = "0"; c.style.textAlign = "left"; c.style.cursor = "pointer"; if (one) c.style.fontSize = "14px";
-        c.addEventListener("click", function () { openEv(e); }); ac.appendChild(c);
+        c.addEventListener("click", function () { showEv(e); }); ac.appendChild(c);
       });
       all.appendChild(ac);
       var col = el("div", "tg-col" + (k === todayK && !one ? " today" : "")); col.style.height = (h1 - h0) * H + "px";
@@ -1559,7 +1586,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
           b.appendChild(document.createTextNode(t.e.title));
           b.appendChild(el("span", "h", t.e.start + (t.e.end ? "–" + t.e.end : "") + (one && t.e.who ? " · " + t.e.who : "")));
           b.setAttribute("aria-label", t.e.title + ", " + t.e.start);
-          b.addEventListener("click", function () { openEv(t.e); });
+          b.addEventListener("click", function () { showEv(t.e); });
           col.appendChild(b);
         });
       });
@@ -1612,6 +1639,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var v = clearView(); renderHomebar();
     var tb = document.querySelector(".topbar"); if (tb) document.documentElement.style.setProperty("--tb", tb.offsetHeight + "px");
     if (evEdit) { v.appendChild(evForm()); return; }
+    if (evView) { v.appendChild(evDetail()); return; }
     var bar = el("div", "pl-bar"), seg = el("div", "pl-seg");
     [["jour", "Jour"], ["semaine", "Semaine"], ["mois", "Mois"]].forEach(function (x) {
       var b = el("button", null, x[1]); b.type = "button"; b.setAttribute("aria-pressed", plView === x[0] ? "true" : "false");
@@ -1645,6 +1673,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       })(addDays(m0d, s));
       stage.appendChild(strip);
       var evs = evsOn(dkey(plDate));
+      if (evs.length) { var dl = el("div", "daylist"); evs.forEach(function (e) { dl.appendChild(evCard(e, true)); }); stage.appendChild(dl); }
       stage.appendChild(timeGrid([plDate]));
       if (!evs.length) stage.appendChild(el("p", "tg-hint", "Rien de prévu. Touche une heure pour ajouter un événement."));
     } else if (plView === "semaine") {
@@ -1686,7 +1715,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   }
   // Ordinateur : flèches gauche / droite du clavier
   document.addEventListener("keydown", function (e) {
-    if (area !== "plan" || evEdit || /INPUT|TEXTAREA|SELECT/.test((e.target || {}).tagName || "")) return;
+    if (area !== "plan" || evEdit || evView || /INPUT|TEXTAREA|SELECT/.test((e.target || {}).tagName || "")) return;
     if (e.key === "ArrowLeft" || e.key === "ArrowRight") { plStep(e.key === "ArrowRight" ? 1 : -1); plAnim = e.key === "ArrowRight" ? 1 : -1; renderPlan(); }
   });
 
