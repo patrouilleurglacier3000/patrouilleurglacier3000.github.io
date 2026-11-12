@@ -706,8 +706,6 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .bl-les-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .bl-les-h b { font: 800 17px var(--body); color: var(--red); }
 .bl-les-x { border: 0; background: none; color: var(--muted); font: 600 14px var(--body); text-decoration: underline; cursor: pointer; }
-.bl-os { display: flex; flex-direction: column; gap: 4px; padding: 6px; border-radius: 10px; background: color-mix(in srgb, #d63a3a 8%, var(--paper)); }
-.bl-os .bf-o { min-height: 46px; font-size: 16px; }
 .bl-les-d { display: flex; flex-direction: column; gap: 4px; }
 .bl-scale { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); gap: 3px; }
 .bl-sc { min-height: 40px; border: 2px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); font: 800 15px var(--body); padding: 0; cursor: pointer; }
@@ -813,7 +811,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794494752";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794494954";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2348,16 +2346,6 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       var tc = el("div", "bf-c");
       TY.forEach(function (t) { var on = zd.t.indexOf(t) >= 0, bt = el("button", "bf-o" + (on ? " on" : ""), t); bt.type = "button"; bt.addEventListener("click", function () { var a = zd.t.slice(), i = a.indexOf(t); if (i >= 0) a.splice(i, 1); else a.push(t); zd.t = a; blSave(b); blRefresh(); }); tc.appendChild(bt); });
       card.appendChild(tc);
-      var osl = blOsFor(id);
-      if (osl) {
-        var orow = el("div", "bl-os"); orow.appendChild(el("span", "bf-q", "Os touché ? (suspicion de fracture)"));
-        var oc = el("div", "bf-c");
-        osl.forEach(function (o) { var on = (zd.os || []).indexOf(o) >= 0, bt = el("button", "bf-o" + (on ? " on" : ""), o); bt.type = "button"; bt.addEventListener("click", function () {
-          var a = (zd.os || []).slice(), i = a.indexOf(o); if (i >= 0) a.splice(i, 1); else a.push(o); zd.os = a;
-          if (a.length && zd.t.indexOf("Suspicion de fracture") < 0) zd.t = zd.t.concat(["Suspicion de fracture"]); // choisir un os = suspicion de fracture
-          blSave(b); blRefresh(); }); oc.appendChild(bt); });
-        orow.appendChild(oc); card.appendChild(orow);
-      }
       var dr = el("div", "bl-les-d"); dr.appendChild(el("span", "bf-q", "Douleur"));
       var sc = el("div", "bl-scale");
       for (var n = 0; n <= 10; n++) (function (n) { var on = zd.dl === n, bt = el("button", "bl-sc" + (on ? " on" : ""), String(n)); bt.type = "button"; bt.style.setProperty("--h", String(120 - n * 12)); bt.addEventListener("click", function () { zd.dl = on ? "" : n; blSave(b); blRefresh(); }); sc.appendChild(bt); })(n);
@@ -2482,22 +2470,10 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     });
     return w;
   }
-  // Os proposés seulement si « Suspicion de fracture » est choisi, selon l'endroit touché
-  // seulement les os utiles : grands os et colonne
-  var BL_OS = { jambe: ["Tibia", "Péroné"], cuisse: ["Fémur"], bras: ["Humérus"], avbras: ["Radius", "Cubitus"], epaule: ["Clavicule"],
-    cou: ["Colonne cervicale"], hautdos: ["Colonne dorsale"], "B|ventre": ["Colonne lombaire"] };
-  var BL_OS_DE = { "Tibia": "du tibia", "Péroné": "du péroné", "Fémur": "du fémur", "Humérus": "de l'humérus", "Radius": "du radius", "Cubitus": "du cubitus", "Poignet": "du poignet",
-    "Métacarpe": "d'un métacarpe", "Phalange": "d'une phalange", "Malléole": "de la malléole", "Métatarse": "d'un métatarse", "Calcanéum": "du calcanéum", "Crâne": "du crâne",
-    "Mâchoire": "de la mâchoire", "Colonne cervicale": "de la colonne cervicale", "Colonne dorsale": "de la colonne dorsale", "Colonne lombaire": "de la colonne lombaire",
-    "Rotule": "de la rotule", "Clavicule": "de la clavicule", "Omoplate": "de l'omoplate", "Sternum": "du sternum", "Côtes": "des côtes" };
-  function blOsFor(id) { var p = id.split("|"); return BL_OS[p[0] + "|" + p[1]] || BL_OS[p[1]] || null; }
   function blLesTxt(f) {
     return (f.zones || []).map(function (id) {
       var zd = (f.zd || {})[id] || {}, hasDl = zd.dl !== "" && zd.dl != null;
-      var t = (zd.t || []).filter(function (x) { return !(hasDl && x === "Douleur"); }).map(function (x) {
-        var os = x === "Suspicion de fracture" ? (zd.os || []) : [];
-        return os.length ? "suspicion de fracture " + os.map(function (o) { return BL_OS_DE[o] || o.toLowerCase(); }).join(" et ") : x.toLowerCase();
-      }).join(", ");
+      var t = (zd.t || []).filter(function (x) { return !(hasDl && x === "Douleur"); }).join(", ").toLowerCase();
       return blZoneName(id) + (t || (zd.dl !== "" && zd.dl != null) ? " : " + [zd.dl !== "" && zd.dl != null ? "douleur " + zd.dl + "/10" : "", t].filter(Boolean).join(", ") : "");
     });
   }
