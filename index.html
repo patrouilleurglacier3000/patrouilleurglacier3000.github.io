@@ -545,7 +545,11 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .sw-act.b { right: 0; background: #d63a3a; }
 .sw.r .sw-act.a, .sw.l .sw-act.b { display: block; }
 .sw > .tk { position: relative; touch-action: pan-y; transition: transform .2s ease; user-select: none; -webkit-user-select: none; }
-.sw.drag > .tk { transition: none; }
+.sw.drag > .tk, .sw.lift > .tk { transition: none; }
+#view.chalk .tk.hasgrip { grid-template-columns: 44px minmax(0,1fr) 34px; }
+.tk .grip { display: grid; place-items: center; color: var(--muted); touch-action: none; cursor: grab; }
+.sw.lift { overflow: visible; z-index: 3; }
+.sw.lift > .tk { box-shadow: 0 8px 22px rgba(0,0,0,.25); transform: scale(1.02); }
 .sw > .tk * { -webkit-touch-callout: none; }
 #snack { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 60; display: flex; align-items: center; gap: 12px; background: #17242e; color: #fff; font: 600 16px var(--body); border-radius: 12px; padding: 8px 8px 8px 16px; box-shadow: 0 6px 20px rgba(0,0,0,.25); max-width: calc(100% - 24px); white-space: nowrap; }
 #snack[hidden] { display: none; }
@@ -560,7 +564,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794472355";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794473520";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -677,6 +681,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     },
     terminerTache: function (id, p, sortir) { var t = byId(data.taches, id); if (!t || (sortir && t.mat)) return false; t.state = "fait"; t.doneBy = p || ""; t.doneAt = Date.now(); },
     rouvrirTache: function (id) { var t = byId(data.taches, id); if (!t) return false; t.state = "afaire"; t.by = ""; t.doneBy = ""; t.doneAt = 0; },
+    ordonnerTaches: function (pairs) { (pairs || []).forEach(function (p) { var t = byId(data.taches, p.id); if (t) t.ord = p.ord; }); },
     supprimerTache: function (id) { if (!byId(data.taches, id)) return false; data.taches = data.taches.filter(function (x) { return String(x.id) !== String(id); }); }
   };
   function act(fn, args, msg) {
@@ -1022,7 +1027,9 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 
   /* ---------- Glisser (doigt ou souris) : la carte s'écarte et montre un bouton à toucher ---------- */
   var swOpen = null, SW_W = 132;
-  function swClose(now) { if (!swOpen) return; var o = swOpen; swOpen = null; o.node.style.transform = ""; setTimeout(function () { o.w.classList.remove("r", "l"); }, now ? 0 : 220); }
+  var tkLate = false, tkDrag = false;
+  function tkLateRender() { if (tkLate && !swOpen && !tkDrag) { tkLate = false; setTimeout(function () { if (area === "taches") renderTaches(); }, 0); } }
+  function swClose(now) { if (!swOpen) return; var o = swOpen; swOpen = null; o.node.style.transform = ""; setTimeout(function () { o.w.classList.remove("r", "l"); tkLateRender(); }, now ? 0 : 220); }
   document.addEventListener("pointerdown", function (e) {
     if (swOpen && !e.target.closest(".sw-act")) { var o = swOpen; if (o.node.contains(e.target)) o.w._swallow = true; swClose(); }
   }, true);
@@ -1081,19 +1088,39 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     node.addEventListener("click", function (e) { if (moved || w._swallow) { e.stopPropagation(); e.preventDefault(); moved = false; w._swallow = false; } }, true);
     node.addEventListener("contextmenu", function (e) { e.preventDefault(); });
   }
+  var GRIP = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><g fill="currentColor"><circle cx="9" cy="6" r="1.8"/><circle cx="15" cy="6" r="1.8"/><circle cx="9" cy="12" r="1.8"/><circle cx="15" cy="12" r="1.8"/><circle cx="9" cy="18" r="1.8"/><circle cx="15" cy="18" r="1.8"/></g></svg>';
   function swipeable(node, o) {
     var w = el("div", "sw"), bg = el("div", "sw-bg"), me = { w: w, node: node };
     if (o.right) { var ba = el("button", "sw-act a", o.rightLabel); ba.type = "button"; ba.addEventListener("click", function () { swClose(true); o.right(); }); bg.appendChild(ba); }
     if (o.left) { var bb = el("button", "sw-act b", o.leftLabel); bb.type = "button"; bb.addEventListener("click", function () { swClose(true); o.left(); }); bg.appendChild(bb); }
     w.appendChild(bg); w.appendChild(node);
-    gest(node, w, { right: !!o.right, left: !!o.left, move: false, width: SW_W, onOpen: function () { if (swOpen && swOpen !== me) swClose(true); swOpen = me; } });
+    if (o.move) { w.dataset.id = o.id; w.dataset.prio = o.prio; w.dataset.key = o.key; }
+    gest(node, w, { right: !!o.right, left: !!o.left, move: !!o.move, width: SW_W,
+      onOpen: function () { if (swOpen && swOpen !== me) swClose(true); swOpen = me; },
+      onLift: function () { if (swOpen) swClose(true); tkDrag = true; w.classList.add("lift"); },
+      onLiftMove: function (y) {
+        var box = w.parentNode, prev = w.previousElementSibling, next = w.nextElementSibling;
+        if (prev && prev.dataset.prio === w.dataset.prio) { var r = prev.getBoundingClientRect(); if (y < r.top + r.height / 2) box.insertBefore(w, prev); }
+        if (next && next.dataset.prio === w.dataset.prio) { var r2 = next.getBoundingClientRect(); if (y > r2.top + r2.height / 2) box.insertBefore(next, w); }
+      },
+      onDrop: function () { w.classList.remove("lift"); tkDrag = false; o.drop(w); tkLateRender(); } });
     return w;
   }
+  function tkKey(t) { return t.ord != null && t.ord !== "" ? +t.ord : (t.created || 0); }
+  function tkSaveOrder(box, pr) {
+    var ws = [].filter.call(box.children, function (x) { return x.dataset.prio === pr; });
+    var keys = ws.map(function (x) { return +x.dataset.key; }).sort(function (a, b) { return a - b; });
+    for (var k = 1; k < keys.length; k++) if (keys[k] <= keys[k - 1]) keys[k] = keys[k - 1] + 1;
+    var pairs = []; ws.forEach(function (x, n) { if (+x.dataset.key !== keys[n]) pairs.push({ id: x.dataset.id, ord: keys[n] }); });
+    if (pairs.length) act("ordonnerTaches", [pairs], "Ordre enregistré");
+  }
   function tkWrap(t) {
-    var done = t.state === "fait";
-    return swipeable(tkRow(t), {
+    var done = t.state === "fait", node = tkRow(t);
+    if (!done) { var gp = el("span", "grip"); gp.innerHTML = GRIP; gp.setAttribute("aria-hidden", "true"); var bd = node.querySelector(".bd"); node.insertBefore(gp, bd.nextSibling); node.classList.add("hasgrip"); }
+    return swipeable(node, {
       right: done ? null : function () { tkOpen = null; tkDisarm(); act("terminerTache", [t.id, "", false], "Bien joué !"); }, rightLabel: "✓ C'est fait",
-      left: function () { tkOpen = null; tkDisarm(); act("supprimerTache", [t.id], "Supprimée"); }, leftLabel: "Supprimer" });
+      left: function () { tkOpen = null; tkDisarm(); act("supprimerTache", [t.id], "Supprimée"); }, leftLabel: "Supprimer",
+      move: !done, id: t.id, prio: t.prio === "urgent" ? "urgent" : "normal", key: tkKey(t), drop: function (w) { tkSaveOrder(w.parentNode, w.dataset.prio); } });
   }
   function tkZoneOf(t) {
     var z = TK_ZONES;
@@ -1103,7 +1130,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   function renderTaches() {
     var v = clearView(); renderHomebar();
     v.classList.toggle("chalk", tkChalk);
-    swOpen = null;
+    if (swOpen || tkDrag) { tkLate = true; return; }
     var zones = TK_ZONES, every = data.taches || [];
     if (tkSect && zones.indexOf(tkSect) < 0) tkSect = "";
     // onglets : Tout + un par secteur
@@ -1117,7 +1144,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     });
     v.appendChild(tabs); keepStrip(tabs, "tk");
     var all = every.filter(function (t) { return !tkSect || tkZoneOf(t) === tkSect; });
-    var todo = all.filter(function (t) { return t.state !== "fait"; }).sort(function (a, b) { return (a.prio !== "urgent") - (b.prio !== "urgent") || a.created - b.created; });
+    var todo = all.filter(function (t) { return t.state !== "fait"; }).sort(function (a, b) { return (a.prio !== "urgent") - (b.prio !== "urgent") || tkKey(a) - tkKey(b); });
     var done = all.filter(function (t) { return t.state === "fait" && Date.now() - t.doneAt < TK_KEEP; }).sort(function (a, b) { return b.doneAt - a.doneAt; });
     // ajouter : un bouton qui s'ouvre en petite fiche (Entrée = retour à la ligne)
     if (!tkAddOpen && !tkDraft) {
