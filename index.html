@@ -684,6 +684,21 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 #bl-zoom .bl-zl { text-align: center; }
 .bl-zoombtn { flex: 1 1 100%; min-height: 44px; }
 .bl-zbox { flex: 1 1 auto; min-width: 0; max-width: 200px; overflow: hidden; border-radius: 10px; display: flex; }
+.bl-fig.big { flex: 1 1 100%; padding: 8px; gap: 6px; }
+.bl-fig.big .bl-zbox { max-width: none; height: min(62vh, 520px); justify-content: center; position: relative; background: var(--paper); border: 2px solid var(--line); perspective: 900px; }
+.bl-fig.big .bl-svg { height: 100%; width: auto; max-width: none; }
+.bl-fig.big .bl-side { font-size: 26px; width: 24px; }
+.bl-svg.flip { animation: blflip .45s ease-out; }
+@keyframes blflip { from { transform: rotateY(90deg); } to { transform: rotateY(0); } }
+.bl-sidesel { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; }
+.bl-sideb { min-height: 50px; border: 2px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); font: 800 18px var(--body); letter-spacing: .06em; cursor: pointer; }
+.bl-sideb.on { background: #17324a; border-color: #17324a; color: #fff; }
+.bl-flash { position: absolute; left: 8px; right: 8px; top: 10px; text-align: center; background: #d63a3a; color: #fff; font: 800 28px/1.15 var(--body); padding: 12px 8px; border-radius: 14px; box-shadow: 0 6px 20px #0005; pointer-events: none; animation: blflash 1.5s ease-in forwards; }
+.bl-flash.off { background: #455a64; }
+@keyframes blflash { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
+.bl-fig.big .bl-zctl { grid-template-columns: 60px 1fr 60px 1fr; }
+.bl-fig.big .bl-zctl .bl-zb:last-child { grid-column: auto; }
+.bl-fig.big .bl-zb { min-height: 52px; }
 .bl-zbox .bl-svg { max-width: none; touch-action: pan-y; }
 .bl-zctl { display: grid; grid-template-columns: 44px 1fr 44px; gap: 4px; width: 100%; padding: 4px 4px 2px; align-items: center; }
 .bl-zctl .bl-zb:last-child { grid-column: 1 / -1; }
@@ -741,7 +756,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794490343";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794490485";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2222,20 +2237,36 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     out.forEach(function (z) { z.name = blZoneName(z.id); });
     return out;
   }
+  // Un seul grand bonhomme : FACE / DOS (il se retourne), zoom dans le cadre, nom de l'endroit en grand quand on touche
+  var blSide = "F", blFlash = null, blFlip = false;
   function blBody(b, host) {
-    var sel = b.f.zones || [], wrap = el("div", "bl-body");
-    ["F", "B"].forEach(function (side) {
-      var col = el("div", "bl-fig"); col.appendChild(el("div", "bl-fig-t", side === "F" ? "FACE" : "DOS"));
-      var row = el("div", "bl-fig-r");
-      row.appendChild(el("span", "bl-side", side === "F" ? "D" : "G"));
-      var svg = blFigure(side, blZonesFor(side), sel, function (id) {
-        var a = (b.f.zones || []).slice(), i = a.indexOf(id); if (i >= 0) { a.splice(i, 1); if (b.f.zd) delete b.f.zd[id]; } else a.push(id); b.f.zones = a; blSave(b); blRefresh();
-      });
-      var box = el("div", "bl-zbox"); box.appendChild(svg); row.appendChild(box);
-      row.appendChild(el("span", "bl-side", side === "F" ? "G" : "D")); col.appendChild(row);
-      col.appendChild(blZoomCtl(svg, side)); wrap.appendChild(col);
+    var sel = b.f.zones || [], side = blSide, col = el("div", "bl-fig big");
+    var seg = el("div", "bl-sidesel");
+    [["F", "FACE"], ["B", "DOS"]].forEach(function (x) {
+      var n = sel.filter(function (id) { return id.charAt(0) === x[0]; }).length;
+      var bt = el("button", "bl-sideb" + (side === x[0] ? " on" : ""), x[1] + (n ? " · " + n : "")); bt.type = "button";
+      bt.addEventListener("click", function () { if (blSide === x[0]) return; blSide = x[0]; blFlip = true; blRefresh(); });
+      seg.appendChild(bt);
     });
-    host.appendChild(wrap);
+    col.appendChild(seg);
+    var row = el("div", "bl-fig-r");
+    row.appendChild(el("span", "bl-side", side === "F" ? "D" : "G"));
+    var svg = blFigure(side, blZonesFor(side), sel, function (id) {
+      var a = (b.f.zones || []).slice(), i = a.indexOf(id), on = i < 0;
+      if (!on) { a.splice(i, 1); if (b.f.zd) delete b.f.zd[id]; } else a.push(id);
+      b.f.zones = a; blFlash = { txt: blZoneName(id), on: on, t: Date.now() }; blSave(b); blRefresh();
+    });
+    var box = el("div", "bl-zbox"); box.appendChild(svg);
+    if (blFlip) { svg.classList.add("flip"); blFlip = false; }
+    if (blFlash && Date.now() - blFlash.t < 1500) {
+      var fl = el("div", "bl-flash" + (blFlash.on ? "" : " off"), (blFlash.on ? "" : "Retiré : ") + blFlash.txt);
+      fl.style.animationDelay = "-" + (Date.now() - blFlash.t) + "ms"; box.appendChild(fl);
+      setTimeout(function () { if (fl.parentNode) fl.parentNode.removeChild(fl); }, 1500 - (Date.now() - blFlash.t));
+    }
+    row.appendChild(box);
+    row.appendChild(el("span", "bl-side", side === "F" ? "G" : "D")); col.appendChild(row);
+    col.appendChild(blZoomCtl(svg, side));
+    host.appendChild(col);
     if (!sel.length) { host.appendChild(el("div", "bl-zl", "Toucher l'endroit sur le bonhomme (D = droite de la victime)")); return; }
     // une ligne par lésion : type + douleur
     var TY = ["Douleur", "Suspicion de fracture", "Plaie", "Entorse", "Contusion", "Luxation"];
