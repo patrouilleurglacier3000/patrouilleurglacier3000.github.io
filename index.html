@@ -741,7 +741,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794490109";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794490343";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -830,7 +830,10 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   }
   function call(fn) {
     var args = Array.prototype.slice.call(arguments, 1);
-    if (window.API_URL) return fetch(window.API_URL, { method: "POST", body: JSON.stringify({ fn: fn, args: args }), headers: { "Content-Type": "text/plain;charset=utf-8" }, credentials: "omit", redirect: "follow" })
+    // délai max : sans réponse au bout de 25 s, on abandonne (sinon l'écran peut rester bloqué)
+    var ac = window.AbortController ? new AbortController() : null, to = ac ? setTimeout(function () { ac.abort(); }, 25000) : null;
+    if (window.API_URL) return fetch(window.API_URL, { method: "POST", body: JSON.stringify({ fn: fn, args: args }), headers: { "Content-Type": "text/plain;charset=utf-8" }, credentials: "omit", redirect: "follow", signal: ac ? ac.signal : undefined })
+      .then(function (r) { clearTimeout(to); return r; }, function (e) { clearTimeout(to); throw new Error(e && e.name === "AbortError" ? "Pas de réponse (réseau lent)" : "Pas de connexion"); })
       .then(function (r) { if (!r.ok) throw new Error("Pas de connexion"); return r.json(); })
       .then(function (o) { if (!o.ok) throw new Error(o.error); return o.data; });
     return new Promise(function (res, rej) {
@@ -892,7 +895,25 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   }
   function load(silent) {
     if (!silent) busy++;
-    return call("donnees", code).then(function (d) { if (!silent) busy--; if (syncN) return; data = d; saveCache(d); renderAll(); }, function (e) { if (!silent) busy--; handleError(e); });
+    return call("donnees", code).then(function (d) {
+      if (!silent) busy--; if (syncN) return; data = d; saveCache(d);
+      try { renderAll(); } catch (x) { loadFail("Erreur d'affichage (" + String(x && x.message || x).slice(0, 60) + ")"); }
+    }, function (e) { if (!silent) busy--; handleError(e); if (!data && code && !/CODE/.test(String(e && e.message || e))) loadFail(String(e && e.message || e).replace(/^Error:\s*/, "")); });
+  }
+  // Premier chargement raté : on ne reste pas bloqué sur « Chargement du stock… »
+  var loadRetry = null;
+  function loadFail(why) {
+    var v = $("view"); if (!v || data && !/Erreur d'affichage/.test(why)) return;
+    v.textContent = ""; var bx = el("div", "empty");
+    bx.appendChild(el("p", null, "Impossible de charger les données."));
+    bx.appendChild(el("p", null, why + ". Nouvel essai automatique dans 10 secondes."));
+    var b = el("button", "btn", "Réessayer maintenant"); b.type = "button"; b.style.setProperty("--tc", "var(--accent)"); b.style.marginTop = "12px";
+    b.addEventListener("click", function () { clearTimeout(loadRetry); v.textContent = ""; v.appendChild(el("p", "empty", "Chargement…")); load(); });
+    bx.appendChild(b);
+    var r = el("button", "btn", "Recharger l'application"); r.type = "button"; r.style.marginTop = "8px";
+    r.addEventListener("click", function () { location.reload(); }); bx.appendChild(r);
+    v.appendChild(bx);
+    clearTimeout(loadRetry); loadRetry = setTimeout(function () { if (!data) load(); }, 10000);
   }
   // Mise à jour automatique toutes les 30 s (sans déranger une saisie en cours)
   setInterval(function () {
@@ -3223,8 +3244,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   }
 
   /* ---------- Démarrage ---------- */
-  if (code) { try { var c0 = JSON.parse(localStorage.getItem(CACHE_KEY) || "null"); if (c0 && c0.stock) { data = c0; renderAll(); } } catch (e) {} }
-  load(!!data);
+  if (code) { try { var c0 = JSON.parse(localStorage.getItem(CACHE_KEY) || "null"); if (c0 && c0.stock) { data = c0; renderAll(); } } catch (e) { data = null; try { localStorage.removeItem(CACHE_KEY); } catch (x) {} } }
+  if (code) load(!!data); else renderGate(false);
 })();
 </script>
 </body>
