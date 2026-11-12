@@ -9,15 +9,21 @@
 <style>
 /* Barre d'onglets en haut, puis une colonne de cartes : même style que la page « Ma journée » */
 :root {
-  /* Fond ardoise sombre, cartes nettement plus claires : on distingue chaque carte d'un coup d'œil */
-  --bg: #eceef0; --paper: #ffffff; --ink: #1d2125; --muted: #5d646b; --line: #d8dce0;
+  /* Mêmes couleurs que la page « Ma journée » : claires le jour, sombres si le téléphone est en mode sombre */
+  --bg: #eef3f6; --paper: #ffffff; --ink: #17242e; --muted: #5b6c78; --line: #d5e0e7;
   --accent: #e8622c; --sky: #2f7fb8; --ok: #2e9461;
-  --bar: #2b2e31; --bar-fg: #c3c7cb; --bar-on: #ffffff;
-  --red: #d63a3a; --red-bg: #fde8e6; --yel: #b06d00; --yel-bg: #fff3d6; --grn: #2e9461; --grn-bg: #e4f4ea;
+  --bar: #17324a; --bar-fg: #c9d8e4; --bar-on: #ffffff;
+  --red: #d63a3a; --red-bg: #fde8e6; --yel: #b06d00; --yel-bg: #fff1d6; --grn: #2e9461; --grn-bg: #e6f4ec;
   --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --body: "Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
   color-scheme: light;
 }
+@media (prefers-color-scheme: dark) { :root {
+  --bg: #0f171d; --paper: #18232b; --ink: #e8eff4; --muted: #96a8b5; --line: #2a3a46;
+  --accent: #f08354; --sky: #6db3e4; --ok: #5fcf93;
+  --bar: #142a3d; --bar-fg: #8fa7ba; --bar-on: #ffffff;
+  --red: #f27a74; --red-bg: #3a1f20; --yel: #f0c46e; --yel-bg: #3a2c12; --grn: #5fcf93; --grn-bg: #16301f;
+  color-scheme: dark } }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; }
@@ -490,57 +496,70 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 @media (min-width: 1700px) { body { zoom: 1.4; } }
 
 
-/* ===== Thème clair (lisible dehors, au soleil) : fond gris clair, cartes blanches, barre anthracite ===== */
+/* ===== Présentation « Ma journée » : mêmes couleurs, cartes et pastilles ===== */
 .homebar button { background: rgba(255,255,255,.1); color: #fff; border: 1px solid rgba(255,255,255,.2); }
 .tab .badge, .btn, .filters button[aria-pressed="true"], .pl-seg button[aria-pressed="true"], .dm-filter button[aria-pressed="true"] { color: #fff; }
 .pl-back, .pl-add, .strip button[aria-current="date"], .tg-dh.today .n { color: #fff !important; }
 .pbtn.main.acc { color: #fff !important; }
-.card.srow .acts button.out { border-color: rgba(214,58,58,.5); color: var(--red); }
-.card.srow .acts button:nth-child(2) { border-color: rgba(46,148,97,.5); color: var(--grn); }
-.tile > svg { color: var(--tc); background: color-mix(in srgb, var(--tc) 14%, transparent); }
+.card.srow .acts button.out { border-color: color-mix(in srgb, var(--red) 55%, transparent); color: var(--red); }
+.card.srow .acts button:nth-child(2) { border-color: color-mix(in srgb, var(--grn) 55%, transparent); color: var(--grn); }
+.tile > svg { color: var(--tc); background: color-mix(in srgb, var(--tc) 16%, transparent); }
+@media (prefers-color-scheme: dark) {
+  .tile > svg { color: color-mix(in srgb, var(--tc) 55%, #fff); background: color-mix(in srgb, var(--tc) 28%, transparent); }
+  .tk .conf { background: var(--grn-bg); border-top-color: color-mix(in srgb, var(--grn) 40%, transparent); }
+  .tk .conf.del { background: var(--red-bg); border-top-color: color-mix(in srgb, var(--red) 40%, transparent); }
+  .tag2.old { background: var(--yel-bg); color: var(--yel); }
+  .tag2.took { background: var(--yel-bg); border-color: var(--yel); color: var(--yel); }
+  .tag2.ok { background: var(--grn-bg); border-color: var(--grn); color: var(--grn); }
+  .tk-switch .track { background: #3a4a56; }
+}
 /* Tâches équipe */
 #view.chalk .tk-tabs { background: var(--bg); }
-#view.chalk .tk-tabs button { background: var(--paper); border: 1px solid var(--line); color: var(--ink); font: 600 15px var(--body); padding: 8px 13px; border-radius: 10px; }
-#view.chalk .tk-tabs button[aria-pressed="true"] { background: #2b2e31; border-color: #2b2e31; color: #fff; }
-#view.chalk .tk-tabs .c { background: rgba(0,0,0,.08); color: inherit; font-size: 12px; }
-#view.chalk .tk-tabs button[aria-pressed="true"] .c { background: rgba(255,255,255,.2); }
+#view.chalk .tk-tabs button { background: var(--paper); border: 1px solid var(--line); color: var(--ink); font: 700 14px var(--body); padding: 8px 13px; border-radius: 999px; }
+#view.chalk .tk-tabs button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+#view.chalk .tk-tabs .c { background: color-mix(in srgb, var(--ink) 10%, transparent); color: inherit; font-size: 12px; }
+#view.chalk .tk-tabs button[aria-pressed="true"] .c { background: rgba(255,255,255,.25); }
 #view.chalk .tk-tabs .c.u { background: var(--red); color: #fff; }
-#view.chalk .tk-openadd { border: 1px dashed #aab1b8; color: var(--ink); background: transparent; font: 600 17px var(--body); padding: 13px 15px; border-radius: 10px; }
-#view.chalk .tk-list { gap: 8px; }
-#view.chalk .tk { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; box-shadow: none; grid-template-columns: 4px 48px minmax(0,1fr); }
-#view.chalk .tk .bar { background: transparent; }
-#view.chalk .tk.urg .bar { background: var(--red); }
-#view.chalk .tk .ck i { width: 24px; height: 24px; border: 2px solid #8a9096; border-radius: 6px; }
-#view.chalk .tk .bd { padding: 12px 14px 12px 2px; }
-#view.chalk .tk .tx { color: var(--ink); font: 400 18px/1.35 var(--body); }
-#view.chalk .tag2 { background: none; border: 0; padding: 0 10px 0 0; font-size: 13px; color: var(--muted); font-weight: 400; }
-#view.chalk .tag2.p { color: var(--red); font-weight: 700; letter-spacing: .04em; }
-#view.chalk .tk-add { background: var(--paper); border: 1px dashed #aab1b8; border-radius: 10px; }
-#view.chalk .tk-add .pbtn.main { background: #2b2e31; border-color: #2b2e31; color: #fff; }
-
-/* Glisser une tâche : droite = fait (vert), gauche = supprimer (rouge) */
-.sw { position: relative; border-radius: 10px; overflow: hidden; }
-.sw-bg { position: absolute; inset: 0; display: flex; align-items: center; padding: 0 22px; font: 700 16px var(--body); color: #fff; visibility: hidden; }
-.sw-bg span { display: none; }
-.sw.r .sw-bg { visibility: visible; background: #2e9461; justify-content: flex-start; }
-.sw.l .sw-bg { visibility: visible; background: #d63a3a; justify-content: flex-end; }
-.sw.r .sw-bg .a, .sw.l .sw-bg .b { display: block; }
+#view.chalk .tk-openadd { border: 1px solid var(--line); color: var(--muted); background: var(--paper); font: 17px var(--body); padding: 14px; border-radius: 14px; }
+#view.chalk .tk-list { gap: 6px; }
+#view.chalk .tk { background: var(--paper); border: 1px solid var(--line); border-left: 6px solid #2f7fb8; border-radius: 12px; box-shadow: none; grid-template-columns: 44px minmax(0,1fr); }
+#view.chalk .tk.urg { border-color: var(--red); border-left-color: var(--red); background: linear-gradient(90deg, var(--red-bg), var(--paper) 60%); }
+#view.chalk .tk.done { border-left-color: var(--line); }
+#view.chalk .tk .bar { display: none; }
+#view.chalk .tk .ck i { width: 22px; height: 22px; border: 2px solid var(--muted); border-radius: 6px; }
+#view.chalk .tk .ck.v i, #view.chalk .tk.done .ck i { background: var(--ok); border-color: var(--ok); color: #fff; }
+#view.chalk .tk .bd { padding: 11px 12px 11px 0; }
+#view.chalk .tk .tx { color: var(--ink); font: 16px/1.4 var(--body); }
+#view.chalk .tk.done .tx { text-decoration: line-through; color: var(--muted); }
+#view.chalk .tag2 { font: 700 11px var(--body); padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); background: none; color: var(--muted); }
+#view.chalk .tag2.p { background: var(--red); border-color: var(--red); color: #fff; }
+#view.chalk .tk-add { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; }
+#view.chalk .tk-add .pbtn.main { background: var(--accent); border-color: var(--accent); color: #fff; }
+#view.chalk .tk-sel { background: var(--paper); color: var(--ink); }
+/* Glisser une tâche : la carte s'écarte, on touche « C'est fait » (à gauche) ou « Supprimer » (à droite) */
+.sw { position: relative; border-radius: 12px; overflow: hidden; }
+.sw-bg { position: absolute; inset: 0; visibility: hidden; }
+.sw.r .sw-bg, .sw.l .sw-bg { visibility: visible; }
+.sw-act { position: absolute; top: 0; bottom: 0; width: 132px; border: 0; color: #fff; font: 700 15px var(--body); cursor: pointer; display: none; }
+.sw-act.a { left: 0; background: #2e9461; }
+.sw-act.b { right: 0; background: #d63a3a; }
+.sw.r .sw-act.a, .sw.l .sw-act.b { display: block; }
 .sw > .tk { position: relative; touch-action: pan-y; transition: transform .2s ease; user-select: none; -webkit-user-select: none; }
 .sw.drag > .tk { transition: none; }
-#snack { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 60; display: flex; align-items: center; gap: 12px; background: #2b2e31; color: #fff; font: 600 16px var(--body); border-radius: 12px; padding: 8px 8px 8px 16px; box-shadow: 0 6px 20px rgba(0,0,0,.25); max-width: calc(100% - 24px); white-space: nowrap; }
+#snack { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 60; display: flex; align-items: center; gap: 12px; background: #17242e; color: #fff; font: 600 16px var(--body); border-radius: 12px; padding: 8px 8px 8px 16px; box-shadow: 0 6px 20px rgba(0,0,0,.25); max-width: calc(100% - 24px); white-space: nowrap; }
 #snack[hidden] { display: none; }
 #snack button { border: 0; background: none; color: #ffb08a; font: 800 16px var(--body); padding: 10px 12px; cursor: pointer; }
 </style>
 <script>window.__LOGO="data:image/jpeg;base64,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";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#2b2e31">
+<meta name="theme-color" content="#17324a">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png?v=3">
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=3">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794470511";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794471282";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -693,7 +712,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   }
   // Mise à jour automatique toutes les 30 s (sans déranger une saisie en cours)
   setInterval(function () {
-    if (!data || busy || panel || document.hidden || Object.keys(countDraft).length || cmdOpen || evEdit || dmEdit || tkEdit || tkConfirm || tkDel || tkDraft || tkPend) return;
+    if (!data || busy || panel || document.hidden || Object.keys(countDraft).length || cmdOpen || evEdit || dmEdit || tkEdit || tkConfirm || tkDel || tkDraft || swOpen) return;
     var a = document.activeElement; if (a && /INPUT|SELECT|TEXTAREA/.test(a.tagName)) return;
     load(true);
   }, 30000);
@@ -946,9 +965,9 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var bd = el("button", "bd"); bd.type = "button";
     bd.appendChild(el("div", "tx", t.text));
     var tg = el("div", "tags");
-    if (urg && !done) tg.appendChild(el("span", "tag2 p", "URGENT"));
+    if (urg && !done) tg.appendChild(el("span", "tag2 p", "Urgent"));
     if (done) tg.appendChild(el("span", "tag2 ok", "Fait le " + tkDate(t.doneAt)));
-    if (!tkSect && tkZoneOf(t) !== TK_NONE) tg.appendChild(el("span", "tag2", "📍 " + tkZoneOf(t)));
+    if (!tkSect && tkZoneOf(t) !== TK_NONE) tg.appendChild(el("span", "tag2", tkZoneOf(t)));
     if (!done && t.created) {
       var days = Math.floor((new Date().setHours(0, 0, 0, 0) - new Date(t.created).setHours(0, 0, 0, 0)) / 864e5);
       tg.appendChild(el("span", "tag2" + (days >= 7 ? " old" : ""), days <= 0 ? "aujourd'hui" : days === 1 ? "hier" : "il y a " + days + " j"));
@@ -1000,18 +1019,16 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     return row;
   }
 
-  /* ---------- Glisser (doigt ou souris) ---------- */
-  var snackT = null;
-  function snack(msg, undo) {
-    var s = $("snack"); if (!s) { s = el("div"); s.id = "snack"; s.setAttribute("role", "status"); document.body.appendChild(s); }
-    s.textContent = ""; s.appendChild(el("span", null, msg));
-    if (undo) { var b = el("button", null, "Annuler"); b.type = "button"; b.addEventListener("click", undo); s.appendChild(b); }
-    s.hidden = false; clearTimeout(snackT); snackT = setTimeout(function () { s.hidden = true; }, 5000);
-  }
-  function snackHide() { var s = $("snack"); if (s) s.hidden = true; clearTimeout(snackT); }
+  /* ---------- Glisser (doigt ou souris) : la carte s'écarte et montre un bouton à toucher ---------- */
+  var swOpen = null, SW_W = 132;
+  function swClose(now) { if (!swOpen) return; var o = swOpen; swOpen = null; o.node.style.transform = ""; setTimeout(function () { o.w.classList.remove("r", "l"); }, now ? 0 : 220); }
+  document.addEventListener("pointerdown", function (e) {
+    if (swOpen && !e.target.closest(".sw-act")) { var o = swOpen; if (o.node.contains(e.target)) o.swallow = true; swClose(); }
+  }, true);
   function swipeable(node, o) {
-    var w = el("div", "sw"), bg = el("div", "sw-bg");
-    if (o.right) bg.appendChild(el("span", "a", o.rightLabel)); if (o.left) bg.appendChild(el("span", "b", o.leftLabel));
+    var w = el("div", "sw"), bg = el("div", "sw-bg"), me = { w: w, node: node, swallow: false };
+    if (o.right) { var ba = el("button", "sw-act a", o.rightLabel); ba.type = "button"; ba.addEventListener("click", function () { swClose(true); o.right(); }); bg.appendChild(ba); }
+    if (o.left) { var bb = el("button", "sw-act b", o.leftLabel); bb.type = "button"; bb.addEventListener("click", function () { swClose(true); o.left(); }); bg.appendChild(bb); }
     w.appendChild(bg); w.appendChild(node);
     var x0 = 0, y0 = 0, dx = 0, st = 0, pid = null, moved = false;
     node.addEventListener("pointerdown", function (e) {
@@ -1027,36 +1044,26 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
           st = 2; moved = true; w.classList.add("drag"); try { node.setPointerCapture(pid); } catch (x) {}
         } else { if (Math.abs(my) > 12) st = 0; return; }
       }
-      dx = mx; if (dx > 0 && !o.right) dx = 0; if (dx < 0 && !o.left) dx = 0;
+      dx = Math.max(-SW_W * 1.3, Math.min(SW_W * 1.3, mx)); if (dx > 0 && !o.right) dx = 0; if (dx < 0 && !o.left) dx = 0;
       w.classList.toggle("r", dx > 0); w.classList.toggle("l", dx < 0);
       node.style.transform = "translateX(" + dx + "px)"; e.preventDefault();
     });
     function end() {
       if (st !== 2) { st = 0; return; }
-      st = 0; w.classList.remove("drag"); var W = w.offsetWidth;
-      if (Math.abs(dx) > W * 0.35) { node.style.transform = "translateX(" + (dx > 0 ? W : -W) + "px)"; setTimeout(dx > 0 ? o.right : o.left, 180); }
+      st = 0; w.classList.remove("drag");
+      if (Math.abs(dx) > 50) { swOpen = me; node.style.transform = "translateX(" + (dx > 0 ? SW_W : -SW_W) + "px)"; }
       else { node.style.transform = ""; setTimeout(function () { w.classList.remove("r", "l"); }, 220); }
     }
     node.addEventListener("pointerup", end);
     node.addEventListener("pointercancel", function () { dx = 0; end(); });
-    node.addEventListener("click", function (e) { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
+    node.addEventListener("click", function (e) { if (moved || me.swallow) { e.stopPropagation(); e.preventDefault(); moved = false; me.swallow = false; } }, true);
     return w;
   }
-  var tkPend = null; // tâche glissée : on attend 5 s (bouton « Annuler ») avant de l'enregistrer
-  function tkCommit() {
-    if (!tkPend) return; var p = tkPend; tkPend = null; clearTimeout(p.timer);
-    if (p.kind === "del") act("supprimerTache", [p.id], "Supprimée"); else act("terminerTache", [p.id, "", false], "Bien joué !");
-  }
-  function tkSwipe(id, kind) {
-    tkCommit(); tkOpen = null; tkEdit = null; tkDisarm();
-    tkPend = { id: id, kind: kind, timer: setTimeout(function () { snackHide(); tkCommit(); }, 5000) };
-    snack(kind === "del" ? "Tâche supprimée" : "Tâche faite ✓", function () { if (tkPend) clearTimeout(tkPend.timer); tkPend = null; snackHide(); renderTaches(); });
-    renderTaches();
-  }
-  document.addEventListener("visibilitychange", function () { if (document.hidden) { snackHide(); tkCommit(); } });
   function tkWrap(t) {
     var done = t.state === "fait";
-    return swipeable(tkRow(t), { right: done ? null : function () { tkSwipe(t.id, "done"); }, rightLabel: "✓ Fait", left: function () { tkSwipe(t.id, "del"); }, leftLabel: "Supprimer 🗑" });
+    return swipeable(tkRow(t), {
+      right: done ? null : function () { tkOpen = null; tkDisarm(); act("terminerTache", [t.id, "", false], "Bien joué !"); }, rightLabel: "✓ C'est fait",
+      left: function () { tkOpen = null; tkDisarm(); act("supprimerTache", [t.id], "Supprimée"); }, leftLabel: "Supprimer" });
   }
   function tkZoneOf(t) {
     var z = TK_ZONES;
@@ -1066,7 +1073,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   function renderTaches() {
     var v = clearView(); renderHomebar();
     v.classList.toggle("chalk", tkChalk);
-    var zones = TK_ZONES, every = (data.taches || []).filter(function (t) { return !tkPend || t.id !== tkPend.id; });
+    swOpen = null;
+    var zones = TK_ZONES, every = data.taches || [];
     if (tkSect && zones.indexOf(tkSect) < 0) tkSect = "";
     // onglets : Tout + un par secteur
     var tabs = el("div", "tk-tabs");
