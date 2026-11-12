@@ -669,9 +669,10 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .fbk-2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; padding: 6px 0; border-bottom: 1px solid color-mix(in srgb, var(--g) 18%, transparent); }
 .fbk-2:last-child { border-bottom: 0; }
 .fbk-2 .lab { grid-column: 1 / -1; font-size: 14px; color: var(--muted); font-weight: 600; }
-.fbk-2 .c { display: flex; flex-direction: column; gap: 3px; border-radius: 10px; padding: 6px 8px; }
-.fbk-2 .c small { font: 800 11px var(--body); letter-spacing: .08em; text-transform: uppercase; }
-.fbk-2 .c b { font: 700 15px/1.25 var(--body); }
+.fbk-2 .c { display: flex; flex-direction: column; gap: 6px; border-radius: 10px; padding: 6px; }
+.fbk-2 .c .ic { align-self: flex-start; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font: 900 16px var(--body); color: #fff !important; }
+.fbk-2 .c.bad .ic { background: #d63a3a; } .fbk-2 .c.ok .ic { background: #2e9461; }
+.fbk-2 .c b { font: 700 16px/1.25 var(--body); background: var(--paper); border-radius: 8px; padding: 6px 8px; box-shadow: 0 1px 2px rgba(0,0,0,.12); }
 .fbk-2 .c i { font-size: 15px; color: var(--muted); }
 .fbk-2 .c.bad { background: color-mix(in srgb, #d63a3a 10%, var(--paper)); } .fbk-2 .c.bad small, .fbk-2 .c.bad b { color: var(--red); }
 .fbk-2 .c.ok { background: color-mix(in srgb, #2e9461 10%, var(--paper)); } .fbk-2 .c.ok small, .fbk-2 .c.ok b { color: var(--grn); }
@@ -829,7 +830,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794496001";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794496186";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2650,7 +2651,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   // Fiche en blocs : un bloc de couleur par partie, dans l'ordre du message radio
   var BL_GRP = { "Plainte principale": "pl", "xABCDE": "abc", "Circulation": "cv", "Ventilation": "cv", "Neurologique": "cv", "Bilan complémentaire": "cv", "Première fois": "mal", "Depuis": "mal", "Malaise": "mal",
     "Antécédents": "ant", "Antécédents (MHTA)": "ant", "Maladies": "ant", "Hospitalisations": "ant", "Traitements": "ant", "Allergies": "ant", "Suivi · réévaluations": "sv", "Évacuation": "ev", "Matériel demandé": "ev" };
-  var BL_GTT = { pl: ["Plainte principale", "#d63a3a"], abc: ["xABCDE", "#2e9461"], cv: ["Bilan complémentaire", "#2f7fb8"], mal: ["Malaise", "#8e4fc2"], ant: ["Antécédents", "#8e4fc2"], sv: ["Suivi · réévaluations", "#00838F"], ev: ["Évacuation", "#e8622c"] };
+  var BL_GTT = { pl: ["Plainte principale", "#d63a3a"], abc: ["xABCDE", "#2e9461"], cv: ["Bilan complémentaire", "#2f7fb8"], mal: ["Malaise", "#8e4fc2"], ant: ["Antécédents médicaux", "#8e4fc2"], sv: ["Suivi · réévaluations", "#00838F"], ev: ["Évacuation", "#e8622c"] };
   function blSheet(b) {
     var box = el("div", "fbm blk"), cur = null, curK = "";
     function block(k, bad) {
@@ -2667,10 +2668,13 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       if (l.table) { host.appendChild(blSuiviTable(b)); return; }
       if (l.head) { if (l.val) { var ev = el("div", "fbk-big"); String(l.val).split(" + ").forEach(function (x) { ev.appendChild(el("span", null, x)); }); host.appendChild(ev); } return; }
       if (l[5]) { // deux colonnes : à gauche ce qui ne va pas, à droite ce qui est normal
-        var tw = el("div", "fbk-2"); if (l[0] !== BL_GTT[k][0]) tw.appendChild(el("span", "lab", l[0]));
+        var tw = el("div", "fbk-2"); if (l[0] !== BL_GTT[k][0] && !(k === "ant")) tw.appendChild(el("span", "lab", l[0]));
         var cl = el("div", "c bad"), cr = el("div", "c ok");
-        cl.appendChild(el("small", null, "À signaler")); if (l[5].bad.length) l[5].bad.forEach(function (x) { cl.appendChild(el("b", null, x)); }); else cl.appendChild(el("i", null, "rien"));
-        cr.appendChild(el("small", null, "Normal")); if (l[5].ok.length) l[5].ok.forEach(function (x) { cr.appendChild(el("b", null, x)); }); else cr.appendChild(el("i", null, "—"));
+        // en-têtes en symboles seulement (rien à lire à la radio)
+        var hb = el("span", "ic", "!"); hb.setAttribute("aria-label", "À signaler"); cl.appendChild(hb);
+        if (l[5].bad.length) l[5].bad.forEach(function (x) { cl.appendChild(el("b", null, x)); }); else cl.appendChild(el("i", null, "—"));
+        var ho = el("span", "ic", "✓"); ho.setAttribute("aria-label", "Normal"); cr.appendChild(ho);
+        if (l[5].ok.length) l[5].ok.forEach(function (x) { cr.appendChild(el("b", null, x)); }); else cr.appendChild(el("i", null, "—"));
         tw.appendChild(cl); tw.appendChild(cr); host.appendChild(tw); return;
       }
       var r = el("div", "fbm-r" + (l[2] === "ok" ? " ok" : l[2] === "todo" ? " todo" : l[2] ? " bad" : "") + (l[0] === BL_GTT[k][0] || (k === "ant" && l[0] === "Antécédents") ? " nolab" : ""));
@@ -2828,8 +2832,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     });
     s3.appendChild(ng);
     // 4. MHTA
-    var s4 = blSec(v, N(), "Complémentaire · antécédents", "#6A1B9A");
-    var mhh = el("div", "bf-sub", "Antécédents (MHTA)"); mhh.style.setProperty("--s", "#6A1B9A"); s4.appendChild(mhh);
+    var s4 = blSec(v, N(), "Antécédents médicaux", "#6A1B9A");
+    var mhh = el("div", "bf-sub", "Maladies, hospitalisations, traitements, allergies"); mhh.style.setProperty("--s", "#6A1B9A"); s4.appendChild(mhh);
     BL_MHTA.forEach(function (m) {
       var bad = !!f[m.id + "_x"], wrap = el("div", "bl-mh" + (bad ? " bad" : ""));
       var bt = el("button", "bl-chk" + (bad ? " bad" : ""), (bad ? "! " : "✓ ") + m.q + (bad ? "" : " : rien")); bt.type = "button";
