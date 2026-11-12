@@ -568,7 +568,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .bf-l { background: var(--c); color: var(--f); display: flex; justify-content: center; align-items: center; }
 .bf-l b { font: 800 22px var(--body); }
 .bf-b { padding: 5px 7px 7px; display: flex; flex-wrap: wrap; gap: 5px 12px; align-items: center; min-width: 0; }
-.bf-t { flex: 0 0 100%; font: 800 12px var(--body); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.bf-t { flex: 0 0 100%; font: 800 15px var(--body); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
 .bf-r { display: flex; align-items: center; gap: 4px; min-width: 0; }
 .bf-r.w { flex: 1 1 100%; flex-wrap: wrap; }
 .bf-q { font: 700 13px/1.1 var(--body); color: var(--ink); margin-right: 2px; }
@@ -595,8 +595,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .bl-badl { flex: 1 1 100%; font: 700 14px var(--body); color: var(--red); }
 .bf-o.go { background: #C62828; border-color: #C62828; color: #fff; }
 .bf-o.st { min-width: 40px; padding: 3px 6px; font-size: 14px; }
-.bf-sub { flex: 1 1 100%; font: 800 13px var(--body); text-transform: uppercase; letter-spacing: .05em; color: var(--s); border-bottom: 2px solid var(--s); padding: 4px 0 2px; margin-top: 2px; }
-.bl-limbs { flex: 1 1 100%; display: flex; background: var(--red-bg); border-radius: 9px; padding: 6px; }
+.bf-sub { flex: 1 1 100%; font: 800 15px var(--body); text-transform: uppercase; letter-spacing: .05em; color: var(--s); border-bottom: 2px solid var(--s); padding: 4px 0 2px; margin-top: 2px; }
+.bl-limbs { flex: 1 1 100%; display: flex; flex-direction: column; gap: 4px; background: var(--red-bg); border-radius: 9px; padding: 8px; }
 .bl-limbs .bf-r { flex-direction: column; align-items: stretch; width: 100%; }
 .bl-limbs .bf-c { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .bl-limbs .bf-o { font-size: 13.5px; padding: 4px 6px; }
@@ -644,16 +644,31 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .fbm-r:last-child { border-bottom: 0; }
 @media (max-width: 480px) { .fbm-r { grid-template-columns: 1fr; gap: 0; padding: 6px 0; } .fbm-r span { font-size: 13px; } }
 .bl-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; flex: 1 1 100%; }
-.bl-fig { display: flex; flex-direction: column; align-items: center; background: var(--bg); border-radius: 12px; padding: 6px 2px; }
-.bl-fig-t { font: 800 14px var(--body); letter-spacing: .08em; }
+.bl-fig { display: flex; flex-direction: column; align-items: center; background: var(--bg); border-radius: 14px; padding: 8px 2px 4px; }
+.bl-fig-t { font: 800 15px var(--body); letter-spacing: .1em; }
 .bl-fig-r { display: flex; align-items: center; gap: 2px; width: 100%; justify-content: center; }
+.bl-fig-r.sm { max-width: 220px; margin: 4px auto; }
 .bl-side { font: 800 20px var(--body); color: #C62828; width: 16px; text-align: center; flex: none; }
-.bl-svg { width: 100%; max-width: 190px; height: auto; touch-action: manipulation; }
-.bl-z { fill: color-mix(in srgb, var(--ink) 9%, var(--paper)); stroke: color-mix(in srgb, var(--ink) 45%, transparent); stroke-width: 1.2; cursor: pointer; }
-.bl-z.on { fill: #d63a3a; stroke: #8f1d1d; }
-.bl-z:focus { outline: none; stroke: var(--accent); stroke-width: 2.5; }
+.bl-svg { width: 100%; max-width: 200px; height: auto; touch-action: manipulation; }
+.bl-svg.sm { max-width: 120px; }
+.bl-skin { fill: color-mix(in srgb, var(--ink) 7%, var(--paper)); }
+.bl-zv { fill: transparent; stroke: color-mix(in srgb, var(--ink) 22%, transparent); stroke-width: 1.2; }
+.bl-zv.on { fill: #d63a3a; stroke: #fff; }
+.bl-z { fill: transparent; stroke: none; cursor: pointer; }
+.bl-z:focus { outline: none; stroke: var(--accent); stroke-width: 3; }
+.bl-ol { fill: none; stroke: color-mix(in srgb, var(--ink) 70%, transparent); stroke-width: 2.2; pointer-events: none; }
+.bl-spine { stroke: color-mix(in srgb, var(--ink) 35%, transparent); stroke-width: 1.5; stroke-dasharray: 4 4; pointer-events: none; }
 .bl-zl { flex: 1 1 100%; font: 600 14px var(--body); color: var(--muted); }
 .bl-zl.on { font: 800 16px var(--body); color: var(--red); }
+.bl-les { flex: 1 1 100%; border: 2px solid #d63a3a; border-radius: 12px; padding: 8px; display: flex; flex-direction: column; gap: 6px; background: var(--paper); }
+.bl-les-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.bl-les-h b { font: 800 17px var(--body); color: var(--red); }
+.bl-les-x { border: 0; background: none; color: var(--muted); font: 600 14px var(--body); text-decoration: underline; cursor: pointer; }
+.bl-les-d { display: flex; flex-direction: column; gap: 4px; }
+.bl-scale { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); gap: 3px; }
+.bl-sc { min-height: 40px; border: 2px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); font: 800 15px var(--body); padding: 0; cursor: pointer; }
+.bl-sc.on { background: hsl(var(--h) 70% 40%); border-color: hsl(var(--h) 70% 40%); color: #fff; }
+.bf-sub.big { font-size: 17px; }
 .bl-ab span { font-size: 9.5px !important; line-height: 1.1; text-align: center; overflow-wrap: anywhere; padding: 0 1px; }
 .bl-sum { white-space: pre-wrap; font: 15px/1.5 var(--body); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin: 4px 0 0; }
 .bl-acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
@@ -684,7 +699,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794487961";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794488784";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2041,64 +2056,136 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     { id: "n_sen", ok: "Sensibilité des 4 membres", bad: "Trouble de la sensibilité", limbs: 1 }];
   var BL_LIMBS = ["Membre supérieur droit", "Membre supérieur gauche", "Membre inférieur droit", "Membre inférieur gauche"];
   function blNeuroTxt(f, n) { if (f[n.id] !== "bad") return n.ok; var m = f[n.id + "_m"] || []; return n.bad + (n.limbs && m.length ? " : " + m.join(", ").toLowerCase() : ""); }
+  var BL_MAT = ["Matelas coquille", "Collier cervical", "Attelle de jambe", "Attelle de bras", "Planche de sauvetage", "Civière à aubes", "Barquette"];
   var BL_MHTA = [{ id: "m", q: "Maladies" }, { id: "h", q: "Hospitalisations" }, { id: "tr", q: "Traitements" }, { id: "al", q: "Allergies" }];
   var BL_MECA = { "Chute à ski": "", "Chute à pied": "", "Chute": "une chute", "Coll. skieur": "une collision avec un skieur", "Coll. obstacle": "une collision avec un obstacle", "Avalanche": "une avalanche", "Malaise": "un malaise", "Autre": "" };
   var BL_OU = ["Tête", "Nuque", "Dos", "Épaule", "Bras", "Poignet / main", "Thorax", "Ventre", "Bassin", "Hanche", "Genou", "Jambe", "Cheville"];
-  /* Bonhomme : on touche l'endroit douloureux. Face : la droite de la victime est à gauche de l'écran. */
+  /* Bonhomme dessiné : silhouette lissée, zones découpées dedans. Face : la droite de la victime est à gauche de l'écran. */
+  var BL_HALF = [[109,64],[111,76],[124,80],[140,86],[152,98],[156,128],[160,166],[164,196],[169,234],[173,262],[178,280],[174,298],[164,301],[159,286],[157,264],[150,232],[145,200],[139,162],[134,130],[133,160],[129,198],[135,230],[139,268],[134,326],[136,362],[126,408],[134,428],[106,431],[103,418],[108,402],[110,362],[107,328],[104,284],[100,252]];
+  function blCR(p) { // courbe lisse (Catmull-Rom) fermée
+    var d = "M" + p[0][0] + " " + p[0][1], n = p.length;
+    for (var i = 0; i < n; i++) {
+      var p0 = p[(i - 1 + n) % n], p1 = p[i], p2 = p[(i + 1) % n], p3 = p[(i + 2) % n];
+      d += " C" + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + " " + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1) + " " + (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + " " + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1) + " " + p2[0] + " " + p2[1];
+    }
+    return d + "Z";
+  }
+  var BL_SIL = (function () { var r = BL_HALF, l = r.slice().reverse().map(function (q) { return [200 - q[0], q[1]]; }); return blCR(r.concat(l.slice(1, -1))); })();
+  // zones (côté gauche de l'écran ; « m » = la partie miroir existe). F = face seulement, B = dos seulement
   var BL_PARTS = [
-    { k: "tete", f: "Tête", b: "Arrière de la tête", s: 0, sh: ["e", 60, 22, 15, 18] },
-    { k: "cou", f: "Cou", b: "Nuque", s: 0, sh: ["r", 53, 41, 14, 10, 3] },
-    { k: "epaule", f: "Épaule", fem: 1, s: 1, sh: ["r", 27, 52, 17, 16, 7] },
-    { k: "thorax", f: "Thorax", b: "Haut du dos", s: 0, sh: ["r", 45, 52, 30, 38, 4] },
-    { k: "ventre", f: "Ventre", b: "Bas du dos", s: 0, sh: ["r", 45, 91, 30, 26, 4] },
-    { k: "bassin", f: "Bassin", b: "Fesses", s: 0, sh: ["r", 45, 118, 30, 20, 5] },
-    { k: "bras", f: "Bras", s: 1, sh: ["r", 25, 69, 15, 38, 6] },
-    { k: "avbras", f: "Avant-bras", s: 1, sh: ["r", 21, 108, 15, 34, 6] },
-    { k: "main", f: "Main", fem: 1, s: 1, sh: ["r", 18, 143, 15, 17, 6] },
-    { k: "cuisse", f: "Cuisse", fem: 1, s: 1, sh: ["r", 45, 139, 14, 46, 6] },
-    { k: "genou", f: "Genou", s: 1, sh: ["r", 46, 186, 13, 13, 5] },
-    { k: "jambe", f: "Jambe", fem: 1, s: 1, sh: ["r", 46, 200, 13, 36, 5] },
-    { k: "pied", f: "Pied / cheville", s: 1, sh: ["r", 43, 237, 16, 12, 5] }];
+    { k: "tete", f: "Tête", b: "Arrière de la tête", r: [62, 6, 76, 58] },
+    { k: "cou", f: "Cou", b: "Nuque", r: [80, 62, 40, 18] },
+    { k: "epaule", f: "Épaule", fem: 1, m: 1, r: [36, 78, 32, 32] },
+    { k: "thorax", f: "Thorax", only: "F", r: [80, 80, 40, 72] },
+    { k: "omoplate", f: "Omoplate", fem: 1, m: 1, only: "B", r: [62, 82, 37, 52] },
+    { k: "hautdos", f: "Haut du dos", only: "B", r: [99, 80, 2, 70], wide: [93, 80, 14, 70] },
+    { k: "cotes", f: "Côtes", fem: 1, m: 1, plural: 1, r: [66, 108, 18, 62] },
+    { k: "ventre", f: "Ventre", b: "Bas du dos", r: [60, 152, 80, 52] },
+    { k: "bassin", f: "Bassin", b: "Fesses", r: [56, 204, 88, 50] },
+    { k: "bras", f: "Bras", m: 1, r: [20, 106, 44, 92] },
+    { k: "avbras", f: "Avant-bras", m: 1, r: [14, 198, 42, 64] },
+    { k: "main", f: "Main", fem: 1, m: 1, r: [10, 262, 46, 44] },
+    { k: "cuisse", f: "Cuisse", fem: 1, m: 1, r: [54, 252, 46, 72] },
+    { k: "genou", f: "Genou", m: 1, r: [56, 324, 44, 24] },
+    { k: "jambe", f: "Jambe", fem: 1, m: 1, r: [56, 348, 44, 56] },
+    { k: "pied", f: "Pied / cheville", m: 1, r: [56, 404, 50, 32] }];
   function blZoneName(id) {
     var p = id.split("|"), part = BL_PARTS.filter(function (x) { return x.k === p[1]; })[0]; if (!part) return id;
-    if (!part.s) return p[0] === "F" ? part.f : part.b;
-    return part.f + " " + (p[2] === "d" ? (part.fem ? "droite" : "droit") : (part.fem ? "gauche" : "gauche")) + (p[0] === "B" ? " (arrière)" : "");
+    if (!part.m) return p[0] === "F" || !part.b ? part.f : part.b;
+    var adj = p[2] === "d" ? (part.fem ? "droite" : "droit") : "gauche"; if (part.plural) adj += "s";
+    return part.f + " " + adj + (p[0] === "B" && ["epaule", "bras", "avbras", "main", "cuisse", "genou", "jambe", "pied"].indexOf(part.k) >= 0 ? " (arrière)" : "");
+  }
+  var blSvgN = 0;
+  function blFigure(side, zones, sel, onTap, small) {
+    var NS = "http://www.w3.org/2000/svg", svg = document.createElementNS(NS, "svg"), uid = "blc" + (++blSvgN);
+    svg.setAttribute("viewBox", "0 0 200 440"); svg.setAttribute("class", "bl-svg" + (small ? " sm" : ""));
+    var defs = document.createElementNS(NS, "defs"), cp = document.createElementNS(NS, "clipPath"); cp.setAttribute("id", uid);
+    var hp = document.createElementNS(NS, "ellipse"); hp.setAttribute("cx", 100); hp.setAttribute("cy", 36); hp.setAttribute("rx", 23); hp.setAttribute("ry", 28); cp.appendChild(hp);
+    var bp = document.createElementNS(NS, "path"); bp.setAttribute("d", BL_SIL); cp.appendChild(bp); defs.appendChild(cp); svg.appendChild(defs);
+    var base = document.createElementNS(NS, "g"); base.setAttribute("clip-path", "url(#" + uid + ")");
+    var bg = document.createElementNS(NS, "rect"); bg.setAttribute("width", 200); bg.setAttribute("height", 440); bg.setAttribute("class", "bl-skin"); base.appendChild(bg);
+    zones.forEach(function (z) {
+      var vz = document.createElementNS(NS, "rect"); vz.setAttribute("x", z.x); vz.setAttribute("y", z.y); vz.setAttribute("width", z.w); vz.setAttribute("height", z.h);
+      vz.setAttribute("class", "bl-zv" + (sel.indexOf(z.id) >= 0 ? " on" : "")); base.appendChild(vz);
+    });
+    svg.appendChild(base);
+    var hit = document.createElementNS(NS, "g");
+    zones.forEach(function (z) {
+      var n = document.createElementNS(NS, "rect"); n.setAttribute("x", z.x); n.setAttribute("y", z.y); n.setAttribute("width", z.w); n.setAttribute("height", z.h);
+      var on = sel.indexOf(z.id) >= 0; n.setAttribute("class", "bl-z" + (on ? " on" : "")); n.setAttribute("role", "button"); n.setAttribute("tabindex", "0");
+      n.setAttribute("aria-label", z.name); n.setAttribute("aria-pressed", on ? "true" : "false");
+      var t = document.createElementNS(NS, "title"); t.textContent = z.name; n.appendChild(t);
+      n.addEventListener("click", function () { onTap(z.id); }); n.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onTap(z.id); } });
+      hit.appendChild(n);
+    });
+    var ol = document.createElementNS(NS, "path"); ol.setAttribute("d", BL_SIL); ol.setAttribute("class", "bl-ol"); svg.appendChild(ol);
+    var oh = document.createElementNS(NS, "ellipse"); oh.setAttribute("cx", 100); oh.setAttribute("cy", 36); oh.setAttribute("rx", 23); oh.setAttribute("ry", 28); oh.setAttribute("class", "bl-ol"); svg.appendChild(oh);
+    if (side === "B") { var sp = document.createElementNS(NS, "path"); sp.setAttribute("d", "M100 80 L100 205"); sp.setAttribute("class", "bl-spine"); svg.appendChild(sp); }
+    svg.appendChild(hit);
+    return svg;
+  }
+  function blZonesFor(side) {
+    var out = [];
+    BL_PARTS.forEach(function (pt) {
+      if (pt.only && pt.only !== side) return;
+      var r = pt.wide || pt.r;
+      if (!pt.m) { out.push({ id: side + "|" + pt.k, x: pt.k === "hautdos" ? 86 : r[0], y: r[1], w: pt.k === "hautdos" ? 28 : r[2], h: r[3] }); return; }
+      // gauche de l'écran = droite de la victime de face, gauche de la victime de dos
+      [["l", side === "F" ? "d" : "g"], ["r", side === "F" ? "g" : "d"]].forEach(function (s) {
+        var x = s[0] === "l" ? r[0] : 200 - r[0] - r[2];
+        out.push({ id: side + "|" + pt.k + "|" + s[1], x: x, y: r[1], w: r[2], h: r[3] });
+      });
+    });
+    out.forEach(function (z) { z.name = blZoneName(z.id); });
+    return out;
   }
   function blBody(b, host) {
-    var NS = "http://www.w3.org/2000/svg", sel = b.f.zones || [];
-    var wrap = el("div", "bl-body");
+    var sel = b.f.zones || [], wrap = el("div", "bl-body");
     ["F", "B"].forEach(function (side) {
-      var col = el("div", "bl-fig");
-      col.appendChild(el("div", "bl-fig-t", side === "F" ? "FACE" : "DOS"));
+      var col = el("div", "bl-fig"); col.appendChild(el("div", "bl-fig-t", side === "F" ? "FACE" : "DOS"));
       var row = el("div", "bl-fig-r");
-      // côté de la victime affiché de part et d'autre
-      var leftLab = side === "F" ? "D" : "G", rightLab = side === "F" ? "G" : "D";
-      row.appendChild(el("span", "bl-side", leftLab));
-      var svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", "0 0 120 252"); svg.setAttribute("class", "bl-svg"); svg.setAttribute("role", "group"); svg.setAttribute("aria-label", side === "F" ? "Silhouette de face" : "Silhouette de dos");
-      BL_PARTS.forEach(function (pt) {
-        var inst = pt.s ? [["v", "l"], ["v", "r"]] : [["c", ""]];
-        inst.forEach(function (it) {
-          var sh = pt.sh.slice(), x = sh[1];
-          var mir = it[1] === "r";
-          // côté réel de la victime : face -> gauche de l'écran = droite ; dos -> gauche de l'écran = gauche
-          var vside = !pt.s ? "" : (side === "F" ? (mir ? "g" : "d") : (mir ? "d" : "g"));
-          var id = side + "|" + pt.k + (vside ? "|" + vside : ""), on = sel.indexOf(id) >= 0, node;
-          if (sh[0] === "e") { node = document.createElementNS(NS, "ellipse"); node.setAttribute("cx", sh[1]); node.setAttribute("cy", sh[2]); node.setAttribute("rx", sh[3]); node.setAttribute("ry", sh[4]); }
-          else { node = document.createElementNS(NS, "rect"); node.setAttribute("x", mir ? 120 - x - sh[3] : x); node.setAttribute("y", sh[2]); node.setAttribute("width", sh[3]); node.setAttribute("height", sh[4]); node.setAttribute("rx", sh[5] || 3); }
-          node.setAttribute("class", "bl-z" + (on ? " on" : "")); node.setAttribute("tabindex", "0"); node.setAttribute("role", "button");
-          node.setAttribute("aria-label", blZoneName(id)); node.setAttribute("aria-pressed", on ? "true" : "false");
-          var t = document.createElementNS(NS, "title"); t.textContent = blZoneName(id); node.appendChild(t);
-          var tog = function () { var a = (b.f.zones || []).slice(), i = a.indexOf(id); if (i >= 0) a.splice(i, 1); else a.push(id); b.f.zones = a; blSave(b); blRefresh(); };
-          node.addEventListener("click", tog); node.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tog(); } });
-          svg.appendChild(node);
-        });
-      });
-      row.appendChild(svg); row.appendChild(el("span", "bl-side", rightLab)); col.appendChild(row);
-      wrap.appendChild(col);
+      row.appendChild(el("span", "bl-side", side === "F" ? "D" : "G"));
+      row.appendChild(blFigure(side, blZonesFor(side), sel, function (id) {
+        var a = (b.f.zones || []).slice(), i = a.indexOf(id); if (i >= 0) { a.splice(i, 1); if (b.f.zd) delete b.f.zd[id]; } else a.push(id); b.f.zones = a; blSave(b); blRefresh();
+      }));
+      row.appendChild(el("span", "bl-side", side === "F" ? "G" : "D")); col.appendChild(row); wrap.appendChild(col);
     });
     host.appendChild(wrap);
-    var names = (b.f.zones || []).map(blZoneName);
-    host.appendChild(el("div", "bl-zl" + (names.length ? " on" : ""), names.length ? names.join(" · ") : "Toucher l'endroit douloureux sur le bonhomme (D = droite de la victime)"));
+    if (!sel.length) { host.appendChild(el("div", "bl-zl", "Toucher l'endroit sur le bonhomme (D = droite de la victime)")); return; }
+    // une ligne par lésion : type + douleur
+    var TY = ["Douleur", "Suspicion de fracture", "Plaie", "Entorse", "Contusion", "Luxation"];
+    sel.forEach(function (id) {
+      var zd = (b.f.zd = b.f.zd || {})[id] = b.f.zd[id] || { t: [], dl: "" }, card = el("div", "bl-les");
+      var hd = el("div", "bl-les-h"); hd.appendChild(el("b", null, blZoneName(id)));
+      var x = el("button", "bl-les-x", "Retirer"); x.type = "button"; x.addEventListener("click", function () { b.f.zones = (b.f.zones || []).filter(function (z) { return z !== id; }); delete b.f.zd[id]; blSave(b); blRefresh(); });
+      hd.appendChild(x); card.appendChild(hd);
+      var tc = el("div", "bf-c");
+      TY.forEach(function (t) { var on = zd.t.indexOf(t) >= 0, bt = el("button", "bf-o" + (on ? " on" : ""), t); bt.type = "button"; bt.addEventListener("click", function () { var a = zd.t.slice(), i = a.indexOf(t); if (i >= 0) a.splice(i, 1); else a.push(t); zd.t = a; blSave(b); blRefresh(); }); tc.appendChild(bt); });
+      card.appendChild(tc);
+      var dr = el("div", "bl-les-d"); dr.appendChild(el("span", "bf-q", "Douleur"));
+      var sc = el("div", "bl-scale");
+      for (var n = 0; n <= 10; n++) (function (n) { var on = zd.dl === n, bt = el("button", "bl-sc" + (on ? " on" : ""), String(n)); bt.type = "button"; bt.style.setProperty("--h", String(120 - n * 12)); bt.addEventListener("click", function () { zd.dl = on ? "" : n; blSave(b); blRefresh(); }); sc.appendChild(bt); })(n);
+      dr.appendChild(sc); card.appendChild(dr);
+      host.appendChild(card);
+    });
+  }
+  function blLesTxt(f) {
+    return (f.zones || []).map(function (id) {
+      var zd = (f.zd || {})[id] || {}; var t = (zd.t || []).join(", ").toLowerCase();
+      return blZoneName(id) + (t || (zd.dl !== "" && zd.dl != null) ? " : " + [t, zd.dl !== "" && zd.dl != null ? zd.dl + "/10" : ""].filter(Boolean).join(" ") : "");
+    });
+  }
+  // Petit bonhomme pour les membres (motricité / sensibilité)
+  function blLimbFig(b, key) {
+    var NS = "http://www.w3.org/2000/svg", sel = b.f[key] || [];
+    var Z = [{ id: "Membre supérieur droit", x: 0, y: 92, w: 58, h: 216 }, { id: "Membre supérieur gauche", x: 142, y: 92, w: 58, h: 216 },
+             { id: "Membre inférieur droit", x: 58, y: 250, w: 42, h: 190 }, { id: "Membre inférieur gauche", x: 100, y: 250, w: 42, h: 190 }];
+    Z.forEach(function (z) { z.name = z.id; });
+    var row = el("div", "bl-fig-r sm");
+    row.appendChild(el("span", "bl-side", "D"));
+    row.appendChild(blFigure("F", Z, sel, function (id) { var a = (b.f[key] || []).slice(), i = a.indexOf(id); if (i >= 0) a.splice(i, 1); else a.push(id); b.f[key] = a; blSave(b); blRefresh(); }, true));
+    row.appendChild(el("span", "bl-side", "G"));
+    return row;
   }
   function blLoad() { try { var b = JSON.parse(localStorage.getItem(BL_KEY) || "null"); if (b && (b.v !== 3 || Date.now() - b.start > BL_MAX)) { localStorage.removeItem(BL_KEY); return null; } return b; } catch (e) { return null; } }
   function blSave(b) { try { localStorage.setItem(BL_KEY, JSON.stringify(b)); } catch (e) {} blShare(); }
@@ -2126,7 +2213,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var who = [f.sexe, f.age !== "" && f.age != null ? f.age + " ans" : ""].filter(Boolean).join(" · ");
     if (who) L.push(["Victime", who]);
     if (f.meca) L.push(["Circonstances", BL_MECA_TXT[f.meca] || f.meca]);
-    var pl = [(f.zones || []).map(blZoneName).join(", "), f.plus || "", f.dl !== "" && f.dl != null ? f.dl + "/10" : ""].filter(Boolean).join(" · ");
+    var pl = blLesTxt(f).concat(f.plus ? [f.plus] : []).join(" · ");
     if (pl) L.push(["Plainte principale", pl]);
     var bad = BL_ABC.filter(function (x) { return abc[x.L] === "bad"; });
     if (bad.length) {
@@ -2138,11 +2225,13 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var v = [f.b_freq ? f.b_freq + "/min" : "", f.b_amp ? f.b_amp.toLowerCase() : "", f.b_reg ? f.b_reg.toLowerCase() : ""].filter(Boolean);
     if (v.length) L.push(["Ventilation", v.join(" · ")]);
     L.push(["Neurologique", BL_NEURO.map(function (n) { return blNeuroTxt(f, n); }).join(" · "), false, BL_NEURO.map(function (n) { return [blNeuroTxt(f, n), f[n.id] === "bad"]; })]);
-    if (f.prem) L.push(["1re fois", f.prem.toLowerCase()]);
+    if (f.prem || f.depuis) L.push({ head: "Si malaise" });
+    if (f.prem) L.push(["Première fois", f.prem.toLowerCase()]);
     if (f.depuis) L.push(["Depuis", blDur(f.depuis)]);
     L.push({ head: "Antécédents (MHTA)" });
     BL_MHTA.forEach(function (m) { L.push([m.q, f[m.id + "_x"] ? (f[m.id] || "oui, à préciser") : "rien", !!f[m.id + "_x"]]); });
     if (f.evac) L.push({ head: "Évacuation", val: f.evac });
+    if ((f.mat || []).length) { if (!f.evac) L.push({ head: "Évacuation" }); L.push(["Matériel demandé", f.mat.join(" · "), true]); }
     return L;
   }
   function blResume(b) {
@@ -2229,11 +2318,10 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     blNum(b, s1, "age", "Âge", "ans", 110, [-5, -1, 1, 5], 30);
     blSeg(b, s1, "sexe", "Sexe", ["Homme", "Femme"]);
     blSeg(b, s1, "meca", "Suite à", ["Chute à ski", "Chute à pied", "Collision avec un skieur", "Collision avec un obstacle", "Avalanche", "Malaise", "Autre"]);
-    var dh = el("div", "bf-sub", "Douleur · où ?"); dh.style.setProperty("--s", "#455a64"); s1.appendChild(dh);
+    var dh = el("div", "bf-sub", "Douleurs et lésions · toucher le bonhomme"); dh.style.setProperty("--s", "#455a64"); s1.appendChild(dh);
     blBody(b, s1);
     var pr = el("div", "bf-r t"); pr.appendChild(el("span", "bf-q", "Précision")); var pc = el("div", "bf-c"), px = document.createElement("input"); px.type = "text"; px.className = "bf-x"; px.placeholder = "Autre blessure, détail…"; px.value = f.plus || ""; px.setAttribute("aria-label", "Précision sur la plainte");
     px.addEventListener("input", function () { b.f.plus = px.value; blSave(b); }); pc.appendChild(px); pr.appendChild(pc); s1.appendChild(pr);
-    blNum(b, s1, "dl", "Intensité", "/10", 10, [-1, 1], 5);
     // 2. xABCDE : vert d'office
     var s2 = blSec(v, "2", "xABCDE · toucher ce qui ne va pas", "#C62828");
     var abc = blAbc(b), line = el("div", "bl-abc");
@@ -2266,13 +2354,14 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     BL_NEURO.forEach(function (n) {
       var bad = f[n.id] === "bad", bt = el("button", "bl-chk" + (bad ? " bad" : ""), (bad ? "! " : "✓ ") + (bad ? n.bad : n.ok)); bt.type = "button";
       bt.addEventListener("click", function () { b.f[n.id] = bad ? null : "bad"; if (bad) b.f[n.id + "_m"] = []; blSave(b); blRefresh(); }); ng.appendChild(bt);
-      if (bad && n.limbs) { var lw = el("div", "bl-limbs"); ng.appendChild(lw); blSeg(b, lw, n.id + "_m", n.id === "n_mot" ? "Motricité touchée" : "Sensibilité touchée", BL_LIMBS, true); }
+      if (bad && n.limbs) { var lw = el("div", "bl-limbs"); lw.appendChild(el("div", "bf-q", (n.id === "n_mot" ? "Motricité" : "Sensibilité") + " : toucher le ou les membres atteints")); lw.appendChild(blLimbFig(b, n.id + "_m")); var lm = (b.f[n.id + "_m"] || []); lw.appendChild(el("div", "bl-zl" + (lm.length ? " on" : ""), lm.length ? lm.join(" · ") : "Aucun membre choisi")); ng.appendChild(lw); }
     });
     s3.appendChild(ng);
     // 4. MHTA
     var s4 = blSec(v, "4", "Complémentaire · antécédents", "#6A1B9A");
-    blSeg(b, s4, "prem", "1re fois", ["Oui", "Non"]);
-    var dr = el("div", "bf-r"); dr.appendChild(el("span", "bf-q", "Depuis")); var dc = el("div", "bf-c");
+    var mal = el("div", "bf-sub big", "Si malaise"); mal.style.setProperty("--s", "#6A1B9A"); s4.appendChild(mal);
+    blSeg(b, s4, "prem", "Première fois ?", ["Oui", "Non"]);
+    var dr = el("div", "bf-r"); dr.appendChild(el("span", "bf-q", "Depuis combien de temps ?")); var dc = el("div", "bf-c");
     [-60, -15].forEach(function (d) { var s = el("button", "bf-o st", d === -60 ? "−1 h" : "−15 min"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = Math.max(0, (+b.f.depuis || 0) + d); blSave(b); blRefresh(); }); dc.appendChild(s); });
     dc.appendChild(el("span", "bl-dur", f.depuis ? blDur(f.depuis) : "—"));
     [15, 60].forEach(function (d) { var s = el("button", "bf-o st", d === 60 ? "+1 h" : "+15 min"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = (+b.f.depuis || 0) + d; blSave(b); blRefresh(); }); dc.appendChild(s); });
@@ -2289,6 +2378,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     // 5. Radio
     var s5 = blSec(v, "5", "Évacuation · message radio", "#17324a");
     blSeg(b, s5, "evac", "", ["Luge", "Skidoo", "Ambulance", "Hélicoptère", "Aucune"]);
+    var mt = el("div", "bf-sub", "Matériel demandé"); mt.style.setProperty("--s", "#17324a"); s5.appendChild(mt);
+    blSeg(b, s5, "mat", "", BL_MAT, true);
     blEnd(b, s5);
   }
   function blAbcMini(b) {
