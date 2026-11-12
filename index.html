@@ -563,7 +563,6 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .bl-lead { font-size: 17px; line-height: 1.45; margin: 4px 0 0; }
 .bl-go { width: 100%; min-height: 64px; border: 0; border-radius: 16px; background: #C62828; color: #fff; font: 800 21px var(--body); cursor: pointer; }
 .bl-info { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
-.bl-share.err { color: var(--red); font-weight: 700; }
 .bl-hint { font-size: 15px; color: var(--muted); margin: 10px 2px 4px; }
 .bf { display: grid; grid-template-columns: 30px minmax(0, 1fr); border: 2px solid var(--c); border-radius: 12px; overflow: hidden; margin-top: 6px; background: var(--paper); }
 .bf-l { background: var(--c); color: var(--f); display: flex; justify-content: center; align-items: center; }
@@ -585,6 +584,47 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .bf-r.t { flex: 1 1 100%; }
 .bf-r.t .bf-c { flex-wrap: nowrap; }
 .bf-r.t .bf-q { min-width: 14px; }
+.bl-share { font-size: 13px; color: var(--muted); }
+.bl-abc { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; flex: 1 1 100%; }
+.bl-ab { min-height: 74px; border: 0; box-shadow: inset 0 5px 0 var(--c); border-radius: 12px; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; padding: 8px 2px 4px; cursor: pointer; }
+.bl-ab.ok { background: #2e9461; }
+.bl-ab.bad { background: #d63a3a; }
+.bl-ab b { font: 800 24px var(--body); line-height: 1; }
+.bl-ab i { font: normal 800 17px var(--body); }
+.bl-ab span { font: 600 11.5px var(--body); }
+.bl-badl { flex: 1 1 100%; font: 700 14px var(--body); color: var(--red); }
+.bf-o.go { background: #C62828; border-color: #C62828; color: #fff; }
+.bf-o.st { min-width: 40px; padding: 3px 6px; font-size: 14px; }
+.bf-sub { flex: 1 1 100%; font: 800 13px var(--body); text-transform: uppercase; letter-spacing: .05em; color: var(--s); border-bottom: 2px solid var(--s); padding: 4px 0 2px; margin-top: 2px; }
+.bl-chks { display: flex; flex-wrap: wrap; gap: 5px; flex: 1 1 100%; }
+.bl-chk { min-height: 40px; padding: 4px 10px; border: 2px solid #2e9461; border-radius: 9px; background: color-mix(in srgb, #2e9461 14%, var(--paper)); color: var(--ink); font: 700 14.5px var(--body); cursor: pointer; text-align: left; }
+.bl-chk.bad { border-color: #d63a3a; background: #d63a3a; color: #fff; }
+.bl-mh { display: flex; gap: 6px; align-items: center; flex: 1 1 100%; }
+.bl-mh .bl-chk { flex: 0 0 auto; }
+.bl-mh .bf-x { min-width: 0; width: 100%; }
+.bl-dur { min-width: 74px; text-align: center; font: 800 18px var(--body); }
+.bl-sum.big { font-size: 18px; line-height: 1.6; padding: 16px; background: var(--paper); }
+.bl-fin { width: 100%; min-height: 52px; border: 0; background: #2e9461; color: #fff; border-radius: 10px; font: 800 17px var(--body); cursor: pointer; margin-top: 4px; }
+.bl-card.done { border-left-color: #2e9461; }
+.bl-card small.st { font-weight: 700; }
+.fb { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.fb-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; background: #17324a; color: #fff; border-radius: 14px; padding: 14px 16px; }
+.fb-h b { display: block; font: 800 22px var(--display); }
+.fb-h span { font-size: 15px; opacity: .9; }
+.fb-st { background: #C62828; padding: 6px 12px; border-radius: 999px; font-weight: 800; opacity: 1 !important; }
+.fb-st.done { background: #2e9461; }
+.fb-msg { background: var(--paper); border: 2px solid #17324a; border-radius: 14px; padding: 12px 16px; }
+.fb-k { font: 800 13px var(--body); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 6px; }
+.fb-msg pre { white-space: pre-wrap; margin: 0; font: 18px/1.6 var(--body); color: var(--ink); }
+.fb-c { display: grid; grid-template-columns: 36px minmax(0, 1fr); border: 2px solid var(--c); border-radius: 12px; overflow: hidden; background: var(--paper); }
+.fb-l { background: var(--c); color: #fff; font: 800 20px var(--body); display: flex; justify-content: center; padding-top: 10px; }
+.fb-b { padding: 8px 14px; }
+.fb-t { font: 800 14px var(--body); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+.fb-r { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 12px; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 16px; }
+.fb-r:last-child { border-bottom: 0; }
+.fb-r span { color: var(--muted); }
+.fb-r.bad b { color: var(--red); }
+@media (min-width: 900px) { .fb { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } .fb-h, .fb-msg { grid-column: 1 / -1; } }
 .bl-sum { white-space: pre-wrap; font: 15px/1.5 var(--body); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin: 4px 0 0; }
 .bl-acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
 .bl-del { width: 100%; min-height: 48px; border: 2px solid var(--red); color: var(--red); background: transparent; border-radius: 10px; font: 800 15px var(--body); cursor: pointer; margin-top: 4px; }
@@ -614,7 +654,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794485497";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794486396";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -856,8 +896,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var subS = openCmd ? openCmd + " transfert" + (openCmd > 1 ? "s" : "") + " à monter" : data.stock.length + " articles · " + data.lieux.length + " locaux";
     var nx = nextEvents(1)[0], pj = data.planjour;
     var tkOpenN = (data.taches || []).filter(function (t) { return t.state !== "fait"; }), tkUrg = tkOpenN.filter(function (t) { return t.prio === "urgent"; }).length;
-    var blMine = blLoad(), blN = (data.bilans || []).filter(function (x) { return (!blMine || x.id !== blMine.id) && x.b && x.b.v === 2; }).length;
-    g.appendChild(bigTile("cross", "#C62828", "Bilan victime", blMine ? "En cours depuis " + blHM(blMine.start) : blN ? blN + " bilan" + (blN > 1 ? "s" : "") + " en cours dans l'équipe" : "Fiche xABCDE · résumé radio", function () { blViewId = null; goArea("bilan"); }));
+    var blMine = blLoad(), blAll = (data.bilans || []).filter(function (x) { return (!blMine || x.id !== blMine.id) && x.b && x.b.v === 3; }), blN = blAll.filter(function (x) { return !x.b.done; }).length;
+    g.appendChild(bigTile("cross", "#C62828", "Bilan victime", blMine ? "En cours depuis " + blHM(blMine.start) : blN ? blN + " bilan" + (blN > 1 ? "s" : "") + " en cours" : blAll.length ? blAll.length + " fiche" + (blAll.length > 1 ? "s" : "") + " · dernière à " + blHM(blAll[0].start) : "Fiche bilan · message radio", function () { blViewId = null; goArea("bilan"); }));
     g.appendChild(bigTile("tasks", "#6b4fbb", "Tâches équipe", tkOpenN.length ? tkOpenN.length + " à faire" + (tkUrg ? " · dont " + tkUrg + " urgente" + (tkUrg > 1 ? "s" : "") : "") : "Rien à faire pour l'instant", function () { goArea("taches"); }));
     g.appendChild(bigTile("box", "#d63a3a", "Stock matériel", subS, function () { goArea("stock"); }));
     g.appendChild(bigTile("cal", "#0e8a9a", "Agenda", nx ? "Prochain : " + nx.title + " · " + dayShort(nx.date) + (nx.start ? " " + nx.start : "") : "Rien de prévu pour l'instant", function () { goArea("plan"); }));
@@ -1956,152 +1996,236 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     });
   }
 
-  /* ---------- Bilan victime : la fiche entière sur un écran, on coche vite, quelques chiffres ---------- */
-  var BL_KEY = "pisteurs-bilan", BL_MAX = 24 * 3600 * 1000, blTimer = null, blArmEnd = false, blViewId = null;
-  var BL_SECS = [
-    { L: "!", title: "Circonstances", col: "#455a64", fg: "#fff", rows: [
-      { id: "age", q: "Âge", t: "num", u: "ans", max: 110 }, { id: "sexe", q: "Sexe", o: ["H", "F"] },
-      { id: "meca", q: "Accident", o: ["Chute", "Coll. skieur", "Coll. obstacle", "Avalanche", "Malaise", "Autre"] },
-      { id: "casque", q: "Casque", o: ["Oui", "Non"] }, { id: "lieu", q: "Lieu", t: "text" }] },
-    { L: "x", title: "Hémorragie massive", col: "#C62828", fg: "#fff", rows: [
-      { id: "x_hem", q: "Hémorragie", o: ["Non", "Oui"], bad: "Oui", key: 1 }, { id: "garrot", q: "Garrot", t: "stamp" }] },
-    { L: "A", title: "Voies aériennes", col: "#E65100", fg: "#fff", rows: [
-      { id: "a_voies", q: "Voies", o: ["Libres", "Obstruées"], bad: "Obstruées", key: 1 }, { id: "a_axe", q: "Tête axe", o: ["Non", "Oui"] }] },
-    { L: "B", title: "Ventilation", col: "#F2A900", fg: "#2a2000", rows: [
-      { id: "b_resp", q: "Respire", o: ["Oui", "Non"], bad: "Non", key: 1 }, { id: "rcp", q: "RCP", t: "stamp" },
-      { id: "b_freq", q: "Fréq.", lq: "Fréquence", t: "num", u: "/min", max: 80 }, { id: "b_reg", q: "Rythme", o: ["Rég.", "Irrég."] },
-      { id: "b_amp", q: "Ampl.", lq: "Amplitude", o: ["Normale", "Superf.", "Ample"] }] },
-    { L: "C", title: "Circulation", col: "#2E7D32", fg: "#fff", rows: [
-      { id: "c_pouls", q: "Pouls", o: ["Oui", "Non"], bad: "Non", key: 1 }, { id: "c_freq", q: "Fréq.", lq: "Fréquence", t: "num", u: "/min", max: 250 },
-      { id: "c_reg", q: "Rythme", o: ["Rég.", "Irrég."] }, { id: "c_force", q: "", lq: "Pouls", o: ["Frappé", "Filant"] },
-      { id: "c_coul", q: "Peau", o: ["Normale", "Pâle", "Rouge", "Bleutée"] }, { id: "c_moite", q: "Moite", o: ["Non", "Oui"] },
-      { id: "c_int", q: "Saign. interne", o: ["Non", "Oui"] }] },
-    { L: "D", title: "Neurologie", col: "#1565C0", fg: "#fff", rows: [
-      { id: "d_evda", q: "EVDA", o: ["Éveillé", "Voix", "Douleur", "Aucune"], bad: "Aucune", key: 1 }, { id: "d_pc", q: "PC", lq: "Perte de connaissance", o: ["Non", "Oui"] },
-      { id: "d_or", q: "Orienté", o: ["Oui", "Non"] }, { id: "d_pup", q: "Pupilles", o: ["Égales", "Inégales"] }, { id: "d_mot", q: "Bouge 4 membres", o: ["Oui", "Non"] }] },
-    { L: "E", title: "Exposition · douleur", col: "#6A1B9A", fg: "#fff", rows: [
-      { id: "e_froid", q: "Froid", o: ["Non", "Oui"], bad: "Oui", key: 1 }, { id: "dl", q: "Douleur", t: "num", u: "/10", max: 10 },
-      { id: "dl_ou", q: "Où", t: "text" }, { id: "bless", q: "Blessures", o: ["Plaie", "Fracture", "Entorse", "Hématome", "Gelure"], many: 1 }] },
-    { L: "+", title: "MHTA · complémentaire", col: "#37474f", fg: "#fff", rows: [
-      { id: "m", q: "M", lq: "Maladies", t: "mhta" }, { id: "h", q: "H", lq: "Hospitalisations", t: "mhta" }, { id: "tr", q: "T", lq: "Traitements", t: "mhta" }, { id: "al", q: "A", lq: "Allergies", t: "mhta" },
-      { id: "prem", q: "1re fois", o: ["Oui", "Non"] }, { id: "depuis", q: "Depuis", o: ["<15 min", "<1 h", "<6 h", "Plus"] }] },
-    { L: "✓", title: "Radio", col: "#17324a", fg: "#fff", rows: [
-      { id: "evac", q: "Évacuation", o: ["Luge", "Skidoo", "Ambulance", "Hélico", "Aucune"] }] }
-  ];
-  function blLoad() { try { var b = JSON.parse(localStorage.getItem(BL_KEY) || "null"); if (b && (!b.v || Date.now() - b.start > BL_MAX)) { localStorage.removeItem(BL_KEY); return null; } return b; } catch (e) { return null; } }
+  /* ---------- Bilan victime : fiche sur un écran. Tout est « OK » d'office, on touche seulement ce qui ne va pas ---------- */
+  var BL_KEY = "pisteurs-bilan", BL_MAX = 24 * 3600 * 1000, blViewId = null;
+  var BL_ABC = [
+    { L: "x", q: "Hémorr.", bad: "Hémorragie massive", col: "#C62828" }, { L: "A", q: "Voies", bad: "Voies aériennes obstruées", col: "#E65100" },
+    { L: "B", q: "Respir.", bad: "Respiration anormale", col: "#F2A900" }, { L: "C", q: "Circul.", bad: "Circulation anormale", col: "#2E7D32" },
+    { L: "D", q: "Consc.", bad: "Trouble de conscience", col: "#1565C0" }, { L: "E", q: "Froid", bad: "Hypothermie / exposé", col: "#6A1B9A" }];
+  var BL_NEURO = [
+    { id: "n_pup", ok: "Pupilles symétriques", bad: "Pupilles asymétriques" },
+    { id: "n_or", ok: "Orienté temps et espace", r: "orienté dans le temps et l'espace", bad: "Désorienté" },
+    { id: "n_mot", ok: "Motricité des 4 membres", r: "motricité des 4 membres conservée", bad: "Trouble de la motricité" },
+    { id: "n_sen", ok: "Sensibilité des 4 membres", r: "sensibilité des 4 membres conservée", bad: "Trouble de la sensibilité" },
+    { id: "n_pc", ok: "Pas de perte de connaissance", bad: "Perte de connaissance" }];
+  var BL_MHTA = [{ id: "m", q: "Maladies" }, { id: "h", q: "Hospitalisations" }, { id: "tr", q: "Traitements" }, { id: "al", q: "Allergies" }];
+  var BL_MECA = { "Chute": "une chute", "Coll. skieur": "une collision avec un skieur", "Coll. obstacle": "une collision avec un obstacle", "Avalanche": "une avalanche", "Malaise": "un malaise", "Autre": "" };
+  var BL_OU = ["Tête", "Nuque", "Dos", "Épaule", "Bras", "Poignet / main", "Thorax", "Ventre", "Bassin", "Hanche", "Genou", "Jambe", "Cheville"];
+  function blLoad() { try { var b = JSON.parse(localStorage.getItem(BL_KEY) || "null"); if (b && (b.v !== 3 || Date.now() - b.start > BL_MAX)) { localStorage.removeItem(BL_KEY); return null; } return b; } catch (e) { return null; } }
   function blSave(b) { try { localStorage.setItem(BL_KEY, JSON.stringify(b)); } catch (e) {} blShare(); }
-  var blShareT = null, blShareSt = "";
-  function blShareShow() { var e = $("bl-share"); if (e) { e.textContent = blShareSt; e.className = "bl-share" + (/Pas de/.test(blShareSt) ? " err" : ""); } }
-  function blShare() {
-    clearTimeout(blShareT);
+  var blShareT = null, blShareSt = "", blShareOff = false;
+  function blShareShow() { var e = $("bl-share"); if (e) e.textContent = blShareSt; }
+  function blShare(wait) {
+    clearTimeout(blShareT); if (blShareOff) return;
     blShareT = setTimeout(function () {
       var b = blLoad(); if (!b) return;
-      blShareSt = "Envoi…"; blShareShow();
       call("enregistrerBilan", code, b, "").then(function (d) {
         if (data && d && d.bilans) data.bilans = d.bilans;
-        blShareSt = "Partagé · " + blHM(Date.now()); blShareShow();
-      }, function () { blShareSt = "Pas de réseau · nouvel essai"; blShareShow(); blShare(); });
-    }, 2000);
+        blShareSt = "Partagé avec l'équipe · " + blHM(Date.now()); blShareShow();
+      }, function (e) {
+        if (/inconnue/i.test(String(e && e.message || e))) { blShareOff = true; blShareSt = "Partage pas encore activé (script de la feuille à mettre à jour)"; blShareShow(); return; }
+        blShareSt = "Hors réseau · partage dès que possible"; blShareShow(); blShare(30000);
+      });
+    }, wait || 2000);
   }
   function blHM(t) { var d = new Date(t); return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2); }
-  function blVal(b, r) {
-    var v = b.f[r.id];
-    if (r.t === "stamp") return v ? blHM(v) : "";
-    if (v == null || v === "" || (Array.isArray(v) && !v.length)) return "";
-    return (Array.isArray(v) ? v.join(", ") : String(v)) + (r.u ? " " + r.u : "");
-  }
-  function blKey(b, L) { var s = BL_SECS.filter(function (x) { return x.L === L; })[0], r = s && s.rows.filter(function (x) { return x.key; })[0]; var v = r && b.f[r.id]; return !v ? "" : v === r.bad ? "bad" : "ok"; }
+  function blDur(m) { m = +m || 0; var h = Math.floor(m / 60), r = m % 60; return h ? h + " h" + (r ? " " + ("0" + r).slice(-2) : "") : r + " min"; }
+  function blAbc(b) { return b.f.abc || {}; }
   function blResume(b) {
-    var out = ["BILAN – début " + blHM(b.start)];
-    BL_SECS.forEach(function (s) {
-      var parts = [];
-      s.rows.forEach(function (r) { var v = blVal(b, r); if (v) parts.push((r.lq || r.q) + " " + v); });
-      if (parts.length) out.push((s.L === "!" || s.L === "+" || s.L === "✓" ? s.title : s.L + " " + s.title) + " : " + parts.join(" · "));
-    });
-    return out.join("\n");
+    var f = b.f, abc = blAbc(b), S = [];
+    var who = (f.sexe || "Victime") + (f.age !== "" && f.age != null ? " de " + f.age + " ans" : "");
+    var p = who + (f.meca && BL_MECA[f.meca] ? ", suite à " + BL_MECA[f.meca] : "");
+    var ou = (f.ou || []).join(", ").toLowerCase() + (f.cote ? " " + f.cote.toLowerCase() : "");
+    if (ou || (f.dl !== "" && f.dl != null)) p += ", se plaint d'une douleur" + (ou ? " : " + ou : "") + (f.dl !== "" && f.dl != null ? " (" + f.dl + "/10)" : "");
+    S.push(p + ".");
+    var bad = BL_ABC.filter(function (x) { return abc[x.L] === "bad"; });
+    var g = [];
+    if (f.garrot) g.push("garrot posé à " + blHM(f.garrot));
+    if (f.rcp) g.push("RCP commencée à " + blHM(f.rcp));
+    S.push("xABCDE : " + (bad.length ? bad.map(function (x) { return x.L + " " + x.bad.toLowerCase(); }).join(", ") + (g.length ? " (" + g.join(", ") + ")" : "") + (bad.length < 6 ? ", le reste OK." : ".") : "RAS."));
+    var v = [f.b_freq ? f.b_freq + "/min" : "", f.b_amp ? f.b_amp.toLowerCase() : "", f.b_reg ? f.b_reg.toLowerCase() : ""].filter(Boolean);
+    if (v.length) S.push("Ventilation " + v.join(", ") + ".");
+    var c = [f.c_freq ? f.c_freq + "/min" : "", f.c_reg ? f.c_reg.toLowerCase() : "", f.c_force ? f.c_force.toLowerCase() : "", f.c_coul ? "peau " + f.c_coul.toLowerCase() : "", f.c_sue === "Oui" ? "sueurs" : ""].filter(Boolean);
+    if (c.length) S.push("Circulation " + c.join(", ") + ".");
+    S.push("Neuro : " + BL_NEURO.map(function (n) { return f[n.id] === "bad" ? n.bad.toLowerCase() : (n.r || n.ok.toLowerCase()); }).join(", ") + ".");
+    var mh = BL_MHTA.filter(function (m) { return f[m.id + "_x"]; });
+    S.push("MHTA : " + (mh.length ? mh.map(function (m) { return m.q.toLowerCase() + " " + (f[m.id] || "(à préciser)"); }).join(" ; ") : "rien") + ".");
+    if (f.prem) S.push("Première fois : " + f.prem.toLowerCase() + ".");
+    if (f.depuis) S.push("Depuis " + blDur(f.depuis) + ".");
+    if (f.evac) S.push("Évacuation : " + f.evac.toLowerCase() + ".");
+    return S.join("\n");
   }
   function blRefresh() { var y = window.scrollY; renderBilan(); window.scrollTo(0, y); }
-  function blStart() { var b = { v: 2, id: "b" + Date.now().toString(36), start: Date.now(), f: {} }; blSave(b); renderBilan(); goTop(); }
+  function blStart() { var b = { v: 3, id: "b" + Date.now().toString(36), start: Date.now(), f: { abc: {} } }; blShareOff = false; blShareSt = ""; blSave(b); renderBilan(); goTop(); }
+  function blSec(v, L, title, col, fg) {
+    var sec = el("section", "bf"); sec.style.setProperty("--c", col); sec.style.setProperty("--f", fg || "#fff");
+    var lt = el("div", "bf-l"); lt.appendChild(el("b", null, L)); sec.appendChild(lt);
+    var body = el("div", "bf-b"); body.appendChild(el("div", "bf-t", title)); sec.appendChild(body); v.appendChild(sec); return body;
+  }
+  function blSeg(b, body, id, q, opts, many) {
+    var row = el("div", "bf-r" + (opts.length > 3 ? " w" : "")); if (q) row.appendChild(el("span", "bf-q", q)); var c = el("div", "bf-c");
+    opts.forEach(function (o) {
+      var cur = b.f[id], on = many ? (cur || []).indexOf(o) >= 0 : cur === o;
+      var bt = el("button", "bf-o" + (on ? " on" : ""), o); bt.type = "button"; bt.setAttribute("aria-pressed", on ? "true" : "false");
+      bt.addEventListener("click", function () {
+        if (many) { var a = (b.f[id] || []).slice(), i = a.indexOf(o); if (i >= 0) a.splice(i, 1); else a.push(o); b.f[id] = a; } else b.f[id] = on ? null : o;
+        blSave(b); blRefresh();
+      });
+      c.appendChild(bt);
+    });
+    row.appendChild(c); body.appendChild(row);
+  }
+  function blNum(b, body, id, q, u, max, steps, base) {
+    var row = el("div", "bf-r"); row.appendChild(el("span", "bf-q", q)); var c = el("div", "bf-c");
+    var inp = document.createElement("input"); inp.type = "number"; inp.inputMode = "numeric"; inp.className = "bf-n"; inp.value = b.f[id] != null ? b.f[id] : ""; inp.setAttribute("aria-label", q);
+    var set = function (n) { n = n === "" ? "" : Math.max(0, Math.min(max, Math.round(n))); b.f[id] = n; inp.value = n; blSave(b); };
+    inp.addEventListener("input", function () { set(inp.value === "" ? "" : +inp.value); });
+    (steps || []).forEach(function (d, k) {
+      var s = el("button", "bf-o st", (d > 0 ? "+" : "−") + Math.abs(d)); s.type = "button";
+      s.addEventListener("click", function () { set(inp.value === "" ? base : +inp.value + d); });
+      if (d < 0) c.appendChild(s);
+    });
+    c.appendChild(inp);
+    (steps || []).forEach(function (d) { if (d < 0) return; var s = el("button", "bf-o st", "+" + d); s.type = "button"; s.addEventListener("click", function () { set(inp.value === "" ? base : +inp.value + d); }); c.appendChild(s); });
+    if (u) c.appendChild(el("span", "bf-u", u));
+    row.appendChild(c); body.appendChild(row);
+  }
+  function blStamp(b, body, id, label) {
+    var t = b.f[id], row = el("div", "bf-r"); row.appendChild(el("span", "bf-q", label));
+    var sb = el("button", "bf-o" + (t ? " on bad" : " go"), t ? "Posé à " + blHM(t) + " ✕" : "⏱ Noter l'heure"); sb.type = "button";
+    sb.addEventListener("click", function () { b.f[id] = t ? null : Date.now(); blSave(b); blRefresh(); });
+    row.appendChild(sb); body.appendChild(row);
+  }
   function renderBilan() {
     var v = clearView(); v.classList.add("bl"); var b = blLoad();
     if (blViewId) return blView(v);
     if (!b) {
       var w = el("div", "bl-start");
-      w.appendChild(el("p", "bl-lead", "La fiche bilan complète sur un écran : on coche, on note deux ou trois chiffres, et le résumé radio est prêt. L'équipe la voit en direct."));
+      w.appendChild(el("p", "bl-lead", "Tout est OK d'office : tu touches seulement ce qui ne va pas, le message radio s'écrit tout seul. Le poste de secours voit la fiche en direct."));
       var go = el("button", "bl-go", "Nouvelle fiche bilan"); go.type = "button"; go.addEventListener("click", blStart); w.appendChild(go);
       v.appendChild(w); blTeam(v); return;
     }
-    var top = el("div", "bl-info"); top.appendChild(el("span", null, "Début " + blHM(b.start)));
+    var f = b.f, top = el("div", "bl-info"); top.appendChild(el("span", null, "Début " + blHM(b.start)));
     var shs = el("span", "bl-share", blShareSt); shs.id = "bl-share"; top.appendChild(shs); v.appendChild(top);
-    v.appendChild(blAbcMini(b));
-    BL_SECS.forEach(function (s) {
-      var sec = el("section", "bf"); sec.style.setProperty("--c", s.col); sec.style.setProperty("--f", s.fg);
-      var lt = el("div", "bf-l"); lt.appendChild(el("b", null, s.L)); sec.appendChild(lt);
-      var body = el("div", "bf-b"); body.appendChild(el("div", "bf-t", s.title));
-      s.rows.forEach(function (r) { body.appendChild(blRow(b, r)); });
-      if (s.L === "✓") blEnd(b, body);
-      sec.appendChild(body); v.appendChild(sec);
+    // 1. Circonstances
+    var s1 = blSec(v, "1", "Circonstances", "#455a64");
+    blNum(b, s1, "age", "Âge", "ans", 110, [-5, -1, 1, 5], 30);
+    blSeg(b, s1, "sexe", "Sexe", ["Homme", "Femme"]);
+    blSeg(b, s1, "meca", "Suite à", ["Chute", "Coll. skieur", "Coll. obstacle", "Avalanche", "Malaise", "Autre"]);
+    blSeg(b, s1, "ou", "Douleur", BL_OU, true);
+    blSeg(b, s1, "cote", "Côté", ["Gauche", "Droit"]);
+    blNum(b, s1, "dl", "Intensité", "/10", 10, [-1, 1], 5);
+    // 2. xABCDE : vert d'office
+    var s2 = blSec(v, "2", "xABCDE · toucher ce qui ne va pas", "#C62828");
+    var abc = blAbc(b), line = el("div", "bl-abc");
+    BL_ABC.forEach(function (it) {
+      var bad = abc[it.L] === "bad", bt = el("button", "bl-ab" + (bad ? " bad" : " ok")); bt.type = "button"; bt.style.setProperty("--c", it.col);
+      bt.appendChild(el("b", null, it.L)); bt.appendChild(el("i", null, bad ? "!" : "✓")); bt.appendChild(el("span", null, it.q));
+      bt.setAttribute("aria-label", bad ? it.bad : it.q + " OK");
+      bt.addEventListener("click", function () { var a = Object.assign({}, blAbc(b)); if (bad) delete a[it.L]; else a[it.L] = "bad"; b.f.abc = a; blSave(b); blRefresh(); });
+      line.appendChild(bt);
     });
-  }
-  function blRow(b, r) {
-    var row = el("div", "bf-r" + (r.t === "text" || r.t === "mhta" ? " t" : "") + (r.o && r.o.length > 3 ? " w" : "")); if (r.q) row.appendChild(el("span", "bf-q", r.q));
-    var c = el("div", "bf-c");
-    if (r.o) r.o.forEach(function (o) {
-      var cur = b.f[r.id], on = r.many ? (cur || []).indexOf(o) >= 0 : cur === o;
-      var bt = el("button", "bf-o" + (on ? (o === r.bad ? " on bad" : " on") : ""), o); bt.type = "button"; bt.setAttribute("aria-pressed", on ? "true" : "false");
-      bt.addEventListener("click", function () {
-        if (r.many) { var a = (b.f[r.id] || []).slice(), i = a.indexOf(o); if (i >= 0) a.splice(i, 1); else a.push(o); b.f[r.id] = a; }
-        else b.f[r.id] = on ? null : o;
-        blSave(b); blRefresh();
-      });
-      c.appendChild(bt);
+    s2.appendChild(line);
+    var bads = BL_ABC.filter(function (x) { return abc[x.L] === "bad"; });
+    if (bads.length) s2.appendChild(el("div", "bl-badl", bads.map(function (x) { return x.L + " : " + x.bad; }).join(" · ")));
+    if (abc.x === "bad") blStamp(b, s2, "garrot", "Garrot");
+    if (abc.B === "bad" || abc.C === "bad") blStamp(b, s2, "rcp", "RCP / DAE");
+    // 3. Bilan complémentaire
+    var s3 = blSec(v, "3", "Bilan complémentaire", "#1565C0");
+    s3.appendChild(el("div", "bf-sub", "Ventilation")).style.setProperty("--s", "#B98100");
+    blNum(b, s3, "b_freq", "Fréq.", "/min", 80, [-1, 1], 16);
+    blSeg(b, s3, "b_amp", "Ampl.", ["Normale", "Superficielle", "Ample"]);
+    blSeg(b, s3, "b_reg", "Rythme", ["Régulière", "Irrégulière"]);
+    s3.appendChild(el("div", "bf-sub", "Circulation")).style.setProperty("--s", "#2E7D32");
+    blNum(b, s3, "c_freq", "Pouls", "/min", 250, [-1, 1], 80);
+    blSeg(b, s3, "c_reg", "Rythme", ["Régulier", "Irrégulier"]);
+    blSeg(b, s3, "c_force", "Pouls", ["Bien frappé", "Filant"]);
+    blSeg(b, s3, "c_coul", "Peau", ["Normale", "Pâle", "Rouge", "Bleutée"]);
+    blSeg(b, s3, "c_sue", "Sueurs", ["Non", "Oui"]);
+    s3.appendChild(el("div", "bf-sub", "Neurologique")).style.setProperty("--s", "#1565C0");
+    var ng = el("div", "bl-chks");
+    BL_NEURO.forEach(function (n) {
+      var bad = f[n.id] === "bad", bt = el("button", "bl-chk" + (bad ? " bad" : ""), (bad ? "! " : "✓ ") + (bad ? n.bad : n.ok)); bt.type = "button";
+      bt.addEventListener("click", function () { b.f[n.id] = bad ? null : "bad"; blSave(b); blRefresh(); }); ng.appendChild(bt);
     });
-    else if (r.t === "num") {
-      var inp = document.createElement("input"); inp.type = "number"; inp.inputMode = "numeric"; inp.className = "bf-n"; inp.value = b.f[r.id] != null ? b.f[r.id] : ""; inp.setAttribute("aria-label", r.q);
-      inp.addEventListener("input", function () { var n = inp.value === "" ? "" : Math.max(0, Math.min(r.max || 300, Math.round(+inp.value))); b.f[r.id] = n; blSave(b); });
-      c.appendChild(inp); c.appendChild(el("span", "bf-u", r.u || ""));
-    } else if (r.t === "text" || r.t === "mhta") {
-      if (r.t === "mhta") { var on = b.f[r.id] === "Rien", nb = el("button", "bf-o" + (on ? " on" : ""), "Rien"); nb.type = "button"; nb.addEventListener("click", function () { b.f[r.id] = on ? "" : "Rien"; blSave(b); blRefresh(); }); c.appendChild(nb); }
-      var tx = document.createElement("input"); tx.type = "text"; tx.className = "bf-x"; tx.value = b.f[r.id] && b.f[r.id] !== "Rien" ? b.f[r.id] : ""; tx.setAttribute("aria-label", r.q);
-      tx.addEventListener("input", function () { b.f[r.id] = tx.value; blSave(b); }); c.appendChild(tx);
-    } else if (r.t === "stamp") {
-      var t = b.f[r.id], sb = el("button", "bf-o" + (t ? " on bad" : ""), t ? blHM(t) + " ✕" : "⏱ heure"); sb.type = "button";
-      sb.addEventListener("click", function () { b.f[r.id] = t ? null : Date.now(); blSave(b); blRefresh(); }); c.appendChild(sb);
-    }
-    row.appendChild(c); return row;
+    s3.appendChild(ng);
+    // 4. MHTA
+    var s4 = blSec(v, "4", "MHTA · rien d'office, toucher s'il y a quelque chose", "#6A1B9A");
+    BL_MHTA.forEach(function (m) {
+      var bad = !!f[m.id + "_x"], wrap = el("div", "bl-mh" + (bad ? " bad" : ""));
+      var bt = el("button", "bl-chk" + (bad ? " bad" : ""), (bad ? "! " : "✓ ") + m.q + (bad ? "" : " : rien")); bt.type = "button";
+      bt.addEventListener("click", function () { b.f[m.id + "_x"] = !bad; if (bad) b.f[m.id] = ""; blSave(b); blRefresh(); if (!bad) setTimeout(function () { var x = $("mh-" + m.id); if (x) x.focus(); }, 0); });
+      wrap.appendChild(bt);
+      if (bad) { var tx = document.createElement("input"); tx.type = "text"; tx.className = "bf-x"; tx.id = "mh-" + m.id; tx.placeholder = "Lesquel(le)s ?"; tx.value = f[m.id] || ""; tx.setAttribute("aria-label", m.q); tx.addEventListener("input", function () { b.f[m.id] = tx.value; blSave(b); }); wrap.appendChild(tx); }
+      s4.appendChild(wrap);
+    });
+    blSeg(b, s4, "prem", "1re fois", ["Oui", "Non"]);
+    var dr = el("div", "bf-r"); dr.appendChild(el("span", "bf-q", "Depuis")); var dc = el("div", "bf-c");
+    [-60, -15].forEach(function (d) { var s = el("button", "bf-o st", d === -60 ? "−1 h" : "−15"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = Math.max(0, (+b.f.depuis || 0) + d); blSave(b); blRefresh(); }); dc.appendChild(s); });
+    dc.appendChild(el("span", "bl-dur", f.depuis ? blDur(f.depuis) : "—"));
+    [15, 60].forEach(function (d) { var s = el("button", "bf-o st", d === 60 ? "+1 h" : "+15"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = (+b.f.depuis || 0) + d; blSave(b); blRefresh(); }); dc.appendChild(s); });
+    dr.appendChild(dc); s4.appendChild(dr);
+    // 5. Radio
+    var s5 = blSec(v, "5", "Évacuation · message radio", "#17324a");
+    blSeg(b, s5, "evac", "", ["Luge", "Skidoo", "Ambulance", "Hélico", "Aucune"]);
+    blEnd(b, s5);
   }
   function blAbcMini(b) {
-    var r = el("div", "bl-mini");
-    BL_SECS.slice(1, 7).forEach(function (s) { var st = blKey(b, s.L), c = el("span", st, s.L + (st === "ok" ? " ✓" : st === "bad" ? " !" : "")); c.style.setProperty("--c", s.col); r.appendChild(c); });
+    var r = el("div", "bl-mini"), a = (b.f && b.f.abc) || {};
+    BL_ABC.forEach(function (s) { var st = a[s.L] === "bad" ? "bad" : "ok", c = el("span", st, s.L + (st === "ok" ? " ✓" : " !")); c.style.setProperty("--c", s.col); r.appendChild(c); });
     return r;
   }
+  function blDate(t) { var d = new Date(t); return ("0" + d.getDate()).slice(-2) + "." + ("0" + (d.getMonth() + 1)).slice(-2) + "." + d.getFullYear(); }
   function blTeam(v) {
-    var mine = blLoad(), list = ((data && data.bilans) || []).filter(function (x) { return (!mine || x.id !== mine.id) && x.b && x.b.v === 2; });
+    var mine = blLoad(), list = ((data && data.bilans) || []).filter(function (x) { return (!mine || x.id !== mine.id) && x.b && x.b.v === 3; });
     if (!list.length) return;
-    v.appendChild(el("h3", "bl-teamh", "Bilans en cours dans l'équipe"));
+    v.appendChild(el("h3", "bl-teamh", "Fiches bilan"));
     list.forEach(function (x) {
-      var f = x.b.f || {}, c = el("button", "bl-card"); c.type = "button";
-      var t = el("div", "bl-card-t"); t.appendChild(el("b", null, "Début " + blHM(x.start))); t.appendChild(el("span", null, [f.meca, f.lieu, f.age ? f.age + " ans" : "", f.sexe].filter(Boolean).join(" · ") || "Bilan en cours")); c.appendChild(t);
-      c.appendChild(blAbcMini(x.b)); c.appendChild(el("small", null, "Mis à jour à " + blHM(x.upd || x.start)));
-      c.addEventListener("click", function () { blViewId = x.id; renderBilan(); goTop(); });
+      var f = x.b.f || {}, c = el("button", "bl-card" + (x.b.done ? " done" : "")); c.type = "button";
+      var t = el("div", "bl-card-t"); t.appendChild(el("b", null, "Bilan du " + blDate(x.start) + " à " + blHM(x.start)));
+      t.appendChild(el("span", null, [f.sexe, f.age !== "" && f.age != null ? f.age + " ans" : "", f.meca].filter(Boolean).join(" · ") || "—")); c.appendChild(t);
+      c.appendChild(blAbcMini(x.b));
+      c.appendChild(el("small", "st", x.b.done ? "Terminé à " + blHM(x.b.end || x.upd) : "En cours · mis à jour à " + blHM(x.upd || x.start)));
+      c.addEventListener("click", function () { blViewId = x.id; blDelArm = false; renderBilan(); goTop(); });
       v.appendChild(c);
     });
   }
+  var blDelArm = false;
   function blView(v) {
     var x = ((data && data.bilans) || []).filter(function (y) { return y.id === blViewId; })[0];
-    var bk = el("button", "pbtn", "‹ Retour aux bilans"); bk.type = "button"; bk.addEventListener("click", function () { blViewId = null; renderBilan(); }); v.appendChild(bk);
-    if (!x) { v.appendChild(el("p", "bl-lead", "Ce bilan est terminé ou n'existe plus.")); return; }
-    var b = x.b;
-    v.appendChild(el("p", "bl-hint", "Bilan commencé à " + blHM(x.start) + " · lecture seule · mis à jour à " + blHM(x.upd || x.start) + ", se rafraîchit tout seul"));
-    v.appendChild(blAbcMini(b));
-    BL_SECS.forEach(function (s) {
-      var rows = s.rows.map(function (r) { return [r.q, blVal(b, r), r.bad && b.f[r.id] === r.bad]; }).filter(function (r) { return r[1]; });
-      if (!rows.length) return;
-      var card = el("div", "bl-vcard"); card.style.setProperty("--c", s.col);
-      card.appendChild(el("div", "bl-vt", (s.L.length === 1 && /[xA-E]/.test(s.L) ? s.L + " · " : "") + s.title));
-      rows.forEach(function (r) { var ln = el("div", "bl-vl" + (r[2] ? " bad" : "")); ln.appendChild(el("span", null, r[0])); ln.appendChild(el("b", null, r[1])); card.appendChild(ln); });
-      v.appendChild(card);
+    var bk = el("button", "pbtn", "‹ Toutes les fiches"); bk.type = "button"; bk.addEventListener("click", function () { blViewId = null; renderBilan(); }); v.appendChild(bk);
+    if (!x) { v.appendChild(el("p", "bl-lead", "Cette fiche n'existe plus.")); return; }
+    var b = x.b, f = b.f || {}, abc = f.abc || {};
+    var sheet = el("div", "fb");
+    var hd = el("div", "fb-h"); var ht = el("div"); ht.appendChild(el("b", null, "Fiche bilan victime")); ht.appendChild(el("span", null, blDate(x.start) + " · début " + blHM(x.start)));
+    hd.appendChild(ht); hd.appendChild(el("span", "fb-st" + (b.done ? " done" : ""), b.done ? "Terminé " + blHM(b.end || x.upd) : "En cours · " + blHM(x.upd || x.start)));
+    sheet.appendChild(hd);
+    var msg = el("div", "fb-msg"); msg.appendChild(el("div", "fb-k", "À transmettre (144 / Rega)")); msg.appendChild(el("pre", null, blResume(b))); sheet.appendChild(msg);
+    function card(L, title, col, rows) {
+      rows = rows.filter(function (r) { return r && r[1] !== "" && r[1] != null; }); if (!rows.length) return;
+      var c = el("div", "fb-c"); c.style.setProperty("--c", col);
+      var lt = el("div", "fb-l", L); c.appendChild(lt); var bd = el("div", "fb-b"); bd.appendChild(el("div", "fb-t", title));
+      rows.forEach(function (r) { var ln = el("div", "fb-r" + (r[2] ? " bad" : "")); ln.appendChild(el("span", null, r[0])); ln.appendChild(el("b", null, String(r[1]))); bd.appendChild(ln); });
+      c.appendChild(bd); sheet.appendChild(c);
+    }
+    card("1", "Circonstances", "#455a64", [["Âge", f.age !== "" && f.age != null ? f.age + " ans" : ""], ["Sexe", f.sexe || ""], ["Suite à", f.meca || ""],
+      ["Douleur", ((f.ou || []).join(", ") + (f.cote ? " " + f.cote.toLowerCase() : "")).trim()], ["Intensité", f.dl !== "" && f.dl != null ? f.dl + " / 10" : ""]]);
+    var xr = BL_ABC.map(function (it) { return [it.L, abc[it.L] === "bad" ? it.bad : "OK", abc[it.L] === "bad"]; });
+    if (f.garrot) xr.push(["Garrot", "posé à " + blHM(f.garrot), true]); if (f.rcp) xr.push(["RCP / DAE", "commencés à " + blHM(f.rcp), true]);
+    card("2", "xABCDE", "#C62828", xr);
+    card("3", "Bilan complémentaire", "#1565C0", [
+      ["Ventilation", [f.b_freq ? f.b_freq + "/min" : "", f.b_amp || "", f.b_reg || ""].filter(Boolean).join(" · ")],
+      ["Circulation", [f.c_freq ? f.c_freq + "/min" : "", f.c_reg || "", f.c_force || ""].filter(Boolean).join(" · ")],
+      ["Peau", [f.c_coul || "", f.c_sue === "Oui" ? "sueurs" : ""].filter(Boolean).join(" · ")]].concat(BL_NEURO.map(function (n) { return [n === BL_NEURO[0] ? "Neurologique" : "", f[n.id] === "bad" ? n.bad : n.ok, f[n.id] === "bad"]; })));
+    card("4", "MHTA", "#6A1B9A", BL_MHTA.map(function (m) { return [m.q, f[m.id + "_x"] ? (f[m.id] || "à préciser") : "Rien", !!f[m.id + "_x"]]; }).concat([["1re fois", f.prem || ""], ["Depuis", f.depuis ? blDur(f.depuis) : ""]]));
+    card("5", "Évacuation", "#17324a", [["Moyen", f.evac || ""]]);
+    v.appendChild(sheet);
+    var dl = el("button", "bl-del", blDelArm ? "Confirmer : supprimer cette fiche pour tous" : "Supprimer cette fiche"); dl.type = "button";
+    dl.addEventListener("click", function () {
+      if (!blDelArm) { blDelArm = true; renderBilan(); setTimeout(function () { if (blDelArm) { blDelArm = false; if (area === "bilan") renderBilan(); } }, 5000); return; }
+      blDelArm = false; var id = blViewId; blViewId = null; act("supprimerBilan", [id], "Fiche supprimée"); renderBilan();
     });
+    v.appendChild(dl);
   }
   function blEnd(b, body) {
     var txt = blResume(b);
@@ -2112,11 +2236,16 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var sh = el("button", "bf-o", "Envoyer…"); sh.type = "button";
     sh.addEventListener("click", function () { if (navigator.share) navigator.share({ title: "Bilan victime", text: txt }).catch(function () {}); else location.href = "sms:?body=" + encodeURIComponent(txt); });
     row.appendChild(cp); row.appendChild(sh); body.appendChild(row);
-    var del = el("button", "bl-del", blArmEnd ? "Confirmer : effacer ce bilan partout" : "Terminer et effacer le bilan"); del.type = "button";
+    var del = el("button", "bl-fin", "✓ Fiche terminée"); del.type = "button";
     del.addEventListener("click", function () {
-      if (!blArmEnd) { blArmEnd = true; blRefresh(); setTimeout(function () { if (blArmEnd) { blArmEnd = false; if (area === "bilan") blRefresh(); } }, 5000); return; }
-      blArmEnd = false; var old = blLoad(); clearTimeout(blShareT); try { localStorage.removeItem(BL_KEY); } catch (e) {}
-      if (old && old.id) act("supprimerBilan", [old.id], "Bilan terminé et effacé"); renderBilan(); goTop();
+      if (blShareOff) { showStatus("Partage pas activé : la fiche ne peut pas être envoyée à l'équipe.", true); return; }
+      b.done = true; b.end = Date.now(); clearTimeout(blShareT); try { localStorage.setItem(BL_KEY, JSON.stringify(b)); } catch (e) {}
+      showStatus("Envoi de la fiche…", false, true);
+      call("enregistrerBilan", code, b, "").then(function (d) {
+        if (data && d && d.bilans) data.bilans = d.bilans;
+        try { localStorage.removeItem(BL_KEY); } catch (e) {}
+        blViewId = b.id; showStatus("Fiche terminée et envoyée", false); renderBilan(); goTop();
+      }, function () { showStatus("Pas de réseau : la fiche reste sur ce téléphone, réessaie dans un moment.", true); });
     });
     body.appendChild(del);
   }
