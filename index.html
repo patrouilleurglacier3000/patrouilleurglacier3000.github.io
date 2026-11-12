@@ -596,6 +596,11 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .bf-o.go { background: #C62828; border-color: #C62828; color: #fff; }
 .bf-o.st { min-width: 40px; padding: 3px 6px; font-size: 14px; }
 .bf-sub { flex: 1 1 100%; font: 800 13px var(--body); text-transform: uppercase; letter-spacing: .05em; color: var(--s); border-bottom: 2px solid var(--s); padding: 4px 0 2px; margin-top: 2px; }
+.bl-limbs { flex: 1 1 100%; display: flex; background: var(--red-bg); border-radius: 9px; padding: 6px; }
+.bl-limbs .bf-r { flex-direction: column; align-items: stretch; width: 100%; }
+.bl-limbs .bf-c { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.bl-limbs .bf-o { font-size: 13.5px; padding: 4px 6px; }
+.bl-limbs .bf-o.on { background: #d63a3a; border-color: #d63a3a; color: #fff; }
 .bl-chks { display: flex; flex-wrap: wrap; gap: 5px; flex: 1 1 100%; }
 .bl-chk { min-height: 40px; padding: 4px 10px; border: 2px solid #2e9461; border-radius: 9px; background: color-mix(in srgb, #2e9461 14%, var(--paper)); color: var(--ink); font: 700 14.5px var(--body); cursor: pointer; text-align: left; }
 .bl-chk.bad { border-color: #d63a3a; background: #d63a3a; color: #fff; }
@@ -679,7 +684,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794487800";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794487961";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2030,9 +2035,12 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   var BL_NEURO = [
     { id: "n_pc", ok: "Pas de perte de connaissance", bad: "Perte de connaissance" },
     { id: "n_pup", ok: "Pupilles symétriques", bad: "Pupilles asymétriques" },
-    { id: "n_or", ok: "Orienté temps et espace", bad: "Désorienté" },
-    { id: "n_mot", ok: "Motricité des 4 membres", bad: "Trouble de la motricité" },
-    { id: "n_sen", ok: "Sensibilité des 4 membres", bad: "Trouble de la sensibilité" }];
+    { id: "n_ort", ok: "Orienté dans le temps", bad: "Désorienté dans le temps" },
+    { id: "n_ore", ok: "Orienté dans l'espace", bad: "Désorienté dans l'espace" },
+    { id: "n_mot", ok: "Motricité des 4 membres", bad: "Trouble de la motricité", limbs: 1 },
+    { id: "n_sen", ok: "Sensibilité des 4 membres", bad: "Trouble de la sensibilité", limbs: 1 }];
+  var BL_LIMBS = ["Membre supérieur droit", "Membre supérieur gauche", "Membre inférieur droit", "Membre inférieur gauche"];
+  function blNeuroTxt(f, n) { if (f[n.id] !== "bad") return n.ok; var m = f[n.id + "_m"] || []; return n.bad + (n.limbs && m.length ? " : " + m.join(", ").toLowerCase() : ""); }
   var BL_MHTA = [{ id: "m", q: "Maladies" }, { id: "h", q: "Hospitalisations" }, { id: "tr", q: "Traitements" }, { id: "al", q: "Allergies" }];
   var BL_MECA = { "Chute à ski": "", "Chute à pied": "", "Chute": "une chute", "Coll. skieur": "une collision avec un skieur", "Coll. obstacle": "une collision avec un obstacle", "Avalanche": "une avalanche", "Malaise": "un malaise", "Autre": "" };
   var BL_OU = ["Tête", "Nuque", "Dos", "Épaule", "Bras", "Poignet / main", "Thorax", "Ventre", "Bassin", "Hanche", "Genou", "Jambe", "Cheville"];
@@ -2125,16 +2133,15 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       var g = []; if (f.garrot) g.push("garrot " + blHM(f.garrot)); if (f.rcp) g.push("RCP " + blHM(f.rcp));
       L.push(["xABCDE", bad.map(function (x) { return x.L + " : " + x.bad; }).concat(g).join(" · "), true]);
     }
-    var v = [f.b_freq ? f.b_freq + "/min" : "", f.b_amp ? f.b_amp.toLowerCase() : "", f.b_reg ? f.b_reg.toLowerCase() : ""].filter(Boolean);
-    if (v.length) L.push(["Ventilation", v.join(" · ")]);
     var c = [f.c_freq ? f.c_freq + "/min" : "", f.c_reg ? f.c_reg.toLowerCase() : "", f.c_force ? f.c_force.toLowerCase() : "", f.c_coul ? "peau " + f.c_coul.toLowerCase() : "", f.c_sue === "Oui" ? "sueurs" : ""].filter(Boolean);
     if (c.length) L.push(["Circulation", c.join(" · ")]);
-    var nb = BL_NEURO.some(function (n) { return f[n.id] === "bad"; });
-    L.push(["Neurologique", BL_NEURO.map(function (n) { return f[n.id] === "bad" ? n.bad : n.ok; }).join(" · "), false, BL_NEURO.map(function (n) { return [f[n.id] === "bad" ? n.bad : n.ok, f[n.id] === "bad"]; })]);
-    L.push({ head: "Antécédents (MHTA)" });
-    BL_MHTA.forEach(function (m) { L.push([m.q, f[m.id + "_x"] ? (f[m.id] || "oui, à préciser") : "rien", !!f[m.id + "_x"]]); });
+    var v = [f.b_freq ? f.b_freq + "/min" : "", f.b_amp ? f.b_amp.toLowerCase() : "", f.b_reg ? f.b_reg.toLowerCase() : ""].filter(Boolean);
+    if (v.length) L.push(["Ventilation", v.join(" · ")]);
+    L.push(["Neurologique", BL_NEURO.map(function (n) { return blNeuroTxt(f, n); }).join(" · "), false, BL_NEURO.map(function (n) { return [blNeuroTxt(f, n), f[n.id] === "bad"]; })]);
     if (f.prem) L.push(["1re fois", f.prem.toLowerCase()]);
     if (f.depuis) L.push(["Depuis", blDur(f.depuis)]);
+    L.push({ head: "Antécédents (MHTA)" });
+    BL_MHTA.forEach(function (m) { L.push([m.q, f[m.id + "_x"] ? (f[m.id] || "oui, à préciser") : "rien", !!f[m.id + "_x"]]); });
     if (f.evac) L.push({ head: "Évacuation", val: f.evac });
     return L;
   }
@@ -2244,25 +2251,33 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (abc.B === "bad" || abc.C === "bad") blStamp(b, s2, "rcp", "RCP / DAE");
     // 3. Bilan complémentaire
     var s3 = blSec(v, "3", "Bilan complémentaire", "#1565C0");
-    s3.appendChild(el("div", "bf-sub", "Ventilation")).style.setProperty("--s", "#B98100");
-    blNum(b, s3, "b_freq", "Fréquence", "/min", 80, [-1, 1], 16);
-    blSeg(b, s3, "b_amp", "Amplitude", ["Normale", "Superficielle", "Ample"]);
-    blSeg(b, s3, "b_reg", "Rythme", ["Régulière", "Irrégulière"]);
     s3.appendChild(el("div", "bf-sub", "Circulation")).style.setProperty("--s", "#2E7D32");
     blNum(b, s3, "c_freq", "Pouls", "/min", 250, [-1, 1], 80);
     blSeg(b, s3, "c_reg", "Rythme", ["Régulier", "Irrégulier"]);
     blSeg(b, s3, "c_force", "Pouls", ["Bien frappé", "Filant"]);
     blSeg(b, s3, "c_coul", "Peau", ["Normale", "Pâle", "Rouge", "Bleutée"]);
     blSeg(b, s3, "c_sue", "Sueurs", ["Non", "Oui"]);
+    s3.appendChild(el("div", "bf-sub", "Ventilation")).style.setProperty("--s", "#B98100");
+    blNum(b, s3, "b_freq", "Fréquence", "/min", 80, [-1, 1], 16);
+    blSeg(b, s3, "b_amp", "Amplitude", ["Normale", "Superficielle", "Ample"]);
+    blSeg(b, s3, "b_reg", "Rythme", ["Régulière", "Irrégulière"]);
     s3.appendChild(el("div", "bf-sub", "Neurologique")).style.setProperty("--s", "#1565C0");
     var ng = el("div", "bl-chks");
     BL_NEURO.forEach(function (n) {
       var bad = f[n.id] === "bad", bt = el("button", "bl-chk" + (bad ? " bad" : ""), (bad ? "! " : "✓ ") + (bad ? n.bad : n.ok)); bt.type = "button";
-      bt.addEventListener("click", function () { b.f[n.id] = bad ? null : "bad"; blSave(b); blRefresh(); }); ng.appendChild(bt);
+      bt.addEventListener("click", function () { b.f[n.id] = bad ? null : "bad"; if (bad) b.f[n.id + "_m"] = []; blSave(b); blRefresh(); }); ng.appendChild(bt);
+      if (bad && n.limbs) { var lw = el("div", "bl-limbs"); ng.appendChild(lw); blSeg(b, lw, n.id + "_m", n.id === "n_mot" ? "Motricité touchée" : "Sensibilité touchée", BL_LIMBS, true); }
     });
     s3.appendChild(ng);
     // 4. MHTA
-    var s4 = blSec(v, "4", "MHTA · rien d'office, toucher s'il y a quelque chose", "#6A1B9A");
+    var s4 = blSec(v, "4", "Complémentaire · antécédents", "#6A1B9A");
+    blSeg(b, s4, "prem", "1re fois", ["Oui", "Non"]);
+    var dr = el("div", "bf-r"); dr.appendChild(el("span", "bf-q", "Depuis")); var dc = el("div", "bf-c");
+    [-60, -15].forEach(function (d) { var s = el("button", "bf-o st", d === -60 ? "−1 h" : "−15 min"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = Math.max(0, (+b.f.depuis || 0) + d); blSave(b); blRefresh(); }); dc.appendChild(s); });
+    dc.appendChild(el("span", "bl-dur", f.depuis ? blDur(f.depuis) : "—"));
+    [15, 60].forEach(function (d) { var s = el("button", "bf-o st", d === 60 ? "+1 h" : "+15 min"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = (+b.f.depuis || 0) + d; blSave(b); blRefresh(); }); dc.appendChild(s); });
+    dr.appendChild(dc); s4.appendChild(dr);
+    var mhh = el("div", "bf-sub", "Antécédents (MHTA)"); mhh.style.setProperty("--s", "#6A1B9A"); s4.appendChild(mhh);
     BL_MHTA.forEach(function (m) {
       var bad = !!f[m.id + "_x"], wrap = el("div", "bl-mh" + (bad ? " bad" : ""));
       var bt = el("button", "bl-chk" + (bad ? " bad" : ""), (bad ? "! " : "✓ ") + m.q + (bad ? "" : " : rien")); bt.type = "button";
@@ -2271,12 +2286,6 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       if (bad) { var tx = document.createElement("input"); tx.type = "text"; tx.className = "bf-x"; tx.id = "mh-" + m.id; tx.placeholder = "Lesquel(le)s ?"; tx.value = f[m.id] || ""; tx.setAttribute("aria-label", m.q); tx.addEventListener("input", function () { b.f[m.id] = tx.value; blSave(b); }); wrap.appendChild(tx); }
       s4.appendChild(wrap);
     });
-    blSeg(b, s4, "prem", "1re fois", ["Oui", "Non"]);
-    var dr = el("div", "bf-r"); dr.appendChild(el("span", "bf-q", "Depuis")); var dc = el("div", "bf-c");
-    [-60, -15].forEach(function (d) { var s = el("button", "bf-o st", d === -60 ? "−1 h" : "−15 min"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = Math.max(0, (+b.f.depuis || 0) + d); blSave(b); blRefresh(); }); dc.appendChild(s); });
-    dc.appendChild(el("span", "bl-dur", f.depuis ? blDur(f.depuis) : "—"));
-    [15, 60].forEach(function (d) { var s = el("button", "bf-o st", d === 60 ? "+1 h" : "+15 min"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = (+b.f.depuis || 0) + d; blSave(b); blRefresh(); }); dc.appendChild(s); });
-    dr.appendChild(dc); s4.appendChild(dr);
     // 5. Radio
     var s5 = blSec(v, "5", "Évacuation · message radio", "#17324a");
     blSeg(b, s5, "evac", "", ["Luge", "Skidoo", "Ambulance", "Hélicoptère", "Aucune"]);
