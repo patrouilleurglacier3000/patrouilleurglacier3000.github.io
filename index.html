@@ -655,6 +655,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .bl-gps-t { display: flex; flex-direction: column; flex: 1 1 auto; } .bl-gps-t b { font: 800 22px var(--body); } .bl-gps-t small { color: var(--muted); }
 .bl-gps .gps { min-height: 48px; font-size: 16px; padding: 4px 14px; }
 .bl-gps .gps:only-child { flex: 1 1 100%; }
+.bl-gps.stick { position: sticky; top: var(--tb, 60px); z-index: 4; margin: 0 0 8px; background: var(--paper); border: 2px solid #17324a; box-shadow: 0 4px 10px rgba(0,0,0,.15); padding: 6px 8px; }
+.bl-gps.stick .bl-gps-t b { font-size: 21px; }
 .fbk-who { background: #17324a; color: #fff; border-radius: 14px; padding: 14px 16px; font: 800 24px/1.25 var(--display); }
 .fbk { background: color-mix(in srgb, var(--g) 7%, var(--paper)); border: 1px solid color-mix(in srgb, var(--g) 30%, var(--line)); border-left: 7px solid var(--g); border-radius: 12px; padding: 8px 14px 10px; }
 .fbk h4 { margin: 2px 0 4px; font: 800 13px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--g); }
@@ -818,7 +820,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794495258";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794495503";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2575,8 +2577,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   function blLines(b) {
     var f = b.f, abc = blAbc(b), L = [];
     var who = blWho(f);
-    if (who) L.push(["Victime", who, false, null, "who"]);
     if (f.gps) L.push(["Position", blPosTxt(f.gps) + (f.gps.acc ? " (± " + f.gps.acc + " m)" : ""), false, null, "pos"]);
+    if (who) L.push(["Victime", who, false, null, "who"]);
     var pls = blLesTxt(f).concat(f.plus ? [f.plus] : []);
     if (pls.length) L.push(["Plainte principale", pls.join(" · "), false, pls.map(function (x) { return [x, false]; })]);
     var bad = BL_ABC.filter(function (x) { return abc[x.L] === "bad"; });
@@ -2744,11 +2746,13 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (part === "compl") v.appendChild(el("div", "bl-revh compl", "Compléter le bilan")).appendChild(el("span", null, "Circulation, ventilation, neurologique, antécédents"));
     if (part !== "compl") {
     // 1. Circonstances
-    var s1 = blSec(v, N(), "Circonstances", "#455a64");
-    var gp = el("div", "bl-gps"), g = f.gps;
+    var gp = el("div", "bl-gps stick"), g = f.gps;
     if (g) { var gt = el("div", "bl-gps-t"); gt.appendChild(el("b", null, "📍 " + blPosTxt(g))); gt.appendChild(el("small", null, "± " + g.acc + " m · " + blHM(g.t) + (g.alt != null ? " · altitude ≈ " + g.alt + " m" : ""))); gp.appendChild(gt); }
     var gb = el("button", "bf-o gps", blGpsBusy ? "Recherche de la position…" : g ? "Mettre à jour" : "📍 Prendre la position GPS"); gb.type = "button"; gb.disabled = blGpsBusy;
-    gb.addEventListener("click", function () { blGps(b); }); gp.appendChild(gb); s1.appendChild(gp);
+    if (!g && !blGpsBusy) gp.insertBefore(el("div", "bl-gps-t"), null).appendChild(el("b", null, "📍 Position inconnue"));
+    gb.addEventListener("click", function () { blGps(b); }); gp.appendChild(gb); v.appendChild(gp);
+    var tbh = document.querySelector(".topbar"); if (tbh) document.documentElement.style.setProperty("--tb", tbh.offsetHeight + "px");
+    var s1 = blSec(v, N(), "Circonstances", "#455a64");
     blNum(b, s1, "age", "Âge", "ans", 110, [-5, -1, 1, 5], 30);
     blSeg(b, s1, "sexe", "Sexe", ["Homme", "Femme"]);
     if (typeof b.f.meca === "string") b.f.meca = [b.f.meca];
