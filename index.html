@@ -639,6 +639,10 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .fbm-r.bad b { color: var(--red); }
 .fbm-r.ok b { color: var(--grn); }
 .fbm-r.bad b.list i:not(.bad) { color: var(--ink); }
+.fbm-r.ok b.list i { color: var(--grn); }
+.bl-abclg { flex: 1 1 100%; display: flex; flex-direction: column; gap: 2px; font-size: 14px; color: var(--muted); }
+.bl-abclg div { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 6px; }
+.bl-abclg b { color: var(--ink); } .bl-abclg div.bad, .bl-abclg div.bad b { color: var(--red); font-weight: 700; }
 .bref { display: flex; flex-direction: column; gap: 8px; padding: 10px 0 12px; border-bottom: 2px solid #17324a; }
 .bref-who { font: 800 24px/1.15 var(--display); }
 .bref-abc { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; }
@@ -782,7 +786,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794491440";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794491515";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2149,9 +2153,13 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   /* ---------- Bilan victime : fiche sur un écran. Tout est « OK » d'office, on touche seulement ce qui ne va pas ---------- */
   var BL_KEY = "pisteurs-bilan", BL_MAX = 24 * 3600 * 1000, blViewId = null, blEdit = false, blAbArm = false;
   var BL_ABC = [
-    { L: "x", q: "Hémorragie", bad: "Hémorragie massive", col: "#C62828" }, { L: "A", q: "Voies aériennes", bad: "Voies aériennes obstruées", col: "#E65100" },
-    { L: "B", q: "Respiration", bad: "Respiration anormale", col: "#F2A900" }, { L: "C", q: "Circulation", bad: "Circulation anormale", col: "#2E7D32" },
-    { L: "D", q: "Conscience", bad: "Trouble de conscience", col: "#1565C0" }, { L: "E", q: "Froid", bad: "Hypothermie / exposé", col: "#6A1B9A" }];
+    // termes anglais officiels + traduction
+    { L: "x", en: "eXsanguination", q: "Hémorragie massive", bad: "Hémorragie massive", col: "#C62828" },
+    { L: "A", en: "Airway", q: "Voies aériennes · colonne cervicale", bad: "Voies aériennes menacées", col: "#E65100" },
+    { L: "B", en: "Breathing", q: "Respiration", bad: "Respiration anormale", col: "#F2A900" },
+    { L: "C", en: "Circulation", q: "Circulation · état de choc", bad: "Circulation anormale", col: "#2E7D32" },
+    { L: "D", en: "Disability", q: "Neurologique (conscience, pupilles)", bad: "Trouble neurologique", col: "#1565C0" },
+    { L: "E", en: "Exposure / Environment", q: "Examen de tout le corps · protection du froid", bad: "Lésion découverte ou froid", col: "#6A1B9A" }];
   var BL_NEURO = [
     { id: "n_pc", ok: "Pas de perte de connaissance", bad: "Perte de connaissance" },
     { id: "n_pup", ok: "Pupilles symétriques", bad: "Pupilles asymétriques" },
@@ -2495,8 +2503,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     pls = blLesTxt(f).concat(f.plus ? [f.plus] : []);
     var bad = BL_ABC.filter(function (x) { return abc[x.L] === "bad"; });
     var g = []; if (f.garrot) g.push("Garrot posé à " + blHM(f.garrot)); if (f.rcp) g.push("RCP depuis " + blHM(f.rcp));
-    if (bad.length || g.length) { var it = bad.map(function (x) { return x.L + " : " + x.bad; }).concat(g); L.push(["xABCDE", it.join(" · "), true, it.map(function (x) { return [x, true]; })]); }
-    else L.push(["xABCDE", "tout normal", "ok"]);
+    var it6 = BL_ABC.map(function (x) { var k = abc[x.L] === "bad"; return [x.L + " · " + x.en + " : " + (k ? x.bad.toLowerCase() : "normal"), k]; }).concat(g.map(function (x) { return [x, true]; }));
+    L.push(["xABCDE", it6.map(function (x) { return x[0]; }).join(" · "), bad.length || g.length ? true : "ok", it6]);
     var cBad = f.c_reg === "Irrégulier" || f.c_force === "Filant" || (f.c_coul && f.c_coul !== "Normale") || f.c_sue === "Oui";
     var c = [f.c_freq ? f.c_freq + "/min" : "", f.c_reg ? f.c_reg.toLowerCase() : "", f.c_force ? f.c_force.toLowerCase() : "", f.c_coul ? "peau " + f.c_coul.toLowerCase() : "", f.c_sue === "Oui" ? "sueurs" : ""].filter(Boolean);
     if (c.length) L.push(["Circulation", c.join(" · "), cBad]);
@@ -2636,12 +2644,13 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var abc = blAbc(b), line = el("div", "bl-abc");
     BL_ABC.forEach(function (it) {
       var bad = abc[it.L] === "bad", bt = el("button", "bl-ab" + (bad ? " bad" : " ok")); bt.type = "button"; bt.style.setProperty("--c", it.col);
-      bt.appendChild(el("b", null, it.L)); bt.appendChild(el("i", null, bad ? "!" : "✓")); bt.appendChild(el("span", null, it.q));
+      bt.appendChild(el("b", null, it.L)); bt.appendChild(el("i", null, bad ? "!" : "✓")); 
       bt.setAttribute("aria-label", bad ? it.bad : it.q + " OK");
       bt.addEventListener("click", function () { var a = Object.assign({}, blAbc(b)); if (bad) delete a[it.L]; else a[it.L] = "bad"; b.f.abc = a; blSave(b); blRefresh(); });
       line.appendChild(bt);
     });
     s2.appendChild(line);
+    var lg = el("div", "bl-abclg"); BL_ABC.forEach(function (it) { var r = el("div", abc[it.L] === "bad" ? "bad" : ""); r.appendChild(el("b", null, it.L)); r.appendChild(el("span", null, it.en + " · " + it.q.toLowerCase())); lg.appendChild(r); }); s2.appendChild(lg);
     var bads = BL_ABC.filter(function (x) { return abc[x.L] === "bad"; });
     if (bads.length) s2.appendChild(el("div", "bl-badl", bads.map(function (x) { return x.L + " : " + x.bad; }).join(" · ")));
     if (abc.x === "bad") blStamp(b, s2, "garrot", "Garrot");
