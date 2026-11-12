@@ -829,7 +829,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794495770";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794496001";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2441,10 +2441,10 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     function nv(x) { return x === "" || x == null ? null : x; }
     var cols = [{ h: "Bilan", t: b.start, pouls: nv(f.c_freq), resp: nv(f.b_freq), cons: f.n_pc === "bad" ? "Perte de connaissance" : "", zd: {}, dl: null, note: "" }];
     zs.forEach(function (id) { var d = (f.zd || {})[id]; cols[0].zd[id] = d ? nv(d.dl) : null; });
-    sv.forEach(function (e) { cols.push({ h: "", t: e.t, pouls: nv(e.pouls), resp: nv(e.resp), cons: e.cons || "", zd: e.zd || {}, dl: nv(e.dl), note: e.note || "" }); });
+    sv.forEach(function (e) { cols.push({ h: "", t: e.t, pouls: nv(e.pouls), resp: nv(e.resp), cons: e.cons || "", zd: e.zd || {}, dl: nv(e.dl), note: e.note || "", ge: (e.ge || []).join(", ").toLowerCase() }); });
     var rows = [["Pouls", "/min", function (c) { return c.pouls; }, 1], ["Ventilation", "/min", function (c) { return c.resp; }, 1], ["Conscience", "", function (c) { return c.cons || null; }]];
     zs.forEach(function (id) { rows.push(["Douleur " + blZoneName(id).toLowerCase(), "/10", function (c) { return c.zd && c.zd[id] !== undefined ? nv(c.zd[id]) : null; }, 1, 1]); });
-    rows.push(["Douleur", "/10", function (c) { return c.dl; }, 1, 1], ["Remarque", "", function (c) { return c.note || null; }]);
+    rows.push(["Douleur", "/10", function (c) { return c.dl; }, 1, 1], ["Gestes effectués", "", function (c) { return c.ge || null; }], ["Remarque", "", function (c) { return c.note || null; }]);
     rows = rows.filter(function (r) { return cols.some(function (c) { return r[2](c) != null; }); });
     var wrap = el("div", "bl-tw"), tb = document.createElement("table"); tb.className = "bl-tb";
     var tr = document.createElement("tr"); tr.appendChild(el("th", "lab", ""));
@@ -2470,7 +2470,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   }
   function blSuiviTxt(e) {
     var zt = e.zd ? Object.keys(e.zd).map(function (id) { var n = e.zd[id], p = e.zp && e.zp[id]; return blZoneName(id).toLowerCase() + " " + n + "/10" + (p === "" || p == null ? "" : n > p ? " ↑" : n < p ? " ↓" : " ="); }) : [];
-    return [e.cons || "", e.pouls !== "" && e.pouls != null ? "pouls " + e.pouls + "/min" : "", e.resp !== "" && e.resp != null ? "ventilation " + e.resp + "/min" : "", e.dl !== "" && e.dl != null ? "douleur " + e.dl + "/10" : ""].concat(zt, [e.note || ""]).filter(Boolean).join(" · ") || "—";
+    var gt = (e.ge || []).length ? ["fait : " + e.ge.join(", ").toLowerCase()] : [];
+    return [e.cons || "", e.pouls !== "" && e.pouls != null ? "pouls " + e.pouls + "/min" : "", e.resp !== "" && e.resp != null ? "ventilation " + e.resp + "/min" : "", e.dl !== "" && e.dl != null ? "douleur " + e.dl + "/10" : ""].concat(zt, gt, [e.note || ""]).filter(Boolean).join(" · ") || "—";
   }
   function blFigsRO(f) {
     var NS = "http://www.w3.org/2000/svg", sel = f.zones || [], w = el("div", "bl-body ro");
@@ -2882,6 +2883,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   // Réévaluation rapide : seulement les constantes, la douleur par endroit et une remarque
   var blRev = null;
   function blRevOpen(x) { blRev = { _rev: 1, id: x.id, f: { zd: {} } }; blViewId = null; blEdit = false; renderBilan(); goTop(); }
+  var BL_GESTES = ["Oxygène", "Position latérale de sécurité", "Position demi-assise", "Jambes surélevées", "Collier cervical", "Attelle", "Matelas coquille", "Couverture de survie", "Pansement compressif"];
   function blRevView(v) {
     var x = blList().filter(function (y) { return y.id === blRev.id; })[0], r = blRev;
     var bk = el("button", "pbtn", "‹ Annuler"); bk.type = "button"; bk.addEventListener("click", function () { blRev = null; blViewId = x ? x.id : null; renderBilan(); }); v.appendChild(bk);
@@ -2909,15 +2911,20 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       s2.appendChild(card);
     });
     else { var pv = last && last.dl !== "" && last.dl != null ? last.dl : ""; s2.appendChild(el("span", "bl-prev", pv !== "" ? "avant : " + pv + "/10" : "Douleur générale")); scale(s2, r.f.dl === undefined ? "" : r.f.dl, pv, function (n) { r.f.dl = n; }); }
+    var sg = blSec(v, "✓", "Gestes effectués", "#2e9461"); sg.classList.add("pick");
+    var done = []; sv.forEach(function (e) { (e.ge || []).forEach(function (g) { if (done.indexOf(g) < 0) done.push(g); }); });
+    if (done.length) sg.appendChild(el("div", "bl-zl", "Déjà fait : " + done.join(", ").toLowerCase()));
+    blSeg(r, sg, "ge", "", BL_GESTES, true);
     var s3 = blSec(v, "+", "Évolution", "#455a64");
     var nx = document.createElement("input"); nx.type = "text"; nx.className = "bf-x"; nx.placeholder = "Nouveau signe, remarque…"; nx.value = r.f.note || ""; nx.setAttribute("aria-label", "Remarque");
     nx.addEventListener("input", function () { r.f.note = nx.value; }); s3.appendChild(nx);
     var ok = el("button", "bl-fin", "Enregistrer la réévaluation"); ok.type = "button"; ok.style.background = "#00838F";
     ok.addEventListener("click", function () {
       var e = { t: Date.now(), pouls: r.f.pouls, resp: r.f.resp, cons: r.f.cons || "", dl: r.f.dl, note: r.f.note || "" }, zd = {}, zp = {};
+      if ((r.f.ge || []).length) e.ge = r.f.ge.slice();
       Object.keys(r.f.zd).forEach(function (id) { zd[id] = r.f.zd[id]; zp[id] = prevDl(id); });
       if (Object.keys(zd).length) { e.zd = zd; e.zp = zp; }
-      if ([e.pouls, e.resp, e.dl].every(function (q) { return q === "" || q == null; }) && !e.cons && !e.note && !e.zd) { showStatus("Rien à enregistrer : note au moins une valeur.", true); return; }
+      if ([e.pouls, e.resp, e.dl].every(function (q) { return q === "" || q == null; }) && !e.cons && !e.note && !e.zd && !e.ge) { showStatus("Rien à enregistrer : note au moins une valeur.", true); return; }
       var b = JSON.parse(JSON.stringify(x.b)); b.f = b.f || {}; b.f.suivi = (b.f.suivi || []).concat([e]);
       var mine = blLoad(); if (mine && mine.id === b.id) { mine.f.suivi = b.f.suivi; try { localStorage.setItem(BL_KEY, JSON.stringify(mine)); } catch (er) {} b = mine; }
       var pd = blPend(); if (pd && pd.id === b.id) { try { localStorage.setItem(BL_PEND, JSON.stringify(b)); } catch (er) {} blRev = null; blViewId = x.id; showStatus("Réévaluation enregistrée sur le téléphone", false); renderBilan(); goTop(); blFlush(); return; }
