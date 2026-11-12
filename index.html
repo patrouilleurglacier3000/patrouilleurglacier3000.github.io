@@ -683,11 +683,21 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .blz-fig .bl-side { font-size: 30px; width: 30px; }
 #bl-zoom .bl-zl { text-align: center; }
 .bl-zoombtn { flex: 1 1 100%; min-height: 44px; }
+.bl-card-b { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.bl-card-b .bf-o { min-height: 46px; }
+.bl-body.ro { margin: 8px 0 4px; }
+.bl-body.ro .bl-z { pointer-events: none; }
+.bl-body.ro .bl-svg { max-width: 160px; }
+.bl-num { fill: #fff; stroke: #d63a3a; stroke-width: 3; }
+.bl-numt { fill: #d63a3a; font: 800 16px var(--body); text-anchor: middle; }
+.bl-sv { flex: 1 1 100%; display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 8px; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 15px; }
+.bl-sv b { color: #00838F; }
+.bl-svf { flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 5px 12px; align-items: center; background: color-mix(in srgb, #00838F 8%, var(--paper)); border-radius: 10px; padding: 8px; }
 .bl-sum { white-space: pre-wrap; font: 15px/1.5 var(--body); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin: 4px 0 0; }
 .bl-acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
 .bl-del { width: 100%; min-height: 48px; border: 2px solid var(--red); color: var(--red); background: transparent; border-radius: 10px; font: 800 15px var(--body); cursor: pointer; margin-top: 4px; }
 .bl-teamh { font: 800 19px var(--display); margin: 26px 0 4px; }
-.bl-card { width: 100%; text-align: left; background: var(--paper); border: 1px solid var(--line); border-left: 6px solid #C62828; border-radius: 14px; padding: 14px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; color: var(--ink); cursor: pointer; font: inherit; }
+.bl-card { box-sizing: border-box; width: 100%; text-align: left; background: var(--paper); border: 1px solid var(--line); border-left: 6px solid #C62828; border-radius: 14px; padding: 14px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; color: var(--ink); cursor: pointer; font: inherit; }
 .bl-card-t { display: flex; flex-direction: column; gap: 2px; }
 .bl-card-t b { font-size: 18px; }
 .bl-card-t span, .bl-card small { color: var(--muted); font-size: 14px; }
@@ -712,7 +722,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794489360";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794489595";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2207,6 +2217,25 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var names = (b.f.zones || []).map(blZoneName);
     o.appendChild(el("div", "bl-zl" + (names.length ? " on" : ""), names.length ? names.join(" · ") : "Toucher l'endroit douloureux"));
   }
+  function blSuiviTxt(e) {
+    return [e.cons || "", e.pouls !== "" && e.pouls != null ? "pouls " + e.pouls + "/min" : "", e.resp !== "" && e.resp != null ? "ventilation " + e.resp + "/min" : "", e.dl !== "" && e.dl != null ? "douleur " + e.dl + "/10" : "", e.note || ""].filter(Boolean).join(" · ") || "—";
+  }
+  function blFigsRO(f) {
+    var NS = "http://www.w3.org/2000/svg", sel = f.zones || [], w = el("div", "bl-body ro");
+    ["F", "B"].forEach(function (side) {
+      var zs = blZonesFor(side); if (!zs.some(function (z) { return sel.indexOf(z.id) >= 0; }) && side === "B" && !sel.some(function (id) { return id.charAt(0) === "B"; })) { /* dos vide : on l'affiche quand même pour situer */ }
+      var col = el("div", "bl-fig"); col.appendChild(el("div", "bl-fig-t", side === "F" ? "FACE" : "DOS"));
+      var row = el("div", "bl-fig-r"); row.appendChild(el("span", "bl-side", side === "F" ? "D" : "G"));
+      var svg = blFigure(side, zs, sel, function () {});
+      zs.forEach(function (z) {
+        var i = sel.indexOf(z.id); if (i < 0) return;
+        var cx = z.x + z.w / 2, cy = z.y + z.h / 2, c = document.createElementNS(NS, "circle"); c.setAttribute("cx", cx); c.setAttribute("cy", cy); c.setAttribute("r", 13); c.setAttribute("class", "bl-num"); svg.appendChild(c);
+        var t = document.createElementNS(NS, "text"); t.setAttribute("x", cx); t.setAttribute("y", cy + 5); t.setAttribute("class", "bl-numt"); t.textContent = String(i + 1); svg.appendChild(t);
+      });
+      row.appendChild(svg); row.appendChild(el("span", "bl-side", side === "F" ? "G" : "D")); col.appendChild(row); w.appendChild(col);
+    });
+    return w;
+  }
   function blLesTxt(f) {
     return (f.zones || []).map(function (id) {
       var zd = (f.zd || {})[id] || {}; var t = (zd.t || []).join(", ").toLowerCase();
@@ -2252,7 +2281,9 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (who) L.push(["Victime", who]);
     if (f.meca) L.push(["Circonstances", BL_MECA_TXT[f.meca] || f.meca]);
     var pls = blLesTxt(f).concat(f.plus ? [f.plus] : []);
+    var les = blLesTxt(f).map(function (x, i) { return (i + 1) + ". " + x; }), pls = les.concat(f.plus ? [f.plus] : []);
     if (pls.length) L.push(["Plainte principale", pls.join(" · "), false, pls.map(function (x) { return [x, false]; })]);
+    if ((f.zones || []).length) L.push({ fig: 1 });
     var bad = BL_ABC.filter(function (x) { return abc[x.L] === "bad"; });
     if (bad.length) {
       var g = []; if (f.garrot) g.push("garrot " + blHM(f.garrot)); if (f.rcp) g.push("RCP " + blHM(f.rcp));
@@ -2268,16 +2299,21 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (f.depuis) L.push(["Depuis", blDur(f.depuis)]);
     L.push({ head: "Antécédents (MHTA)" });
     BL_MHTA.forEach(function (m) { L.push([m.q, f[m.id + "_x"] ? (f[m.id] || "oui, à préciser") : "rien", !!f[m.id + "_x"]]); });
+    if ((f.suivi || []).length) {
+      L.push({ head: "Suivi · réévaluations" });
+      f.suivi.forEach(function (e) { L.push([blHM(e.t), blSuiviTxt(e)]); });
+    }
     if (f.evac) L.push({ head: "Évacuation", val: f.evac });
     if ((f.mat || []).length) { if (!f.evac) L.push({ head: "Évacuation" }); L.push(["Matériel demandé", f.mat.join(" · "), true, f.mat.map(function (x) { return [x, true]; })]); }
     return L;
   }
   function blResume(b) {
-    return blLines(b).map(function (l) { return l.head ? (l.val ? l.head.toUpperCase() + " : " + l.val : l.head.toUpperCase()) : l[3] && l[3].length > 1 ? l[0] + " :\n" + l[3].map(function (p) { return "  - " + p[0]; }).join("\n") : (l[0] + " : " + l[1]); }).join("\n");
+    return blLines(b).filter(function (l) { return !l.fig; }).map(function (l) { return l.head ? (l.val ? l.head.toUpperCase() + " : " + l.val : l.head.toUpperCase()) : l[3] && l[3].length > 1 ? l[0] + " :\n" + l[3].map(function (p) { return "  - " + p[0]; }).join("\n") : (l[0] + " : " + l[1]); }).join("\n");
   }
   function blSheet(b) {
     var box = el("div", "fbm");
     blLines(b).forEach(function (l) {
+      if (l.fig) { box.appendChild(blFigsRO(b.f)); return; }
       if (l.head) { var h = el("div", "fbm-h"); h.appendChild(el("span", null, l.head)); if (l.val) h.appendChild(el("b", null, l.val)); box.appendChild(h); return; }
       var r = el("div", "fbm-r" + (l[2] ? " bad" : "")); r.appendChild(el("span", null, l[0]));
       if (l[3]) { var vb = el("b", "list"); l[3].forEach(function (p) { vb.appendChild(el("i", p[1] ? "bad" : "", p[0])); }); r.appendChild(vb); }
@@ -2413,8 +2449,28 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       if (bad) { var tx = document.createElement("input"); tx.type = "text"; tx.className = "bf-x"; tx.id = "mh-" + m.id; tx.placeholder = "Lesquel(le)s ?"; tx.value = f[m.id] || ""; tx.setAttribute("aria-label", m.q); tx.addEventListener("input", function () { b.f[m.id] = tx.value; blSave(b); }); wrap.appendChild(tx); }
       s4.appendChild(wrap);
     });
-    // 5. Radio
-    var s5 = blSec(v, "5", "Évacuation · message radio", "#17324a");
+    // 5. Suivi / réévaluations
+    var s6 = blSec(v, "5", "Suivi · réévaluations", "#00838F");
+    var sv = f.suivi || [], last = sv.length ? sv[sv.length - 1].t : b.start;
+    s6.appendChild(el("div", "bl-zl", sv.length ? "Dernière réévaluation à " + blHM(last) + " (il y a " + Math.floor((Date.now() - last) / 60000) + " min)" : "Refaire les constantes régulièrement (toutes les 10 min environ)"));
+    sv.forEach(function (e) { var r = el("div", "bl-sv"); r.appendChild(el("b", null, blHM(e.t))); r.appendChild(el("span", null, blSuiviTxt(e))); s6.appendChild(r); });
+    var sd = el("div", "bl-svf"); s6.appendChild(sd);
+    blNum(b, sd, "sv_pouls", "Pouls", "/min", 250, [-1, 1], 80);
+    blNum(b, sd, "sv_resp", "Ventilation", "/min", 80, [-1, 1], 16);
+    blSeg(b, sd, "sv_cons", "Conscience", ["Éveillé", "Voix", "Douleur", "Aucune réaction"]);
+    blNum(b, sd, "sv_dl", "Douleur", "/10", 10, [-1, 1], 5);
+    var nr = el("div", "bf-r t"); nr.appendChild(el("span", "bf-q", "Remarque")); var nc = el("div", "bf-c"), nx = document.createElement("input"); nx.type = "text"; nx.className = "bf-x"; nx.placeholder = "Évolution, nouveau signe…"; nx.value = f.sv_note || ""; nx.setAttribute("aria-label", "Remarque");
+    nx.addEventListener("input", function () { b.f.sv_note = nx.value; blSave(b); }); nc.appendChild(nx); nr.appendChild(nc); sd.appendChild(nr);
+    var add = el("button", "bl-fin", "Enregistrer la réévaluation (" + blHM(Date.now()) + ")"); add.type = "button"; add.style.background = "#00838F";
+    add.addEventListener("click", function () {
+      var e = { t: Date.now(), pouls: f.sv_pouls, resp: f.sv_resp, cons: f.sv_cons || "", dl: f.sv_dl, note: f.sv_note || "" };
+      if ([e.pouls, e.resp, e.dl].every(function (x) { return x === "" || x == null; }) && !e.cons && !e.note) { showStatus("Rien à enregistrer : note au moins une valeur.", true); return; }
+      b.f.suivi = (b.f.suivi || []).concat([e]); ["sv_pouls", "sv_resp", "sv_cons", "sv_dl", "sv_note"].forEach(function (k) { delete b.f[k]; });
+      blSave(b); showStatus("Réévaluation enregistrée", false); blRefresh();
+    });
+    sd.appendChild(add);
+    // 6. Radio
+    var s5 = blSec(v, "6", "Évacuation · message radio", "#17324a");
     blSeg(b, s5, "evac", "", ["Luge", "Skidoo", "Ambulance", "Hélicoptère", "Aucune"]);
     var mt = el("div", "bf-sub", "Matériel demandé"); mt.style.setProperty("--s", "#17324a"); s5.appendChild(mt);
     blSeg(b, s5, "mat", "", BL_MAT, true);
@@ -2431,14 +2487,25 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (!list.length) return;
     v.appendChild(el("h3", "bl-teamh", "Fiches bilan"));
     list.forEach(function (x) {
-      var f = x.b.f || {}, c = el("button", "bl-card" + (x.b.done ? " done" : "")); c.type = "button";
+      var f = x.b.f || {}, c = el("div", "bl-card" + (x.b.done ? " done" : ""));
       var t = el("div", "bl-card-t"); t.appendChild(el("b", null, "Bilan du " + blDate(x.start) + " à " + blHM(x.start)));
       t.appendChild(el("span", null, [f.sexe, f.age !== "" && f.age != null ? f.age + " ans" : "", f.meca].filter(Boolean).join(" · ") || "—")); c.appendChild(t);
       c.appendChild(blAbcMini(x.b));
-      c.appendChild(el("small", "st", x.b.done ? "Terminé à " + blHM(x.b.end || x.upd) : "En cours · mis à jour à " + blHM(x.upd || x.start)));
-      c.addEventListener("click", function () { blViewId = x.id; blDelArm = false; renderBilan(); goTop(); });
+      var nsv = (f.suivi || []).length;
+      c.appendChild(el("small", "st", (x.b.done ? "Terminé" : "En cours") + " · mis à jour à " + blHM(x.upd || x.start) + (nsv ? " · " + nsv + " réévaluation" + (nsv > 1 ? "s" : "") : "")));
+      var bt = el("div", "bl-card-b");
+      var vw = el("button", "bf-o", "Voir la fiche"); vw.type = "button"; vw.addEventListener("click", function () { blViewId = x.id; blDelArm = false; renderBilan(); goTop(); });
+      var cp = el("button", "bf-o on", "Compléter / réévaluer"); cp.type = "button"; cp.style.setProperty("--c", "#00838F"); cp.addEventListener("click", function () { blReprendre(x); });
+      bt.appendChild(vw); bt.appendChild(cp); c.appendChild(bt);
       v.appendChild(c);
     });
+  }
+  function blReprendre(x) {
+    var mine = blLoad();
+    if (mine && mine.id !== x.id) { showStatus("Termine ou abandonne d'abord la fiche en cours sur cet appareil.", true); return; }
+    var b = JSON.parse(JSON.stringify(x.b)); b.done = false; b.f = b.f || {};
+    try { localStorage.setItem(BL_KEY, JSON.stringify(b)); } catch (e) {}
+    blShareOff = false; blShareSt = ""; blViewId = null; blEdit = true; renderBilan(); goTop();
   }
   var blDelArm = false;
   function blView(v) {
@@ -2452,6 +2519,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     sheet.appendChild(hd);
     sheet.appendChild(blSheet(b));
     v.appendChild(sheet);
+    var cpl = el("button", "bl-fin", "Compléter / réévaluer cette fiche"); cpl.type = "button"; cpl.style.background = "#00838F"; cpl.addEventListener("click", function () { blReprendre(x); }); v.appendChild(cpl);
     var dl = el("button", "bl-del", blDelArm ? "Confirmer : supprimer cette fiche pour tous" : "Supprimer cette fiche"); dl.type = "button";
     dl.addEventListener("click", function () {
       if (!blDelArm) { blDelArm = true; renderBilan(); setTimeout(function () { if (blDelArm) { blDelArm = false; if (area === "bilan") renderBilan(); } }, 5000); return; }
