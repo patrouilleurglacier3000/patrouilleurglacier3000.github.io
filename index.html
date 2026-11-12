@@ -810,7 +810,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794493145";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794493318";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -934,6 +934,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     ordonnerTaches: function (pairs) { (pairs || []).forEach(function (p) { var t = byId(data.taches, p.id); if (t) t.ord = p.ord; }); },
     supprimerTache: function (id) { if (!byId(data.taches, id)) return false; data.taches = data.taches.filter(function (x) { return String(x.id) !== String(id); }); }
   };
+  function full(d) { if (d && !d.stock && data && data.stock) { Object.keys(d).forEach(function (k) { data[k] = d[k]; }); return data; } return d; }
   function act(fn, args, msg) {
     var snap = data && OPT[fn] && !syncN ? JSON.stringify(data) : null;
     if (data && OPT[fn] && OPT[fn].apply(null, args || []) !== false) {
@@ -942,7 +943,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       busy++; syncN++;
       syncChain = syncChain.then(function () {
         return call.apply(null, [fn, code].concat(args || [])).then(function (d) {
-          busy--; syncN--; if (!syncN) { data = d; saveCache(d); renderAll(); }
+          busy--; syncN--; if (!syncN) { data = full(d); saveCache(data); renderAll(); }
         }, function (e) {
           busy--; syncN--; handleError(e);
           if (!syncN) { try { data = JSON.parse(syncSnap); } catch (x) {} renderAll(); load(true); }
@@ -952,7 +953,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     }
     busy++; showStatus("Enregistrement…", false, true);
     return call.apply(null, [fn, code].concat(args || [])).then(function (d) {
-      busy--; data = d; saveCache(d); showStatus(msg || "Enregistré"); renderAll(); return d;
+      busy--; data = full(d); saveCache(data); showStatus(msg || "Enregistré"); renderAll(); return data;
     }, function (e) {
       busy--; handleError(e); throw e;
     });
