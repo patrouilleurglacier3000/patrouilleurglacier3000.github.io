@@ -549,7 +549,9 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 #view.chalk .tk.hasgrip { grid-template-columns: 44px minmax(0,1fr) 34px; }
 .tk .grip { display: grid; place-items: center; color: var(--muted); touch-action: none; cursor: grab; }
 .sw.lift { overflow: visible; z-index: 3; }
-.sw.lift > .tk { box-shadow: 0 8px 22px rgba(0,0,0,.25); transform: scale(1.02); }
+#view.chalk .sw.lift > .tk, #view.chalk .sw.lift > .tk.urg { background: color-mix(in srgb, var(--accent) 18%, var(--paper)); border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent), 0 14px 30px rgba(0,0,0,.3); transform: scale(1.03); }
+.sw.lift .grip { color: var(--accent); }
+.moving > .sw:not(.lift) { opacity: .4; transition: opacity .15s; }
 .sw > .tk * { -webkit-touch-callout: none; }
 #snack { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 60; display: flex; align-items: center; gap: 12px; background: #17242e; color: #fff; font: 600 16px var(--body); border-radius: 12px; padding: 8px 8px 8px 16px; box-shadow: 0 6px 20px rgba(0,0,0,.25); max-width: calc(100% - 24px); white-space: nowrap; }
 #snack[hidden] { display: none; }
@@ -564,7 +566,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794473520";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794473775";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1097,13 +1099,13 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (o.move) { w.dataset.id = o.id; w.dataset.prio = o.prio; w.dataset.key = o.key; }
     gest(node, w, { right: !!o.right, left: !!o.left, move: !!o.move, width: SW_W,
       onOpen: function () { if (swOpen && swOpen !== me) swClose(true); swOpen = me; },
-      onLift: function () { if (swOpen) swClose(true); tkDrag = true; w.classList.add("lift"); },
+      onLift: function () { if (swOpen) swClose(true); tkDrag = true; w.classList.add("lift"); w.parentNode.classList.add("moving"); },
       onLiftMove: function (y) {
         var box = w.parentNode, prev = w.previousElementSibling, next = w.nextElementSibling;
         if (prev && prev.dataset.prio === w.dataset.prio) { var r = prev.getBoundingClientRect(); if (y < r.top + r.height / 2) box.insertBefore(w, prev); }
         if (next && next.dataset.prio === w.dataset.prio) { var r2 = next.getBoundingClientRect(); if (y > r2.top + r2.height / 2) box.insertBefore(next, w); }
       },
-      onDrop: function () { w.classList.remove("lift"); tkDrag = false; o.drop(w); tkLateRender(); } });
+      onDrop: function () { w.classList.remove("lift"); if (w.parentNode) w.parentNode.classList.remove("moving"); tkDrag = false; o.drop(w); tkLateRender(); } });
     return w;
   }
   function tkKey(t) { return t.ord != null && t.ord !== "" ? +t.ord : (t.created || 0); }
