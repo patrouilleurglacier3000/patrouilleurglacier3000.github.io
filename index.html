@@ -696,14 +696,15 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .bl-flash { position: absolute; left: 8px; right: 8px; top: 10px; text-align: center; background: #d63a3a; color: #fff; font: 800 28px/1.15 var(--body); padding: 12px 8px; border-radius: 14px; box-shadow: 0 6px 20px #0005; pointer-events: none; animation: blflash 1.5s ease-in forwards; }
 .bl-flash.off { background: #455a64; }
 @keyframes blflash { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
-.bl-fig.big .bl-zctl { grid-template-columns: 60px 1fr 60px 1fr; }
+.bl-fig.big .bl-zctl { grid-template-columns: 1fr 1fr 1fr; }
+.bl-ft.thin { stroke-width: 1.1; }
 .bl-fig.big .bl-zctl .bl-zb:last-child { grid-column: auto; }
 .bl-fig.big .bl-zb { min-height: 52px; }
 .bl-zbox .bl-svg { max-width: none; touch-action: pan-y; }
 .bl-zctl { display: grid; grid-template-columns: 44px 1fr 44px; gap: 4px; width: 100%; padding: 4px 4px 2px; align-items: center; }
 .bl-zctl .bl-zb:last-child { grid-column: 1 / -1; }
 .bl-zb { min-height: 44px; border: 2px solid var(--line); border-radius: 10px; background: var(--paper); color: var(--ink); font: 800 22px var(--body); cursor: pointer; padding: 0; }
-.bl-zb:last-child { font-size: 15px; }
+.bl-zctl .bl-zb:nth-child(n+4) { font-size: 16px; }
 .bl-zlv { text-align: center; font: 800 14px var(--body); color: var(--muted); }
 .bl-zv, .bl-ol, .bl-ft, .bl-spine { vector-effect: non-scaling-stroke; }
 .bl-zv.ft { stroke: none; }
@@ -769,7 +770,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794490845";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794491159";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2153,7 +2154,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   var BL_MECA = { "Chute à ski": "", "Chute à pied": "", "Chute": "une chute", "Coll. skieur": "une collision avec un skieur", "Coll. obstacle": "une collision avec un obstacle", "Avalanche": "une avalanche", "Malaise": "un malaise", "Autre": "" };
   var BL_OU = ["Tête", "Nuque", "Dos", "Épaule", "Bras", "Poignet / main", "Thorax", "Ventre", "Bassin", "Hanche", "Genou", "Jambe", "Cheville"];
   /* Bonhomme dessiné : silhouette lissée, zones découpées dedans. Face : la droite de la victime est à gauche de l'écran. */
-  var BL_HALF = [[109,64],[111,76],[124,80],[140,86],[152,98],[156,128],[160,166],[164,196],[169,234],[173,262],[178,280],[174,298],[164,301],[159,286],[157,264],[150,232],[145,200],[139,162],[134,130],[133,160],[129,198],[135,230],[139,268],[134,326],[136,362],[126,408],[134,428],[106,431],[103,418],[108,402],[110,362],[107,328],[104,284],[100,252]];
+  var BL_HALF = [[109,64],[111,76],[124,80],[140,86],[152,98],[156,128],[160,166],[164,196],[169,234],[173,262],[177,271],[183,283],[184,288],[180,288],[175,282],[174.6,295],[174,301],[172.5,303.6],[171,301.5],[170.6,294],[170.4,292],[170.2,294.5],[170,302.5],[168.5,305.6],[167,303],[166.7,295],[166.5,292],[166.3,295],[166,301.5],[164.5,303.6],[163,301.5],[162.7,294],[162.5,292],[162.3,294],[162,298.5],[160.6,300.6],[159.2,298.5],[158.7,291],[157.6,280],[157,264],[150,232],[145,200],[139,162],[134,130],[133,160],[129,198],[135,230],[139,268],[134,326],[136,362],[126,408],[134,428],[106,431],[103,418],[108,402],[110,362],[107,328],[104,284],[100,252]];
   function blCR(p) { // courbe lisse (Catmull-Rom) fermée
     var d = "M" + p[0][0] + " " + p[0][1], n = p.length;
     for (var i = 0; i < n; i++) {
@@ -2182,6 +2183,11 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     { k: "bras", f: "Bras", m: 1, r: [20, 106, 44, 92] },
     { k: "avbras", f: "Avant-bras", m: 1, r: [14, 198, 42, 64] },
     { k: "main", f: "Main", fem: 1, m: 1, r: [10, 262, 46, 44] },
+    { k: "pouce", f: "Pouce", m: 1, r: [13, 270, 12, 21] },
+    { k: "index", f: "Index", m: 1, r: [25.5, 292, 4, 14] },
+    { k: "majeur", f: "Majeur", m: 1, r: [29.5, 292, 4, 16] },
+    { k: "annulaire", f: "Annulaire", m: 1, r: [33.5, 292, 4, 14] },
+    { k: "auriculaire", f: "Auriculaire", m: 1, r: [37.5, 292, 4.5, 11] },
     { k: "cuisse", f: "Cuisse", fem: 1, m: 1, r: [54, 252, 46, 72] },
     { k: "genou", f: "Genou", m: 1, r: [56, 324, 44, 24] },
     { k: "jambe", f: "Jambe", fem: 1, m: 1, r: [56, 348, 44, 56] },
@@ -2204,7 +2210,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var bg = document.createElementNS(NS, "rect"); bg.setAttribute("width", 200); bg.setAttribute("height", 440); bg.setAttribute("class", "bl-skin"); base.appendChild(bg);
     zones.forEach(function (z) {
       var vz = document.createElementNS(NS, "rect"); vz.setAttribute("x", z.x); vz.setAttribute("y", z.y); vz.setAttribute("width", z.w); vz.setAttribute("height", z.h);
-      vz.setAttribute("class", "bl-zv" + (/\|(oeil|nez|bouche|oreille)/.test(z.id) ? " ft" : "") + (sel.indexOf(z.id) >= 0 ? " on" : "")); base.appendChild(vz);
+      vz.setAttribute("class", "bl-zv" + (/\|(oeil|nez|bouche|oreille|pouce|index|majeur|annulaire|auriculaire)/.test(z.id) ? " ft" : "") + (sel.indexOf(z.id) >= 0 ? " on" : "")); base.appendChild(vz);
     });
     svg.appendChild(base);
     var hit = document.createElementNS(NS, "g");
@@ -2220,6 +2226,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var oh = document.createElementNS(NS, "ellipse"); oh.setAttribute("cx", 100); oh.setAttribute("cy", 36); oh.setAttribute("rx", 23); oh.setAttribute("ry", 28); oh.setAttribute("class", "bl-ol"); svg.appendChild(oh);
     if (side === "B") { var sp = document.createElementNS(NS, "path"); sp.setAttribute("d", "M100 80 L100 205"); sp.setAttribute("class", "bl-spine"); svg.appendChild(sp); }
     function dr(tag, at, cl) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); e.setAttribute("class", cl); svg.appendChild(e); }
+    // doigts : séparations + pouce (côté extérieur), sur les deux mains
     // oreilles (les deux vues)
     dr("path", { d: "M78 29 C69 26 68 47 79 45" }, "bl-ft"); dr("path", { d: "M122 29 C131 26 132 47 121 45" }, "bl-ft");
     if (side === "F") {
@@ -2312,7 +2319,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var z = blZm[side], moved = false, t0 = null;
     function unit(px, py) { var r = svg.getBoundingClientRect(); return { x: z.cx + (px - r.left - r.width / 2) * (200 / z.s) / r.width, y: z.cy + (py - r.top - r.height / 2) * (200 / z.s) / r.width }; }
     function upd() { blZmApply(svg, z); }
-    function zoomAt(ns, px, py) { var r = svg.getBoundingClientRect(), u = unit(px, py); z.s = Math.min(5, Math.max(1, ns)); z.cx = u.x - (px - r.left - r.width / 2) * (200 / z.s) / r.width; z.cy = u.y - (py - r.top - r.height / 2) * (200 / z.s) / r.width; upd(); }
+    function zoomAt(ns, px, py) { var r = svg.getBoundingClientRect(), u = unit(px, py); z.s = Math.min(6, Math.max(1, ns)); z.cx = u.x - (px - r.left - r.width / 2) * (200 / z.s) / r.width; z.cy = u.y - (py - r.top - r.height / 2) * (200 / z.s) / r.width; upd(); }
     svg.addEventListener("touchstart", function (e) {
       moved = false; var t = e.touches;
       if (t.length === 2) t0 = { two: 1, s: z.s, d: Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY), mx: (t[0].clientX + t[1].clientX) / 2, my: (t[0].clientY + t[1].clientY) / 2 };
@@ -2321,7 +2328,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     svg.addEventListener("touchmove", function (e) {
       if (!t0) return; var t = e.touches, r = svg.getBoundingClientRect();
       if (t.length === 2 && t0.two) { e.preventDefault(); moved = true; var d = Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY), mx = (t[0].clientX + t[1].clientX) / 2, my = (t[0].clientY + t[1].clientY) / 2;
-        var u = unit(t0.mx, t0.my); z.s = Math.min(5, Math.max(1, t0.s * d / t0.d)); z.cx = u.x - (mx - r.left - r.width / 2) * (200 / z.s) / r.width; z.cy = u.y - (my - r.top - r.height / 2) * (200 / z.s) / r.width; t0.mx = mx; t0.my = my; t0.s = z.s; t0.d = d; upd(); return; }
+        var u = unit(t0.mx, t0.my); z.s = Math.min(6, Math.max(1, t0.s * d / t0.d)); z.cx = u.x - (mx - r.left - r.width / 2) * (200 / z.s) / r.width; z.cy = u.y - (my - r.top - r.height / 2) * (200 / z.s) / r.width; t0.mx = mx; t0.my = my; t0.s = z.s; t0.d = d; upd(); return; }
       if (t.length === 1 && !t0.two && z.s > 1) { e.preventDefault(); var dx = t[0].clientX - t0.x, dy = t[0].clientY - t0.y; if (Math.abs(t[0].clientX - t0.sx) + Math.abs(t[0].clientY - t0.sy) > 8) moved = true;
         z.cx -= dx * (200 / z.s) / r.width; z.cy -= dy * (200 / z.s) / r.width; t0.x = t[0].clientX; t0.y = t[0].clientY; upd(); }
     }, { passive: false });
@@ -2338,6 +2345,9 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     bar.appendChild(el("span", "bl-zlv"));
     bt("+", "Zoomer", function () { var r = svg.getBoundingClientRect(); zoomAt(z.s * 1.6, r.left + r.width / 2, r.top + r.height / 2); });
     bt("Tête", "Zoomer sur la tête", function () { z.s = 3.5; z.cx = 100; z.cy = 36; upd(); });
+    // main droite de la victime : à gauche de l'écran de face, à droite de dos
+    bt("Main D", "Zoomer sur la main droite", function () { z.s = 5.5; z.cx = side === "F" ? 31 : 169; z.cy = 283; upd(); });
+    bt("Main G", "Zoomer sur la main gauche", function () { z.s = 5.5; z.cx = side === "F" ? 169 : 31; z.cy = 283; upd(); });
     setTimeout(upd, 0);
     return bar;
   }
