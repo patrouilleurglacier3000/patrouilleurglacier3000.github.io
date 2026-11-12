@@ -1,4 +1,4 @@
-# Glacier 3000 Pisteurs
+# Glacier 3000 Patrouilleurs
 
-Appli de l’équipe des pisteurs (stock, tâches, planning, agenda, achats).
+Appli de l’équipe des patrouilleurs (stock, tâches, planning, agenda, achats).
 Les données sont dans la feuille Google du service, pas ici.

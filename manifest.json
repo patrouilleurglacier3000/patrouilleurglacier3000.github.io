@@ -1,6 +1,6 @@
 {
-  "name": "Glacier 3000 Pisteurs",
-  "short_name": "Pisteurs",
+  "name": "Glacier 3000 Patrouilleurs",
+  "short_name": "Patrouilleurs",
   "start_url": "/?app=1",
   "scope": "/",
   "display": "standalone",
