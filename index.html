@@ -813,7 +813,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794494381";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794494752";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2222,7 +2222,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     { k: "cou", f: "Cou", b: "Nuque", r: [80, 62, 40, 18] },
     { k: "epaule", f: "Épaule", fem: 1, m: 1, r: [36, 78, 32, 32] },
     { k: "thorax", f: "Thorax", only: "F", r: [80, 92, 40, 60] },
-    { k: "clavicule", f: "Clavicule", fem: 1, m: 1, only: "F", r: [66, 76, 34, 15] },
+    { k: "clavicule", f: "Clavicule", fem: 1, m: 1, only: "F", r: [64, 74, 36, 19] },
     { k: "omoplate", f: "Omoplate", fem: 1, m: 1, only: "B", r: [62, 82, 37, 52] },
     { k: "hautdos", f: "Haut du dos", only: "B", r: [99, 80, 2, 70], wide: [93, 80, 14, 70] },
     { k: "cotes", f: "Côtes", fem: 1, m: 1, plural: 1, r: [66, 108, 18, 62] },
@@ -2284,6 +2284,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       dr("ellipse", { cx: 92, cy: 30, rx: 4.5, ry: 2.8 }, "bl-eye"); dr("ellipse", { cx: 108, cy: 30, rx: 4.5, ry: 2.8 }, "bl-eye");
       dr("circle", { cx: 92, cy: 30, r: 1.6 }, "bl-pup"); dr("circle", { cx: 108, cy: 30, r: 1.6 }, "bl-pup");
       dr("path", { d: "M100 32 L96 42 Q100 44 104 42" }, "bl-ft");
+      dr("path", { d: "M97 84 Q84 80 70 84" }, "bl-ft"); dr("path", { d: "M103 84 Q116 80 130 84" }, "bl-ft"); // clavicules
       dr("path", { d: "M91 50 Q100 55 109 50" }, "bl-ft");
     } else {
       dr("path", { d: "M77 38 C76 4 124 4 123 38 C121 50 114 56 100 57 C86 56 79 50 77 38Z" }, "bl-hair");
@@ -2338,7 +2339,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     host.appendChild(col);
     if (!sel.length) { host.appendChild(el("div", "bl-zl", "Toucher l'endroit sur le bonhomme (D = droite de la victime)")); return; }
     // une ligne par lésion : type + douleur
-    var TY = ["Douleur", "Suspicion de fracture", "Plaie", "Entorse", "Contusion", "Luxation"];
+    var TY = ["Douleur", "Suspicion de fracture", "Déformation", "Plaie", "Entorse", "Contusion", "Luxation"];
     sel.forEach(function (id) {
       var zd = (b.f.zd = b.f.zd || {})[id] = b.f.zd[id] || { t: [], dl: "" }, card = el("div", "bl-les");
       var hd = el("div", "bl-les-h"); hd.appendChild(el("b", null, blZoneName(id)));
@@ -2482,9 +2483,9 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     return w;
   }
   // Os proposés seulement si « Suspicion de fracture » est choisi, selon l'endroit touché
-  var BL_OS = { jambe: ["Tibia", "Péroné"], cuisse: ["Fémur"], bras: ["Humérus"], avbras: ["Radius", "Cubitus"], main: ["Poignet", "Métacarpe", "Phalange"],
-    pied: ["Malléole", "Métatarse", "Calcanéum"], tete: ["Crâne", "Mâchoire"], cou: ["Colonne cervicale"], hautdos: ["Colonne dorsale"], genou: ["Rotule"],
-    epaule: ["Clavicule", "Omoplate", "Humérus"], thorax: ["Sternum", "Côtes"], "B|ventre": ["Colonne lombaire"] };
+  // seulement les os utiles : grands os et colonne
+  var BL_OS = { jambe: ["Tibia", "Péroné"], cuisse: ["Fémur"], bras: ["Humérus"], avbras: ["Radius", "Cubitus"], epaule: ["Clavicule"],
+    cou: ["Colonne cervicale"], hautdos: ["Colonne dorsale"], "B|ventre": ["Colonne lombaire"] };
   var BL_OS_DE = { "Tibia": "du tibia", "Péroné": "du péroné", "Fémur": "du fémur", "Humérus": "de l'humérus", "Radius": "du radius", "Cubitus": "du cubitus", "Poignet": "du poignet",
     "Métacarpe": "d'un métacarpe", "Phalange": "d'une phalange", "Malléole": "de la malléole", "Métatarse": "d'un métatarse", "Calcanéum": "du calcanéum", "Crâne": "du crâne",
     "Mâchoire": "de la mâchoire", "Colonne cervicale": "de la colonne cervicale", "Colonne dorsale": "de la colonne dorsale", "Colonne lombaire": "de la colonne lombaire",
