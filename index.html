@@ -637,6 +637,18 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .fbm-r span { color: var(--muted); font-weight: 600; }
 .fbm-r b { font-weight: 700; }
 .fbm-r.bad b { color: var(--red); }
+.fbm-r.ok b { color: var(--grn); }
+.fbm-r.bad b.list i:not(.bad) { color: var(--ink); }
+.bref { display: flex; flex-direction: column; gap: 8px; padding: 10px 0 12px; border-bottom: 2px solid #17324a; }
+.bref-who { font: 800 24px/1.15 var(--display); }
+.bref-abc { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; }
+.bref-abc span { display: flex; flex-direction: column; align-items: center; border-radius: 10px; padding: 4px 0; background: var(--grn-bg); color: var(--grn); }
+.bref-abc span.bad { background: #d63a3a; color: #fff; }
+.bref-abc b { font: 800 22px var(--body); line-height: 1.1; } .bref-abc small { font: 800 14px var(--body); }
+.bref-t { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.bref-t div { background: var(--bg); border-radius: 10px; padding: 6px 10px; display: flex; flex-direction: column; }
+.bref-t span { font: 700 13px var(--body); color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.bref-t b { font: 800 24px/1.15 var(--body); } .bref-t small { font-size: 13px; color: var(--muted); }
 .fbm-r i { font-style: normal; }
 .fbm-r b.list { display: flex; flex-direction: column; gap: 3px; }
 .fbm-r b.list i { padding-left: 14px; position: relative; }
@@ -770,7 +782,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794491159";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794491440";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2481,22 +2493,26 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (f.meca) L.push(["Circonstances", BL_MECA_TXT[f.meca] || f.meca]);
     var pls = blLesTxt(f).concat(f.plus ? [f.plus] : []);
     pls = blLesTxt(f).concat(f.plus ? [f.plus] : []);
-    if (pls.length) L.push(["Plainte principale", pls.join(" · "), false, pls.map(function (x) { return [x, false]; })]);
     var bad = BL_ABC.filter(function (x) { return abc[x.L] === "bad"; });
-    if (bad.length) {
-      var g = []; if (f.garrot) g.push("garrot " + blHM(f.garrot)); if (f.rcp) g.push("RCP " + blHM(f.rcp));
-      L.push(["xABCDE", bad.map(function (x) { return x.L + " : " + x.bad; }).concat(g).join(" · "), true]);
-    }
+    var g = []; if (f.garrot) g.push("Garrot posé à " + blHM(f.garrot)); if (f.rcp) g.push("RCP depuis " + blHM(f.rcp));
+    if (bad.length || g.length) { var it = bad.map(function (x) { return x.L + " : " + x.bad; }).concat(g); L.push(["xABCDE", it.join(" · "), true, it.map(function (x) { return [x, true]; })]); }
+    else L.push(["xABCDE", "tout normal", "ok"]);
+    var cBad = f.c_reg === "Irrégulier" || f.c_force === "Filant" || (f.c_coul && f.c_coul !== "Normale") || f.c_sue === "Oui";
     var c = [f.c_freq ? f.c_freq + "/min" : "", f.c_reg ? f.c_reg.toLowerCase() : "", f.c_force ? f.c_force.toLowerCase() : "", f.c_coul ? "peau " + f.c_coul.toLowerCase() : "", f.c_sue === "Oui" ? "sueurs" : ""].filter(Boolean);
-    if (c.length) L.push(["Circulation", c.join(" · ")]);
+    if (c.length) L.push(["Circulation", c.join(" · "), cBad]);
+    var vBad = (f.b_amp && f.b_amp !== "Normale") || f.b_reg === "Irrégulière";
     var v = [f.b_freq ? f.b_freq + "/min" : "", f.b_amp ? f.b_amp.toLowerCase() : "", f.b_reg ? f.b_reg.toLowerCase() : ""].filter(Boolean);
-    if (v.length) L.push(["Ventilation", v.join(" · ")]);
-    L.push(["Neurologique", BL_NEURO.map(function (n) { return blNeuroTxt(f, n); }).join(" · "), false, BL_NEURO.map(function (n) { return [blNeuroTxt(f, n), f[n.id] === "bad"]; })]);
+    if (v.length) L.push(["Ventilation", v.join(" · "), vBad]);
+    var nb = BL_NEURO.filter(function (n) { return f[n.id] === "bad"; });
+    if (!nb.length) L.push(["Neurologique", "tout normal", "ok"]);
+    else { var ni = nb.map(function (n) { return blNeuroTxt(f, n); }).concat(nb.length < BL_NEURO.length ? ["le reste normal"] : []); L.push(["Neurologique", ni.join(" · "), true, ni.map(function (x, i) { return [x, i < nb.length]; })]); }
+    if (pls.length) L.push(["Plainte principale", pls.join(" · "), false, pls.map(function (x) { return [x, false]; })]);
     if (f.prem || f.depuis) L.push({ head: "Si malaise" });
     if (f.prem) L.push(["Première fois", f.prem.toLowerCase()]);
     if (f.depuis) L.push(["Depuis", blDur(f.depuis)]);
-    L.push({ head: "Antécédents (MHTA)" });
-    BL_MHTA.forEach(function (m) { L.push([m.q, f[m.id + "_x"] ? (f[m.id] || "oui, à préciser") : "rien", !!f[m.id + "_x"]]); });
+    var mh = BL_MHTA.filter(function (m) { return f[m.id + "_x"]; });
+    if (!mh.length) L.push(["Antécédents", "aucun", "ok"]);
+    else { L.push({ head: "Antécédents (MHTA)" }); mh.forEach(function (m) { L.push([m.q, f[m.id] || "oui, à préciser", true]); }); }
     if ((f.suivi || []).length) {
       L.push({ head: "Suivi · réévaluations" });
       L.push({ table: 1 });
@@ -2508,13 +2524,32 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   function blResume(b) {
     return blLines(b).filter(function (l) { return !l.fig; }).map(function (l) { if (l.table) return (b.f.suivi || []).map(function (e) { return blHM(e.t) + " : " + blSuiviTxt(e); }).join("\n"); return l.head ? (l.val ? l.head.toUpperCase() + " : " + l.val : l.head.toUpperCase()) : l[3] && l[3].length > 1 ? l[0] + " :\n" + l[3].map(function (p) { return "  - " + p[0]; }).join("\n") : (l[0] + " : " + l[1]); }).join("\n");
   }
+  // En bref : ce qu'il faut voir d'un coup d'œil (médecin, hélico, radio)
+  function blBref(b) {
+    var f = b.f || {}, sv = f.suivi || [], w = el("div", "bref");
+    var who = [f.sexe, f.age !== "" && f.age != null ? f.age + " ans" : "", f.meca].filter(Boolean).join(" · ");
+    if (who) w.appendChild(el("div", "bref-who", who));
+    var ab = el("div", "bref-abc"), a = f.abc || {};
+    BL_ABC.forEach(function (x) { var bad = a[x.L] === "bad", c = el("span", bad ? "bad" : "ok"); c.appendChild(el("b", null, x.L)); c.appendChild(el("small", null, bad ? "!" : "✓")); c.title = bad ? x.bad : x.q + " normal"; ab.appendChild(c); });
+    w.appendChild(ab);
+    function lastOf(get, init) { for (var i = sv.length - 1; i >= 0; i--) { var v = get(sv[i]); if (v !== "" && v != null) return { v: v, t: sv[i].t }; } return init !== "" && init != null ? { v: init, t: b.start } : null; }
+    var T = [], p = lastOf(function (e) { return e.pouls; }, f.c_freq), r = lastOf(function (e) { return e.resp; }, f.b_freq), cs = lastOf(function (e) { return e.cons; }, f.n_pc === "bad" ? "Perte de connaissance" : "");
+    if (p) T.push(["Pouls", p.v + "/min", p.t]); if (r) T.push(["Ventilation", r.v + "/min", r.t]); if (cs) T.push(["Conscience", cs.v, cs.t]);
+    var mx = null;
+    (f.zones || []).forEach(function (id) { var d = (f.zd || {})[id], x = lastOf(function (e) { return e.zd && e.zd[id] !== undefined ? e.zd[id] : ""; }, d ? d.dl : ""); if (x && (!mx || +x.v > +mx.v)) mx = { v: x.v, t: x.t, id: id }; });
+    if (mx) T.push(["Douleur max", mx.v + "/10", mx.t, blZoneName(mx.id).toLowerCase()]);
+    if (T.length) { var tg = el("div", "bref-t"); T.forEach(function (x) { var c = el("div"); c.appendChild(el("span", null, x[0])); c.appendChild(el("b", null, x[1])); c.appendChild(el("small", null, (x[3] ? x[3] + " · " : "") + "à " + blHM(x[2]))); tg.appendChild(c); }); w.appendChild(tg); }
+    return w;
+  }
   function blSheet(b) {
     var box = el("div", "fbm");
+    box.appendChild(blBref(b));
     blLines(b).forEach(function (l) {
+      if (l[0] === "Victime" || (l[0] === "Circonstances" && b.f.meca && b.f.meca !== "Autre")) return; // déjà dans « en bref »
       if (l.fig) { box.appendChild(blFigsRO(b.f)); return; }
       if (l.table) { box.appendChild(blSuiviTable(b)); return; }
       if (l.head) { var h = el("div", "fbm-h"); h.appendChild(el("span", null, l.head)); if (l.val) h.appendChild(el("b", null, l.val)); box.appendChild(h); return; }
-      var r = el("div", "fbm-r" + (l[2] ? " bad" : "")); r.appendChild(el("span", null, l[0]));
+      var r = el("div", "fbm-r" + (l[2] === "ok" ? " ok" : l[2] ? " bad" : "")); r.appendChild(el("span", null, l[0]));
       if (l[3]) { var vb = el("b", "list"); l[3].forEach(function (p) { vb.appendChild(el("i", p[1] ? "bad" : "", p[0])); }); r.appendChild(vb); }
       else r.appendChild(el("b", null, l[1]));
       box.appendChild(r);
