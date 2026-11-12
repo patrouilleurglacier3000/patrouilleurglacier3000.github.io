@@ -624,7 +624,18 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .fb-r:last-child { border-bottom: 0; }
 .fb-r span { color: var(--muted); }
 .fb-r.bad b { color: var(--red); }
-@media (min-width: 900px) { .fb { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } .fb-h, .fb-msg { grid-column: 1 / -1; } }
+@media (min-width: 900px) { .fb { max-width: 820px; } }
+.fbm { background: var(--paper); border: 2px solid #17324a; border-radius: 14px; padding: 6px 16px 10px; flex: 1 1 100%; }
+.fbm-r { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 17px; line-height: 1.35; }
+.fbm-r span { color: var(--muted); font-weight: 600; }
+.fbm-r b { font-weight: 700; }
+.fbm-r.bad b { color: var(--red); }
+.fbm-r i { font-style: normal; }
+.fbm-r i.bad { color: var(--red); }
+.fbm-h { display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; padding: 6px 0 4px; border-bottom: 2px solid #17324a; font: 800 14px var(--body); text-transform: uppercase; letter-spacing: .05em; }
+.fbm-h b { text-transform: none; letter-spacing: 0; font-size: 17px; }
+.fbm-r:last-child { border-bottom: 0; }
+@media (max-width: 480px) { .fbm-r { grid-template-columns: 1fr; gap: 0; padding: 6px 0; } .fbm-r span { font-size: 13px; } }
 .bl-sum { white-space: pre-wrap; font: 15px/1.5 var(--body); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin: 4px 0 0; }
 .bl-acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
 .bl-del { width: 100%; min-height: 48px; border: 2px solid var(--red); color: var(--red); background: transparent; border-radius: 10px; font: 800 15px var(--body); cursor: pointer; margin-top: 4px; }
@@ -654,7 +665,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794486396";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794487581";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2003,13 +2014,13 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     { L: "B", q: "Respir.", bad: "Respiration anormale", col: "#F2A900" }, { L: "C", q: "Circul.", bad: "Circulation anormale", col: "#2E7D32" },
     { L: "D", q: "Consc.", bad: "Trouble de conscience", col: "#1565C0" }, { L: "E", q: "Froid", bad: "Hypothermie / exposé", col: "#6A1B9A" }];
   var BL_NEURO = [
+    { id: "n_pc", ok: "Pas de perte de connaissance", bad: "Perte de connaissance" },
     { id: "n_pup", ok: "Pupilles symétriques", bad: "Pupilles asymétriques" },
-    { id: "n_or", ok: "Orienté temps et espace", r: "orienté dans le temps et l'espace", bad: "Désorienté" },
-    { id: "n_mot", ok: "Motricité des 4 membres", r: "motricité des 4 membres conservée", bad: "Trouble de la motricité" },
-    { id: "n_sen", ok: "Sensibilité des 4 membres", r: "sensibilité des 4 membres conservée", bad: "Trouble de la sensibilité" },
-    { id: "n_pc", ok: "Pas de perte de connaissance", bad: "Perte de connaissance" }];
+    { id: "n_or", ok: "Orienté temps et espace", bad: "Désorienté" },
+    { id: "n_mot", ok: "Motricité des 4 membres", bad: "Trouble de la motricité" },
+    { id: "n_sen", ok: "Sensibilité des 4 membres", bad: "Trouble de la sensibilité" }];
   var BL_MHTA = [{ id: "m", q: "Maladies" }, { id: "h", q: "Hospitalisations" }, { id: "tr", q: "Traitements" }, { id: "al", q: "Allergies" }];
-  var BL_MECA = { "Chute": "une chute", "Coll. skieur": "une collision avec un skieur", "Coll. obstacle": "une collision avec un obstacle", "Avalanche": "une avalanche", "Malaise": "un malaise", "Autre": "" };
+  var BL_MECA = { "Chute à ski": "", "Chute à pied": "", "Chute": "une chute", "Coll. skieur": "une collision avec un skieur", "Coll. obstacle": "une collision avec un obstacle", "Avalanche": "une avalanche", "Malaise": "un malaise", "Autre": "" };
   var BL_OU = ["Tête", "Nuque", "Dos", "Épaule", "Bras", "Poignet / main", "Thorax", "Ventre", "Bassin", "Hanche", "Genou", "Jambe", "Cheville"];
   function blLoad() { try { var b = JSON.parse(localStorage.getItem(BL_KEY) || "null"); if (b && (b.v !== 3 || Date.now() - b.start > BL_MAX)) { localStorage.removeItem(BL_KEY); return null; } return b; } catch (e) { return null; } }
   function blSave(b) { try { localStorage.setItem(BL_KEY, JSON.stringify(b)); } catch (e) {} blShare(); }
@@ -2031,29 +2042,45 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   function blHM(t) { var d = new Date(t); return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2); }
   function blDur(m) { m = +m || 0; var h = Math.floor(m / 60), r = m % 60; return h ? h + " h" + (r ? " " + ("0" + r).slice(-2) : "") : r + " min"; }
   function blAbc(b) { return b.f.abc || {}; }
-  function blResume(b) {
-    var f = b.f, abc = blAbc(b), S = [];
-    var who = (f.sexe || "Victime") + (f.age !== "" && f.age != null ? " de " + f.age + " ans" : "");
-    var p = who + (f.meca && BL_MECA[f.meca] ? ", suite à " + BL_MECA[f.meca] : "");
-    var ou = (f.ou || []).join(", ").toLowerCase() + (f.cote ? " " + f.cote.toLowerCase() : "");
-    if (ou || (f.dl !== "" && f.dl != null)) p += ", se plaint d'une douleur" + (ou ? " : " + ou : "") + (f.dl !== "" && f.dl != null ? " (" + f.dl + "/10)" : "");
-    S.push(p + ".");
+  var BL_MECA_TXT = { "Coll. skieur": "Collision avec un skieur", "Coll. obstacle": "Collision avec un obstacle" };
+  function blLines(b) {
+    var f = b.f, abc = blAbc(b), L = [];
+    var who = [f.sexe, f.age !== "" && f.age != null ? f.age + " ans" : ""].filter(Boolean).join(" · ");
+    if (who) L.push(["Victime", who]);
+    if (f.meca) L.push(["Circonstances", BL_MECA_TXT[f.meca] || f.meca]);
+    var pl = [((f.ou || []).join(", ") + (f.cote ? " " + f.cote.toLowerCase() : "")).trim(), f.plus || "", f.dl !== "" && f.dl != null ? f.dl + "/10" : ""].filter(Boolean).join(" · ");
+    if (pl) L.push(["Plainte principale", pl]);
     var bad = BL_ABC.filter(function (x) { return abc[x.L] === "bad"; });
-    var g = [];
-    if (f.garrot) g.push("garrot posé à " + blHM(f.garrot));
-    if (f.rcp) g.push("RCP commencée à " + blHM(f.rcp));
-    S.push("xABCDE : " + (bad.length ? bad.map(function (x) { return x.L + " " + x.bad.toLowerCase(); }).join(", ") + (g.length ? " (" + g.join(", ") + ")" : "") + (bad.length < 6 ? ", le reste OK." : ".") : "RAS."));
+    if (bad.length) {
+      var g = []; if (f.garrot) g.push("garrot " + blHM(f.garrot)); if (f.rcp) g.push("RCP " + blHM(f.rcp));
+      L.push(["xABCDE", bad.map(function (x) { return x.L + " : " + x.bad; }).concat(g).join(" · "), true]);
+    }
     var v = [f.b_freq ? f.b_freq + "/min" : "", f.b_amp ? f.b_amp.toLowerCase() : "", f.b_reg ? f.b_reg.toLowerCase() : ""].filter(Boolean);
-    if (v.length) S.push("Ventilation " + v.join(", ") + ".");
+    if (v.length) L.push(["Ventilation", v.join(" · ")]);
     var c = [f.c_freq ? f.c_freq + "/min" : "", f.c_reg ? f.c_reg.toLowerCase() : "", f.c_force ? f.c_force.toLowerCase() : "", f.c_coul ? "peau " + f.c_coul.toLowerCase() : "", f.c_sue === "Oui" ? "sueurs" : ""].filter(Boolean);
-    if (c.length) S.push("Circulation " + c.join(", ") + ".");
-    S.push("Neuro : " + BL_NEURO.map(function (n) { return f[n.id] === "bad" ? n.bad.toLowerCase() : (n.r || n.ok.toLowerCase()); }).join(", ") + ".");
-    var mh = BL_MHTA.filter(function (m) { return f[m.id + "_x"]; });
-    S.push("MHTA : " + (mh.length ? mh.map(function (m) { return m.q.toLowerCase() + " " + (f[m.id] || "(à préciser)"); }).join(" ; ") : "rien") + ".");
-    if (f.prem) S.push("Première fois : " + f.prem.toLowerCase() + ".");
-    if (f.depuis) S.push("Depuis " + blDur(f.depuis) + ".");
-    if (f.evac) S.push("Évacuation : " + f.evac.toLowerCase() + ".");
-    return S.join("\n");
+    if (c.length) L.push(["Circulation", c.join(" · ")]);
+    var nb = BL_NEURO.some(function (n) { return f[n.id] === "bad"; });
+    L.push(["Neurologique", BL_NEURO.map(function (n) { return f[n.id] === "bad" ? n.bad : n.ok; }).join(" · "), false, BL_NEURO.map(function (n) { return [f[n.id] === "bad" ? n.bad : n.ok, f[n.id] === "bad"]; })]);
+    L.push({ head: "Antécédents (MHTA)" });
+    BL_MHTA.forEach(function (m) { L.push([m.q, f[m.id + "_x"] ? (f[m.id] || "oui, à préciser") : "rien", !!f[m.id + "_x"]]); });
+    if (f.prem) L.push(["1re fois", f.prem.toLowerCase()]);
+    if (f.depuis) L.push(["Depuis", blDur(f.depuis)]);
+    if (f.evac) L.push({ head: "Évacuation", val: f.evac });
+    return L;
+  }
+  function blResume(b) {
+    return blLines(b).map(function (l) { return l.head ? (l.val ? l.head.toUpperCase() + " : " + l.val : l.head.toUpperCase()) : (l[0] + " : " + l[1]); }).join("\n");
+  }
+  function blSheet(b) {
+    var box = el("div", "fbm");
+    blLines(b).forEach(function (l) {
+      if (l.head) { var h = el("div", "fbm-h"); h.appendChild(el("span", null, l.head)); if (l.val) h.appendChild(el("b", null, l.val)); box.appendChild(h); return; }
+      var r = el("div", "fbm-r" + (l[2] ? " bad" : "")); r.appendChild(el("span", null, l[0]));
+      if (l[3]) { var vb = el("b"); l[3].forEach(function (p, k) { if (k) vb.appendChild(document.createTextNode(" · ")); var sp = el("i", p[1] ? "bad" : "", p[0]); vb.appendChild(sp); }); r.appendChild(vb); }
+      else r.appendChild(el("b", null, l[1]));
+      box.appendChild(r);
+    });
+    return box;
   }
   function blRefresh() { var y = window.scrollY; renderBilan(); window.scrollTo(0, y); }
   function blStart() { var b = { v: 3, id: "b" + Date.now().toString(36), start: Date.now(), f: { abc: {} } }; blShareOff = false; blShareSt = ""; blSave(b); renderBilan(); goTop(); }
@@ -2111,9 +2138,11 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var s1 = blSec(v, "1", "Circonstances", "#455a64");
     blNum(b, s1, "age", "Âge", "ans", 110, [-5, -1, 1, 5], 30);
     blSeg(b, s1, "sexe", "Sexe", ["Homme", "Femme"]);
-    blSeg(b, s1, "meca", "Suite à", ["Chute", "Coll. skieur", "Coll. obstacle", "Avalanche", "Malaise", "Autre"]);
+    blSeg(b, s1, "meca", "Suite à", ["Chute à ski", "Chute à pied", "Coll. skieur", "Coll. obstacle", "Avalanche", "Malaise", "Autre"]);
     blSeg(b, s1, "ou", "Douleur", BL_OU, true);
     blSeg(b, s1, "cote", "Côté", ["Gauche", "Droit"]);
+    var pr = el("div", "bf-r t"); pr.appendChild(el("span", "bf-q", "Précision")); var pc = el("div", "bf-c"), px = document.createElement("input"); px.type = "text"; px.className = "bf-x"; px.placeholder = "Autre blessure, détail…"; px.value = f.plus || ""; px.setAttribute("aria-label", "Précision sur la plainte");
+    px.addEventListener("input", function () { b.f.plus = px.value; blSave(b); }); pc.appendChild(px); pr.appendChild(pc); s1.appendChild(pr);
     blNum(b, s1, "dl", "Intensité", "/10", 10, [-1, 1], 5);
     // 2. xABCDE : vert d'office
     var s2 = blSec(v, "2", "xABCDE · toucher ce qui ne va pas", "#C62828");
@@ -2200,25 +2229,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var hd = el("div", "fb-h"); var ht = el("div"); ht.appendChild(el("b", null, "Fiche bilan victime")); ht.appendChild(el("span", null, blDate(x.start) + " · début " + blHM(x.start)));
     hd.appendChild(ht); hd.appendChild(el("span", "fb-st" + (b.done ? " done" : ""), b.done ? "Terminé " + blHM(b.end || x.upd) : "En cours · " + blHM(x.upd || x.start)));
     sheet.appendChild(hd);
-    var msg = el("div", "fb-msg"); msg.appendChild(el("div", "fb-k", "À transmettre (144 / Rega)")); msg.appendChild(el("pre", null, blResume(b))); sheet.appendChild(msg);
-    function card(L, title, col, rows) {
-      rows = rows.filter(function (r) { return r && r[1] !== "" && r[1] != null; }); if (!rows.length) return;
-      var c = el("div", "fb-c"); c.style.setProperty("--c", col);
-      var lt = el("div", "fb-l", L); c.appendChild(lt); var bd = el("div", "fb-b"); bd.appendChild(el("div", "fb-t", title));
-      rows.forEach(function (r) { var ln = el("div", "fb-r" + (r[2] ? " bad" : "")); ln.appendChild(el("span", null, r[0])); ln.appendChild(el("b", null, String(r[1]))); bd.appendChild(ln); });
-      c.appendChild(bd); sheet.appendChild(c);
-    }
-    card("1", "Circonstances", "#455a64", [["Âge", f.age !== "" && f.age != null ? f.age + " ans" : ""], ["Sexe", f.sexe || ""], ["Suite à", f.meca || ""],
-      ["Douleur", ((f.ou || []).join(", ") + (f.cote ? " " + f.cote.toLowerCase() : "")).trim()], ["Intensité", f.dl !== "" && f.dl != null ? f.dl + " / 10" : ""]]);
-    var xr = BL_ABC.map(function (it) { return [it.L, abc[it.L] === "bad" ? it.bad : "OK", abc[it.L] === "bad"]; });
-    if (f.garrot) xr.push(["Garrot", "posé à " + blHM(f.garrot), true]); if (f.rcp) xr.push(["RCP / DAE", "commencés à " + blHM(f.rcp), true]);
-    card("2", "xABCDE", "#C62828", xr);
-    card("3", "Bilan complémentaire", "#1565C0", [
-      ["Ventilation", [f.b_freq ? f.b_freq + "/min" : "", f.b_amp || "", f.b_reg || ""].filter(Boolean).join(" · ")],
-      ["Circulation", [f.c_freq ? f.c_freq + "/min" : "", f.c_reg || "", f.c_force || ""].filter(Boolean).join(" · ")],
-      ["Peau", [f.c_coul || "", f.c_sue === "Oui" ? "sueurs" : ""].filter(Boolean).join(" · ")]].concat(BL_NEURO.map(function (n) { return [n === BL_NEURO[0] ? "Neurologique" : "", f[n.id] === "bad" ? n.bad : n.ok, f[n.id] === "bad"]; })));
-    card("4", "MHTA", "#6A1B9A", BL_MHTA.map(function (m) { return [m.q, f[m.id + "_x"] ? (f[m.id] || "à préciser") : "Rien", !!f[m.id + "_x"]]; }).concat([["1re fois", f.prem || ""], ["Depuis", f.depuis ? blDur(f.depuis) : ""]]));
-    card("5", "Évacuation", "#17324a", [["Moyen", f.evac || ""]]);
+    sheet.appendChild(blSheet(b));
     v.appendChild(sheet);
     var dl = el("button", "bl-del", blDelArm ? "Confirmer : supprimer cette fiche pour tous" : "Supprimer cette fiche"); dl.type = "button";
     dl.addEventListener("click", function () {
@@ -2229,7 +2240,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   }
   function blEnd(b, body) {
     var txt = blResume(b);
-    body.appendChild(el("pre", "bl-sum", txt));
+    body.appendChild(blSheet(b));
     var row = el("div", "bl-acts");
     var cp = el("button", "bf-o", "Copier"); cp.type = "button";
     cp.addEventListener("click", function () { (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function () { showStatus("Résumé copié", false); }, function () { showStatus("Copie impossible : sélectionne le texte à la main.", true); }); });
