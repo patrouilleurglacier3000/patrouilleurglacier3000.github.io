@@ -638,6 +638,9 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .fbm-r b { font-weight: 700; }
 .fbm-r.bad b { color: var(--red); }
 .fbm-r i { font-style: normal; }
+.fbm-r b.list { display: flex; flex-direction: column; gap: 3px; }
+.fbm-r b.list i { padding-left: 14px; position: relative; }
+.fbm-r b.list i::before { content: "•"; position: absolute; left: 0; color: var(--muted); }
 .fbm-r i.bad { color: var(--red); }
 .fbm-h { display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; padding: 6px 0 4px; border-bottom: 2px solid #17324a; font: 800 14px var(--body); text-transform: uppercase; letter-spacing: .05em; }
 .fbm-h b { text-transform: none; letter-spacing: 0; font-size: 17px; }
@@ -670,6 +673,16 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .bl-sc.on { background: hsl(var(--h) 70% 40%); border-color: hsl(var(--h) 70% 40%); color: #fff; }
 .bf-sub.big { font-size: 17px; }
 .bl-ab span { font-size: 9.5px !important; line-height: 1.1; text-align: center; overflow-wrap: anywhere; padding: 0 1px; }
+#bl-zoom { position: fixed; inset: 0; z-index: 80; background: var(--bg); display: flex; flex-direction: column; gap: 6px; padding: calc(10px + env(safe-area-inset-top, 0px)) 12px calc(10px + env(safe-area-inset-bottom, 0px)); }
+#bl-zoom[hidden] { display: none; }
+.blz-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.blz-top .bf-o { min-height: 48px; font-size: 17px; padding: 4px 18px; }
+.blz-ok { width: auto !important; min-height: 48px !important; padding: 0 22px; font-size: 18px !important; background: #2e9461 !important; }
+.blz-fig { flex: none; align-items: center; }
+.blz-fig .bl-svg { max-width: none; }
+.blz-fig .bl-side { font-size: 30px; width: 30px; }
+#bl-zoom .bl-zl { text-align: center; }
+.bl-zoombtn { flex: 1 1 100%; min-height: 44px; }
 .bl-sum { white-space: pre-wrap; font: 15px/1.5 var(--body); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin: 4px 0 0; }
 .bl-acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
 .bl-del { width: 100%; min-height: 48px; border: 2px solid var(--red); color: var(--red); background: transparent; border-radius: 10px; font: 800 15px var(--body); cursor: pointer; margin-top: 4px; }
@@ -699,7 +712,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794488784";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794489360";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1415,6 +1428,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   function leaves(root) { var out = []; root.querySelectorAll("span,b,strong,h2,h3,h4,p,div,label,button,a,li").forEach(function (e) { if (!e.children.length && e.textContent.trim().length > 2) out.push(e); }); return out; }
   document.addEventListener("click", function (ev) {
     var t = ev.target; if (!t || !t.closest || !t.closest("#view")) return;
+    if (t.closest("#view.bl")) { lastTap = null; return; } // le bilan garde la page exactement où elle est
     var row = t.closest(".card,.tk,.crow,.dm,.ev,li,.prow,.row,.cmd,.order") || t;
     var L = leaves(row)[0] || (t.textContent.trim().length > 2 ? t : null); if (!L) return;
     lastTap = { t: L.textContent.trim(), top: L.getBoundingClientRect().top, at: Date.now() };
@@ -2076,7 +2090,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     { k: "tete", f: "Tête", b: "Arrière de la tête", r: [62, 6, 76, 58] },
     { k: "cou", f: "Cou", b: "Nuque", r: [80, 62, 40, 18] },
     { k: "epaule", f: "Épaule", fem: 1, m: 1, r: [36, 78, 32, 32] },
-    { k: "thorax", f: "Thorax", only: "F", r: [80, 80, 40, 72] },
+    { k: "thorax", f: "Thorax", only: "F", r: [80, 92, 40, 60] },
+    { k: "clavicule", f: "Clavicule", fem: 1, m: 1, only: "F", r: [66, 76, 34, 15] },
     { k: "omoplate", f: "Omoplate", fem: 1, m: 1, only: "B", r: [62, 82, 37, 52] },
     { k: "hautdos", f: "Haut du dos", only: "B", r: [99, 80, 2, 70], wide: [93, 80, 14, 70] },
     { k: "cotes", f: "Côtes", fem: 1, m: 1, plural: 1, r: [66, 108, 18, 62] },
@@ -2151,6 +2166,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       row.appendChild(el("span", "bl-side", side === "F" ? "G" : "D")); col.appendChild(row); wrap.appendChild(col);
     });
     host.appendChild(wrap);
+    var zb = el("button", "bf-o bl-zoombtn", "🔍 Agrandir le bonhomme"); zb.type = "button"; zb.addEventListener("click", function () { blZoomSide = "F"; blZoomOpen(); }); host.appendChild(zb);
     if (!sel.length) { host.appendChild(el("div", "bl-zl", "Toucher l'endroit sur le bonhomme (D = droite de la victime)")); return; }
     // une ligne par lésion : type + douleur
     var TY = ["Douleur", "Suspicion de fracture", "Plaie", "Entorse", "Contusion", "Luxation"];
@@ -2168,6 +2184,28 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       dr.appendChild(sc); card.appendChild(dr);
       host.appendChild(card);
     });
+  }
+  var blZoomSide = "F";
+  function blZoomOpen() {
+    var b = blLoad(); if (!b) return;
+    var o = $("bl-zoom"); if (!o) { o = el("div"); o.id = "bl-zoom"; o.setAttribute("role", "dialog"); o.setAttribute("aria-label", "Bonhomme agrandi"); document.body.appendChild(o); }
+    o.textContent = ""; o.hidden = false; document.body.style.overflow = "hidden";
+    var top = el("div", "blz-top"), seg = el("div", "bf-c");
+    [["F", "FACE"], ["B", "DOS"]].forEach(function (x) { var bt = el("button", "bf-o" + (blZoomSide === x[0] ? " on" : ""), x[1]); bt.type = "button"; bt.style.setProperty("--c", "#455a64"); bt.addEventListener("click", function () { blZoomSide = x[0]; blZoomOpen(); }); seg.appendChild(bt); });
+    top.appendChild(seg);
+    var ok = el("button", "bl-go blz-ok", "Terminé"); ok.type = "button"; ok.addEventListener("click", function () { o.hidden = true; document.body.style.overflow = ""; blRefresh(); }); top.appendChild(ok);
+    o.appendChild(top);
+    var row = el("div", "bl-fig-r blz-fig"), side = blZoomSide;
+    row.appendChild(el("span", "bl-side", side === "F" ? "D" : "G"));
+    row.appendChild(blFigure(side, blZonesFor(side), b.f.zones || [], function (id) {
+      var bb = blLoad(); if (!bb) return; var a = (bb.f.zones || []).slice(), i = a.indexOf(id); if (i >= 0) { a.splice(i, 1); if (bb.f.zd) delete bb.f.zd[id]; } else a.push(id); bb.f.zones = a; blSave(bb); blZoomOpen();
+    }));
+    row.appendChild(el("span", "bl-side", side === "F" ? "G" : "D"));
+    var hh = Math.max(300, window.innerHeight - 190), sv = row.querySelector("svg");
+    row.style.height = hh + "px"; sv.style.height = hh + "px"; sv.style.width = Math.min(window.innerWidth - 90, hh * 200 / 440) + "px";
+    o.appendChild(row);
+    var names = (b.f.zones || []).map(blZoneName);
+    o.appendChild(el("div", "bl-zl" + (names.length ? " on" : ""), names.length ? names.join(" · ") : "Toucher l'endroit douloureux"));
   }
   function blLesTxt(f) {
     return (f.zones || []).map(function (id) {
@@ -2213,8 +2251,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var who = [f.sexe, f.age !== "" && f.age != null ? f.age + " ans" : ""].filter(Boolean).join(" · ");
     if (who) L.push(["Victime", who]);
     if (f.meca) L.push(["Circonstances", BL_MECA_TXT[f.meca] || f.meca]);
-    var pl = blLesTxt(f).concat(f.plus ? [f.plus] : []).join(" · ");
-    if (pl) L.push(["Plainte principale", pl]);
+    var pls = blLesTxt(f).concat(f.plus ? [f.plus] : []);
+    if (pls.length) L.push(["Plainte principale", pls.join(" · "), false, pls.map(function (x) { return [x, false]; })]);
     var bad = BL_ABC.filter(function (x) { return abc[x.L] === "bad"; });
     if (bad.length) {
       var g = []; if (f.garrot) g.push("garrot " + blHM(f.garrot)); if (f.rcp) g.push("RCP " + blHM(f.rcp));
@@ -2231,18 +2269,18 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     L.push({ head: "Antécédents (MHTA)" });
     BL_MHTA.forEach(function (m) { L.push([m.q, f[m.id + "_x"] ? (f[m.id] || "oui, à préciser") : "rien", !!f[m.id + "_x"]]); });
     if (f.evac) L.push({ head: "Évacuation", val: f.evac });
-    if ((f.mat || []).length) { if (!f.evac) L.push({ head: "Évacuation" }); L.push(["Matériel demandé", f.mat.join(" · "), true]); }
+    if ((f.mat || []).length) { if (!f.evac) L.push({ head: "Évacuation" }); L.push(["Matériel demandé", f.mat.join(" · "), true, f.mat.map(function (x) { return [x, true]; })]); }
     return L;
   }
   function blResume(b) {
-    return blLines(b).map(function (l) { return l.head ? (l.val ? l.head.toUpperCase() + " : " + l.val : l.head.toUpperCase()) : (l[0] + " : " + l[1]); }).join("\n");
+    return blLines(b).map(function (l) { return l.head ? (l.val ? l.head.toUpperCase() + " : " + l.val : l.head.toUpperCase()) : l[3] && l[3].length > 1 ? l[0] + " :\n" + l[3].map(function (p) { return "  - " + p[0]; }).join("\n") : (l[0] + " : " + l[1]); }).join("\n");
   }
   function blSheet(b) {
     var box = el("div", "fbm");
     blLines(b).forEach(function (l) {
       if (l.head) { var h = el("div", "fbm-h"); h.appendChild(el("span", null, l.head)); if (l.val) h.appendChild(el("b", null, l.val)); box.appendChild(h); return; }
       var r = el("div", "fbm-r" + (l[2] ? " bad" : "")); r.appendChild(el("span", null, l[0]));
-      if (l[3]) { var vb = el("b"); l[3].forEach(function (p, k) { if (k) vb.appendChild(document.createTextNode(" · ")); var sp = el("i", p[1] ? "bad" : "", p[0]); vb.appendChild(sp); }); r.appendChild(vb); }
+      if (l[3]) { var vb = el("b", "list"); l[3].forEach(function (p) { vb.appendChild(el("i", p[1] ? "bad" : "", p[0])); }); r.appendChild(vb); }
       else r.appendChild(el("b", null, l[1]));
       box.appendChild(r);
     });
