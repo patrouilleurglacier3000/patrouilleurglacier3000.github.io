@@ -748,7 +748,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .bl-tb td { font-size: 18px; white-space: normal; min-width: 62px; }
 .bl-tb td .ar { font-style: normal; margin-left: 3px; font-size: 16px; color: var(--muted); }
 .bl-tb td .ar.bad { color: #d63a3a; } .bl-tb td .ar.good { color: #2e9461; }
-.bl-card-b .wide { grid-column: 1 / -1; }
+.bl-card-b .wide { grid-column: auto; }
 .bl-revh.compl { background: #1565C0; font: 800 22px var(--display); }
 .bl-card-b { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .bl-card-b .bf-o { min-height: 46px; }
@@ -789,7 +789,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794491884";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794492170";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2572,7 +2572,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     return box;
   }
   function blRefresh() { var y = window.scrollY; renderBilan(); window.scrollTo(0, y); }
-  function blStart() { var b = { v: 3, id: "b" + Date.now().toString(36), start: Date.now(), part: "first", f: { abc: {} } }; blShareOff = false; blShareSt = ""; blEdit = true; blSave(b); renderBilan(); goTop(); }
+  function blStart() { var b = { v: 3, id: "b" + Date.now().toString(36), start: Date.now(), part: "all", f: { abc: {} } }; blShareOff = false; blShareSt = ""; blEdit = true; blSave(b); renderBilan(); goTop(); }
   function blSec(v, L, title, col, fg) {
     var sec = el("section", "bf"); sec.style.setProperty("--c", col); sec.style.setProperty("--f", fg || "#fff");
     var lt = el("div", "bf-l"); lt.appendChild(el("b", null, L)); sec.appendChild(lt);
@@ -2747,9 +2747,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       c.appendChild(el("small", "st", (x.b.done ? "Terminé" : "En cours") + " · mis à jour à " + blHM(x.upd || x.start) + (nsv ? " · " + nsv + " réévaluation" + (nsv > 1 ? "s" : "") : "")));
       var bt = el("div", "bl-card-b");
       var vw = el("button", "bf-o wide", "Voir la fiche"); vw.type = "button"; vw.addEventListener("click", function () { blViewId = x.id; blDelArm = false; renderBilan(); goTop(); });
-      var cm = el("button", "bf-o" + (x.b.compl ? "" : " on"), x.b.compl ? "Compléter ✓" : "Compléter"); cm.type = "button"; cm.style.setProperty("--c", "#1565C0"); cm.addEventListener("click", function () { blReprendre(x, "compl"); });
       var cp = el("button", "bf-o on", "Réévaluer"); cp.type = "button"; cp.style.setProperty("--c", "#00838F"); cp.addEventListener("click", function () { blRevOpen(x); });
-      bt.appendChild(vw); bt.appendChild(cm); bt.appendChild(cp); c.appendChild(bt);
+      bt.appendChild(vw); bt.appendChild(cp); c.appendChild(bt);
       v.appendChild(c);
     });
   }
@@ -2822,7 +2821,6 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     sheet.appendChild(hd);
     sheet.appendChild(blSheet(b));
     v.appendChild(sheet);
-    var cm = el("button", "bl-fin", x.b.compl ? "Compléter le bilan ✓ (modifier)" : "Compléter le bilan (circulation, ventilation, neurologique, antécédents)"); cm.type = "button"; cm.style.background = "#1565C0"; cm.addEventListener("click", function () { blReprendre(x, "compl"); }); v.appendChild(cm);
     var cpl = el("button", "bl-fin", "Réévaluer (constantes, douleur)"); cpl.type = "button"; cpl.style.background = "#00838F"; cpl.addEventListener("click", function () { blRevOpen(x); }); v.appendChild(cpl);
     var mod = el("button", "bl-mod", "Modifier toute la fiche"); mod.type = "button"; mod.addEventListener("click", function () { blReprendre(x); }); v.appendChild(mod);
     var dl = el("button", "bl-del", blDelArm ? "Confirmer : supprimer cette fiche pour tous" : "Supprimer cette fiche"); dl.type = "button";
