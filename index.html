@@ -638,6 +638,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .fbm-r b { font-weight: 700; }
 .fbm-r.bad b { color: var(--red); }
 .fbm-r.ok b { color: var(--grn); }
+.fbm-r.todo b { color: var(--muted); font-style: italic; }
 .fbm-r.bad b.list i:not(.bad) { color: var(--ink); }
 .fbm-r.ok b.list i { color: var(--grn); }
 .bl-abclg { flex: 1 1 100%; display: flex; flex-direction: column; gap: 2px; font-size: 14px; color: var(--muted); }
@@ -747,6 +748,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .bl-tb td { font-size: 18px; white-space: normal; min-width: 62px; }
 .bl-tb td .ar { font-style: normal; margin-left: 3px; font-size: 16px; color: var(--muted); }
 .bl-tb td .ar.bad { color: #d63a3a; } .bl-tb td .ar.good { color: #2e9461; }
+.bl-card-b .wide { grid-column: 1 / -1; }
+.bl-revh.compl { background: #1565C0; font: 800 22px var(--display); }
 .bl-card-b { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .bl-card-b .bf-o { min-height: 46px; }
 .bl-body.ro { margin: 8px 0 4px; }
@@ -786,7 +789,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794491515";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794491884";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2505,6 +2508,9 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var g = []; if (f.garrot) g.push("Garrot posé à " + blHM(f.garrot)); if (f.rcp) g.push("RCP depuis " + blHM(f.rcp));
     var it6 = BL_ABC.map(function (x) { var k = abc[x.L] === "bad"; return [x.L + " · " + x.en + " : " + (k ? x.bad.toLowerCase() : "normal"), k]; }).concat(g.map(function (x) { return [x, true]; }));
     L.push(["xABCDE", it6.map(function (x) { return x[0]; }).join(" · "), bad.length || g.length ? true : "ok", it6]);
+    var cDone = !b.part || b.part !== "first" || b.compl;
+    if (!cDone) L.push(["Bilan complémentaire", "pas encore fait", "todo"]);
+    if (cDone) {
     var cBad = f.c_reg === "Irrégulier" || f.c_force === "Filant" || (f.c_coul && f.c_coul !== "Normale") || f.c_sue === "Oui";
     var c = [f.c_freq ? f.c_freq + "/min" : "", f.c_reg ? f.c_reg.toLowerCase() : "", f.c_force ? f.c_force.toLowerCase() : "", f.c_coul ? "peau " + f.c_coul.toLowerCase() : "", f.c_sue === "Oui" ? "sueurs" : ""].filter(Boolean);
     if (c.length) L.push(["Circulation", c.join(" · "), cBad]);
@@ -2514,12 +2520,13 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var nb = BL_NEURO.filter(function (n) { return f[n.id] === "bad"; });
     if (!nb.length) L.push(["Neurologique", "tout normal", "ok"]);
     else { var ni = nb.map(function (n) { return blNeuroTxt(f, n); }).concat(nb.length < BL_NEURO.length ? ["le reste normal"] : []); L.push(["Neurologique", ni.join(" · "), true, ni.map(function (x, i) { return [x, i < nb.length]; })]); }
+    }
     if (pls.length) L.push(["Plainte principale", pls.join(" · "), false, pls.map(function (x) { return [x, false]; })]);
     if (f.prem || f.depuis) L.push({ head: "Si malaise" });
     if (f.prem) L.push(["Première fois", f.prem.toLowerCase()]);
     if (f.depuis) L.push(["Depuis", blDur(f.depuis)]);
     var mh = BL_MHTA.filter(function (m) { return f[m.id + "_x"]; });
-    if (!mh.length) L.push(["Antécédents", "aucun", "ok"]);
+    if (!cDone) {} else if (!mh.length) L.push(["Antécédents", "aucun", "ok"]);
     else { L.push({ head: "Antécédents (MHTA)" }); mh.forEach(function (m) { L.push([m.q, f[m.id] || "oui, à préciser", true]); }); }
     if ((f.suivi || []).length) {
       L.push({ head: "Suivi · réévaluations" });
@@ -2557,7 +2564,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       if (l.fig) { box.appendChild(blFigsRO(b.f)); return; }
       if (l.table) { box.appendChild(blSuiviTable(b)); return; }
       if (l.head) { var h = el("div", "fbm-h"); h.appendChild(el("span", null, l.head)); if (l.val) h.appendChild(el("b", null, l.val)); box.appendChild(h); return; }
-      var r = el("div", "fbm-r" + (l[2] === "ok" ? " ok" : l[2] ? " bad" : "")); r.appendChild(el("span", null, l[0]));
+      var r = el("div", "fbm-r" + (l[2] === "ok" ? " ok" : l[2] === "todo" ? " todo" : l[2] ? " bad" : "")); r.appendChild(el("span", null, l[0]));
       if (l[3]) { var vb = el("b", "list"); l[3].forEach(function (p) { vb.appendChild(el("i", p[1] ? "bad" : "", p[0])); }); r.appendChild(vb); }
       else r.appendChild(el("b", null, l[1]));
       box.appendChild(r);
@@ -2565,7 +2572,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     return box;
   }
   function blRefresh() { var y = window.scrollY; renderBilan(); window.scrollTo(0, y); }
-  function blStart() { var b = { v: 3, id: "b" + Date.now().toString(36), start: Date.now(), f: { abc: {} } }; blShareOff = false; blShareSt = ""; blEdit = true; blSave(b); renderBilan(); goTop(); }
+  function blStart() { var b = { v: 3, id: "b" + Date.now().toString(36), start: Date.now(), part: "first", f: { abc: {} } }; blShareOff = false; blShareSt = ""; blEdit = true; blSave(b); renderBilan(); goTop(); }
   function blSec(v, L, title, col, fg) {
     var sec = el("section", "bf"); sec.style.setProperty("--c", col); sec.style.setProperty("--f", fg || "#fff");
     var lt = el("div", "bf-l"); lt.appendChild(el("b", null, L)); sec.appendChild(lt);
@@ -2605,7 +2612,16 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     sb.addEventListener("click", function () { b.f[id] = t ? null : Date.now(); blSave(b); blRefresh(); });
     row.appendChild(sb); body.appendChild(row);
   }
+  // garde l'écran allumé pendant qu'on remplit une fiche
+  var blWL = null;
+  function blWake() {
+    var want = area === "bilan" && (blEdit || blRev) && !document.hidden;
+    if (want && !blWL && navigator.wakeLock) navigator.wakeLock.request("screen").then(function (l) { blWL = l; l.addEventListener("release", function () { if (blWL === l) blWL = null; }); }).catch(function () {});
+    if (!want && blWL) { var l = blWL; blWL = null; l.release().catch(function () {}); }
+  }
+  setInterval(blWake, 3000); document.addEventListener("visibilitychange", blWake);
   function renderBilan() {
+    setTimeout(blWake, 0);
     renderHomebar(); var v = clearView(); v.classList.add("bl"); var b = blLoad();
     if (blRev) return blRevView(v);
     if (blViewId) return blView(v);
@@ -2614,10 +2630,15 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       if (b) {
         var cur = el("div", "bl-cur"); cur.appendChild(el("b", null, "Fiche en cours sur cet appareil · début " + blHM(b.start)));
         var rs = el("button", "bl-go", "Reprendre la fiche"); rs.type = "button"; rs.addEventListener("click", function () { blEdit = true; renderBilan(); goTop(); }); cur.appendChild(rs);
-        var ab = el("button", "bl-del", blAbArm ? "Confirmer : abandonner et effacer cette fiche" : "Abandonner cette fiche"); ab.type = "button";
+        var ed = b.part && b.part !== "first";
+        if (ed) cur.firstChild.textContent = "Complément en cours sur cet appareil · fiche de " + blHM(b.start);
+        var ab = el("button", "bl-del", ed ? (blAbArm ? "Confirmer : annuler les modifications" : "Annuler les modifications") : blAbArm ? "Confirmer : abandonner et effacer cette fiche" : "Abandonner cette fiche"); ab.type = "button";
         ab.addEventListener("click", function () {
           if (!blAbArm) { blAbArm = true; renderBilan(); setTimeout(function () { if (blAbArm) { blAbArm = false; if (area === "bilan") renderBilan(); } }, 5000); return; }
           blAbArm = false; clearTimeout(blShareT); try { localStorage.removeItem(BL_KEY); } catch (e) {}
+          if (ed) { var o = null; try { o = JSON.parse(localStorage.getItem(BL_KEY + "-orig") || "null"); localStorage.removeItem(BL_KEY + "-orig"); } catch (e) {}
+            if (o && o.id === b.id) { blMergeSuivi(o); call("enregistrerBilan", code, o, "").then(function (d) { if (data && d && d.bilans) data.bilans = d.bilans; renderBilan(); }, function () {}); }
+            showStatus("Modifications annulées", false); renderBilan(); return; }
           if (!blShareOff) act("supprimerBilan", [b.id], "Fiche abandonnée"); else showStatus("Fiche abandonnée", false); renderBilan();
         });
         cur.appendChild(ab); w.appendChild(cur);
@@ -2630,8 +2651,11 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var bkF = el("button", "pbtn", "‹ Toutes les fiches"); bkF.type = "button"; bkF.addEventListener("click", function () { blEdit = false; renderBilan(); goTop(); }); v.appendChild(bkF);
     var f = b.f, top = el("div", "bl-info"); top.appendChild(el("span", null, "Début " + blHM(b.start)));
     var shs = el("span", "bl-share", blShareSt); shs.id = "bl-share"; top.appendChild(shs); v.appendChild(top);
+    var part = b.part || "first", nS = 0; function N() { return String(++nS); }
+    if (part === "compl") v.appendChild(el("div", "bl-revh compl", "Compléter le bilan")).appendChild(el("span", null, "Circulation, ventilation, neurologique, antécédents"));
+    if (part !== "compl") {
     // 1. Circonstances
-    var s1 = blSec(v, "1", "Circonstances", "#455a64");
+    var s1 = blSec(v, N(), "Circonstances", "#455a64");
     blNum(b, s1, "age", "Âge", "ans", 110, [-5, -1, 1, 5], 30);
     blSeg(b, s1, "sexe", "Sexe", ["Homme", "Femme"]);
     blSeg(b, s1, "meca", "Suite à", ["Chute à ski", "Chute à pied", "Collision avec un skieur", "Collision avec un obstacle", "Avalanche", "Malaise", "Autre"]);
@@ -2640,7 +2664,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var pr = el("div", "bf-r t"); pr.appendChild(el("span", "bf-q", "Précision")); var pc = el("div", "bf-c"), px = document.createElement("input"); px.type = "text"; px.className = "bf-x"; px.placeholder = "Autre blessure, détail…"; px.value = f.plus || ""; px.setAttribute("aria-label", "Précision sur la plainte");
     px.addEventListener("input", function () { b.f.plus = px.value; blSave(b); }); pc.appendChild(px); pr.appendChild(pc); s1.appendChild(pr);
     // 2. xABCDE : vert d'office
-    var s2 = blSec(v, "2", "xABCDE · toucher ce qui ne va pas", "#C62828");
+    var s2 = blSec(v, N(), "xABCDE · toucher ce qui ne va pas", "#C62828");
     var abc = blAbc(b), line = el("div", "bl-abc");
     BL_ABC.forEach(function (it) {
       var bad = abc[it.L] === "bad", bt = el("button", "bl-ab" + (bad ? " bad" : " ok")); bt.type = "button"; bt.style.setProperty("--c", it.col);
@@ -2655,8 +2679,10 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (bads.length) s2.appendChild(el("div", "bl-badl", bads.map(function (x) { return x.L + " : " + x.bad; }).join(" · ")));
     if (abc.x === "bad") blStamp(b, s2, "garrot", "Garrot");
     if (abc.B === "bad" || abc.C === "bad") blStamp(b, s2, "rcp", "RCP / DAE");
+    }
+    if (part !== "first") {
     // 3. Bilan complémentaire
-    var s3 = blSec(v, "3", "Bilan complémentaire", "#1565C0");
+    var s3 = blSec(v, N(), "Bilan complémentaire", "#1565C0");
     s3.appendChild(el("div", "bf-sub", "Circulation")).style.setProperty("--s", "#2E7D32");
     blNum(b, s3, "c_freq", "Pouls", "/min", 250, [-1, 1], 80);
     blSeg(b, s3, "c_reg", "Rythme", ["Régulier", "Irrégulier"]);
@@ -2676,7 +2702,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     });
     s3.appendChild(ng);
     // 4. MHTA
-    var s4 = blSec(v, "4", "Complémentaire · antécédents", "#6A1B9A");
+    var s4 = blSec(v, N(), "Complémentaire · antécédents", "#6A1B9A");
     var mal = el("div", "bf-sub big", "Si malaise"); mal.style.setProperty("--s", "#6A1B9A"); s4.appendChild(mal);
     blSeg(b, s4, "prem", "Première fois ?", ["Oui", "Non"]);
     var dr = el("div", "bf-r"); dr.appendChild(el("span", "bf-q", "Depuis combien de temps ?")); var dc = el("div", "bf-c");
@@ -2693,8 +2719,10 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       if (bad) { var tx = document.createElement("input"); tx.type = "text"; tx.className = "bf-x"; tx.id = "mh-" + m.id; tx.placeholder = "Lesquel(le)s ?"; tx.value = f[m.id] || ""; tx.setAttribute("aria-label", m.q); tx.addEventListener("input", function () { b.f[m.id] = tx.value; blSave(b); }); wrap.appendChild(tx); }
       s4.appendChild(wrap);
     });
-    // 6. Radio
-    var s5 = blSec(v, "5", "Évacuation · message radio", "#17324a");
+    }
+    if (part === "compl") { var sc = blSec(v, N(), "Enregistrer", "#17324a"); blFinish(b, sc, "✓ Enregistrer le complément"); return; }
+    // Évacuation / radio
+    var s5 = blSec(v, N(), "Évacuation · message radio", "#17324a");
     blSeg(b, s5, "evac", "", ["Luge", "Skidoo", "Ambulance", "Hélicoptère", "Aucune"]);
     var mt = el("div", "bf-sub", "Matériel demandé"); mt.style.setProperty("--s", "#17324a"); s5.appendChild(mt);
     blSeg(b, s5, "mat", "", BL_MAT, true);
@@ -2718,16 +2746,18 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       var nsv = (f.suivi || []).length;
       c.appendChild(el("small", "st", (x.b.done ? "Terminé" : "En cours") + " · mis à jour à " + blHM(x.upd || x.start) + (nsv ? " · " + nsv + " réévaluation" + (nsv > 1 ? "s" : "") : "")));
       var bt = el("div", "bl-card-b");
-      var vw = el("button", "bf-o", "Voir la fiche"); vw.type = "button"; vw.addEventListener("click", function () { blViewId = x.id; blDelArm = false; renderBilan(); goTop(); });
+      var vw = el("button", "bf-o wide", "Voir la fiche"); vw.type = "button"; vw.addEventListener("click", function () { blViewId = x.id; blDelArm = false; renderBilan(); goTop(); });
+      var cm = el("button", "bf-o" + (x.b.compl ? "" : " on"), x.b.compl ? "Compléter ✓" : "Compléter"); cm.type = "button"; cm.style.setProperty("--c", "#1565C0"); cm.addEventListener("click", function () { blReprendre(x, "compl"); });
       var cp = el("button", "bf-o on", "Réévaluer"); cp.type = "button"; cp.style.setProperty("--c", "#00838F"); cp.addEventListener("click", function () { blRevOpen(x); });
-      bt.appendChild(vw); bt.appendChild(cp); c.appendChild(bt);
+      bt.appendChild(vw); bt.appendChild(cm); bt.appendChild(cp); c.appendChild(bt);
       v.appendChild(c);
     });
   }
-  function blReprendre(x) {
+  function blReprendre(x, part) {
     var mine = blLoad();
     if (mine && mine.id !== x.id) { showStatus("Termine ou abandonne d'abord la fiche en cours sur cet appareil.", true); return; }
-    var b = JSON.parse(JSON.stringify(x.b)); b.done = false; b.f = b.f || {};
+    try { localStorage.setItem(BL_KEY + "-orig", JSON.stringify(x.b)); } catch (e) {}
+    var b = JSON.parse(JSON.stringify(x.b)); b.done = false; b.f = b.f || {}; b.part = part || "all";
     try { localStorage.setItem(BL_KEY, JSON.stringify(b)); } catch (e) {}
     blShareOff = false; blShareSt = ""; blViewId = null; blEdit = true; renderBilan(); goTop();
   }
@@ -2792,6 +2822,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     sheet.appendChild(hd);
     sheet.appendChild(blSheet(b));
     v.appendChild(sheet);
+    var cm = el("button", "bl-fin", x.b.compl ? "Compléter le bilan ✓ (modifier)" : "Compléter le bilan (circulation, ventilation, neurologique, antécédents)"); cm.type = "button"; cm.style.background = "#1565C0"; cm.addEventListener("click", function () { blReprendre(x, "compl"); }); v.appendChild(cm);
     var cpl = el("button", "bl-fin", "Réévaluer (constantes, douleur)"); cpl.type = "button"; cpl.style.background = "#00838F"; cpl.addEventListener("click", function () { blRevOpen(x); }); v.appendChild(cpl);
     var mod = el("button", "bl-mod", "Modifier toute la fiche"); mod.type = "button"; mod.addEventListener("click", function () { blReprendre(x); }); v.appendChild(mod);
     var dl = el("button", "bl-del", blDelArm ? "Confirmer : supprimer cette fiche pour tous" : "Supprimer cette fiche"); dl.type = "button";
@@ -2810,15 +2841,20 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var sh = el("button", "bf-o", "Envoyer…"); sh.type = "button";
     sh.addEventListener("click", function () { if (navigator.share) navigator.share({ title: "Bilan victime", text: txt }).catch(function () {}); else location.href = "sms:?body=" + encodeURIComponent(txt); });
     row.appendChild(cp); row.appendChild(sh); body.appendChild(row);
-    var del = el("button", "bl-fin", "✓ Fiche terminée"); del.type = "button";
+    blFinish(b, body, (b.part || "first") === "first" ? "✓ Valider le premier bilan" : "✓ Fiche terminée");
+  }
+  function blFinish(b, body, label) {
+    var del = el("button", "bl-fin", label); del.type = "button";
     del.addEventListener("click", function () {
       if (blShareOff) { showStatus("Partage pas activé : la fiche ne peut pas être envoyée à l'équipe.", true); return; }
-      b.done = true; b.end = Date.now(); clearTimeout(blShareT); try { localStorage.setItem(BL_KEY, JSON.stringify(b)); } catch (e) {}
+      blMergeSuivi(b);
+      if (b.part === "compl") b.compl = Date.now();
+      b.done = true; b.end = b.end || Date.now(); clearTimeout(blShareT); try { localStorage.setItem(BL_KEY, JSON.stringify(b)); } catch (e) {}
       showStatus("Envoi de la fiche…", false, true);
       call("enregistrerBilan", code, b, "").then(function (d) {
         if (data && d && d.bilans) data.bilans = d.bilans;
         try { localStorage.removeItem(BL_KEY); } catch (e) {}
-        blEdit = false; blViewId = b.id; showStatus("Fiche terminée et envoyée", false); renderBilan(); goTop();
+        blEdit = false; blViewId = b.id; showStatus(b.part === "compl" ? "Complément enregistré" : "Fiche envoyée à l'équipe", false); renderBilan(); goTop();
       }, function () { showStatus("Pas de réseau : la fiche reste sur ce téléphone, réessaie dans un moment.", true); });
     });
     body.appendChild(del);
