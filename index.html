@@ -666,6 +666,15 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .fbk .fbm-r.nolab span { display: none; }
 .fbk .fbm-r b { font-weight: 800; }
 .fbk .fbm-r.ok b { display: inline-block; background: var(--grn); color: #fff; border-radius: 8px; padding: 2px 12px; }
+.fbk-2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; padding: 6px 0; border-bottom: 1px solid color-mix(in srgb, var(--g) 18%, transparent); }
+.fbk-2:last-child { border-bottom: 0; }
+.fbk-2 .lab { grid-column: 1 / -1; font-size: 14px; color: var(--muted); font-weight: 600; }
+.fbk-2 .c { display: flex; flex-direction: column; gap: 3px; border-radius: 10px; padding: 6px 8px; }
+.fbk-2 .c small { font: 800 11px var(--body); letter-spacing: .08em; text-transform: uppercase; }
+.fbk-2 .c b { font: 700 15px/1.25 var(--body); }
+.fbk-2 .c i { font-size: 15px; color: var(--muted); }
+.fbk-2 .c.bad { background: color-mix(in srgb, #d63a3a 10%, var(--paper)); } .fbk-2 .c.bad small, .fbk-2 .c.bad b { color: var(--red); }
+.fbk-2 .c.ok { background: color-mix(in srgb, #2e9461 10%, var(--paper)); } .fbk-2 .c.ok small, .fbk-2 .c.ok b { color: var(--grn); }
 .fbk-big { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0 6px; }
 .fbk-big span { background: var(--g); color: #fff; font: 800 19px var(--body); border-radius: 10px; padding: 6px 14px; }
 .fbk .bl-tw { margin: 4px 0 2px; }
@@ -820,7 +829,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794495503";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794495770";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2596,16 +2605,18 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var v = [f.b_freq ? f.b_freq + "/min" : "", f.b_amp ? f.b_amp.toLowerCase() : "", f.b_reg ? f.b_reg.toLowerCase() : ""].filter(Boolean);
     if (v.length) L.push(["Ventilation", v.join(" · "), vBad]);
     var nb = BL_NEURO.filter(function (n) { return f[n.id] === "bad"; });
-    if (!nb.length) L.push(["Neurologique", "RAS", "ok"]);
-    else { var ni = nb.map(function (n) { return blNeuroTxt(f, n); }).concat(nb.length < BL_NEURO.length ? ["le reste RAS"] : []); L.push(["Neurologique", ni.join(" · "), true, ni.map(function (x, i) { return [x, i < nb.length]; })]); }
+    var n2 = { bad: nb.map(function (n) { return blNeuroTxt(f, n); }), ok: BL_NEURO.filter(function (n) { return f[n.id] !== "bad"; }).map(function (n) { return n.ok; }) };
+    if (!nb.length) L.push(["Neurologique", "RAS", "ok", null, null, n2]);
+    else { var ni = n2.bad.concat(nb.length < BL_NEURO.length ? ["le reste RAS"] : []); L.push(["Neurologique", ni.join(" · "), true, ni.map(function (x, i) { return [x, i < nb.length]; }), null, n2]); }
     }
     var isMal = [].concat(f.meca || []).indexOf("Malaise") >= 0;
     if (isMal && (f.prem || f.depuis)) L.push({ head: "Malaise" });
     if (isMal && f.prem) L.push(["Première fois", f.prem.toLowerCase()]);
     if (isMal && f.depuis) L.push(["Depuis", blDur(f.depuis)]);
     var mh = BL_MHTA.filter(function (m) { return f[m.id + "_x"]; });
-    if (!cDone) {} else if (!mh.length) L.push(["Antécédents", "aucun", "ok"]);
-    else { L.push({ head: "Antécédents (MHTA)" }); mh.forEach(function (m) { L.push([m.q, f[m.id] || "oui, à préciser", true]); }); }
+    var a2 = { bad: mh.map(function (m) { return m.q + " : " + (f[m.id] || "oui, à préciser"); }), ok: BL_MHTA.filter(function (m) { return !f[m.id + "_x"]; }).map(function (m) { return m.q + " : rien"; }) };
+    if (!cDone) {} else if (!mh.length) L.push(["Antécédents", "aucun", "ok", null, null, a2]);
+    else L.push(["Antécédents", a2.bad.join(" · "), true, a2.bad.map(function (x) { return [x, true]; }), null, a2]);
     if ((f.suivi || []).length) {
       L.push({ head: "Suivi · réévaluations" });
       L.push({ table: 1 });
@@ -2654,6 +2665,13 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       var host = block(k, l[0] === "xABCDE" && l[2] === true);
       if (l.table) { host.appendChild(blSuiviTable(b)); return; }
       if (l.head) { if (l.val) { var ev = el("div", "fbk-big"); String(l.val).split(" + ").forEach(function (x) { ev.appendChild(el("span", null, x)); }); host.appendChild(ev); } return; }
+      if (l[5]) { // deux colonnes : à gauche ce qui ne va pas, à droite ce qui est normal
+        var tw = el("div", "fbk-2"); if (l[0] !== BL_GTT[k][0]) tw.appendChild(el("span", "lab", l[0]));
+        var cl = el("div", "c bad"), cr = el("div", "c ok");
+        cl.appendChild(el("small", null, "À signaler")); if (l[5].bad.length) l[5].bad.forEach(function (x) { cl.appendChild(el("b", null, x)); }); else cl.appendChild(el("i", null, "rien"));
+        cr.appendChild(el("small", null, "Normal")); if (l[5].ok.length) l[5].ok.forEach(function (x) { cr.appendChild(el("b", null, x)); }); else cr.appendChild(el("i", null, "—"));
+        tw.appendChild(cl); tw.appendChild(cr); host.appendChild(tw); return;
+      }
       var r = el("div", "fbm-r" + (l[2] === "ok" ? " ok" : l[2] === "todo" ? " todo" : l[2] ? " bad" : "") + (l[0] === BL_GTT[k][0] || (k === "ant" && l[0] === "Antécédents") ? " nolab" : ""));
       r.appendChild(el("span", null, l[0]));
       if (l[3]) { var vb = el("b", "list"); l[3].forEach(function (p) { vb.appendChild(el("i", p[1] ? "bad" : "", p[0])); }); r.appendChild(vb); }
@@ -2757,6 +2775,15 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     blSeg(b, s1, "sexe", "Sexe", ["Homme", "Femme"]);
     if (typeof b.f.meca === "string") b.f.meca = [b.f.meca];
     blSeg(b, s1, "meca", "Suite à", ["Chute à ski", "Chute à pied", "Collision avec un skieur", "Collision avec un obstacle", "Avalanche", "Malaise", "Autre"], true);
+    if ([].concat(f.meca || []).indexOf("Malaise") >= 0) {
+    var mal = el("div", "bf-sub big", "Malaise : première fois et depuis quand"); mal.style.setProperty("--s", "#6A1B9A"); s1.appendChild(mal);
+    blSeg(b, s1, "prem", "Première fois ?", ["Oui", "Non"]);
+    var dr = el("div", "bf-r"); dr.appendChild(el("span", "bf-q", "Depuis combien de temps ?")); var dc = el("div", "bf-c");
+    [-60, -15].forEach(function (d) { var s = el("button", "bf-o st", d === -60 ? "−1 h" : "−15 min"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = Math.max(0, (+b.f.depuis || 0) + d); blSave(b); blRefresh(); }); dc.appendChild(s); });
+    dc.appendChild(el("span", "bl-dur", f.depuis ? blDur(f.depuis) : "—"));
+    [15, 60].forEach(function (d) { var s = el("button", "bf-o st", d === 60 ? "+1 h" : "+15 min"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = (+b.f.depuis || 0) + d; blSave(b); blRefresh(); }); dc.appendChild(s); });
+    dr.appendChild(dc); s1.appendChild(dr);
+    }
     var dh = el("div", "bf-sub", "Douleurs et lésions · toucher le bonhomme"); dh.style.setProperty("--s", "#455a64"); s1.appendChild(dh);
     blBody(b, s1);
     var pr = el("div", "bf-r t"); pr.appendChild(el("span", "bf-q", "Précision")); var pc = el("div", "bf-c"), px = document.createElement("input"); px.type = "text"; px.className = "bf-x"; px.placeholder = "Autre blessure, détail…"; px.value = f.plus || ""; px.setAttribute("aria-label", "Précision sur la plainte");
@@ -2801,15 +2828,6 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     s3.appendChild(ng);
     // 4. MHTA
     var s4 = blSec(v, N(), "Complémentaire · antécédents", "#6A1B9A");
-    if ([].concat(f.meca || []).indexOf("Malaise") >= 0) {
-    var mal = el("div", "bf-sub big", "Malaise"); mal.style.setProperty("--s", "#6A1B9A"); s4.appendChild(mal);
-    blSeg(b, s4, "prem", "Première fois ?", ["Oui", "Non"]);
-    var dr = el("div", "bf-r"); dr.appendChild(el("span", "bf-q", "Depuis combien de temps ?")); var dc = el("div", "bf-c");
-    [-60, -15].forEach(function (d) { var s = el("button", "bf-o st", d === -60 ? "−1 h" : "−15 min"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = Math.max(0, (+b.f.depuis || 0) + d); blSave(b); blRefresh(); }); dc.appendChild(s); });
-    dc.appendChild(el("span", "bl-dur", f.depuis ? blDur(f.depuis) : "—"));
-    [15, 60].forEach(function (d) { var s = el("button", "bf-o st", d === 60 ? "+1 h" : "+15 min"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = (+b.f.depuis || 0) + d; blSave(b); blRefresh(); }); dc.appendChild(s); });
-    dr.appendChild(dc); s4.appendChild(dr);
-    }
     var mhh = el("div", "bf-sub", "Antécédents (MHTA)"); mhh.style.setProperty("--s", "#6A1B9A"); s4.appendChild(mhh);
     BL_MHTA.forEach(function (m) {
       var bad = !!f[m.id + "_x"], wrap = el("div", "bl-mh" + (bad ? " bad" : ""));
