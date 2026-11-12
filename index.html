@@ -717,6 +717,19 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .bl-prev { font: 700 15px var(--body); color: var(--muted); }
 .bl-sc.was { border-color: var(--ink); border-style: dashed; }
 .bl-mod { width: 100%; min-height: 44px; border: 0; background: none; color: var(--muted); font: 700 15px var(--body); text-decoration: underline; cursor: pointer; }
+.bl-tw { flex: 1 1 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 6px 0; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+.bl-tb { border-collapse: separate; border-spacing: 0; font: 700 16px var(--body); min-width: 100%; }
+.bl-tb th, .bl-tb td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
+.bl-tb tr:last-child th, .bl-tb tr:last-child td { border-bottom: 0; }
+.bl-tb th.lab { position: sticky; left: 0; z-index: 1; background: var(--paper); text-align: left; font: 700 14px var(--body); color: var(--muted); white-space: normal; min-width: 92px; max-width: 120px; border-right: 2px solid var(--line); }
+.bl-tb tr:first-child th { background: color-mix(in srgb, #00838F 10%, var(--paper)); }
+.bl-tb tr:first-child th.lab { background: color-mix(in srgb, #00838F 10%, var(--paper)); }
+.bl-tb tr:first-child th b { display: block; font-size: 16px; color: #00838F; } .bl-tb tr:first-child th small { display: block; font-size: 12px; color: var(--muted); }
+.bl-tb td.last, .bl-tb th.last { background: color-mix(in srgb, #00838F 7%, var(--paper)); }
+.bl-tb td span.na { color: var(--line); }
+.bl-tb td { font-size: 18px; white-space: normal; min-width: 62px; }
+.bl-tb td .ar { font-style: normal; margin-left: 3px; font-size: 16px; color: var(--muted); }
+.bl-tb td .ar.bad { color: #d63a3a; } .bl-tb td .ar.good { color: #2e9461; }
 .bl-card-b { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .bl-card-b .bf-o { min-height: 46px; }
 .bl-body.ro { margin: 8px 0 4px; }
@@ -756,7 +769,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794490485";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794490746";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2349,6 +2362,39 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var names = (b.f.zones || []).map(blZoneName);
     o.appendChild(el("div", "bl-zl" + (names.length ? " on" : ""), names.length ? names.join(" · ") : "Toucher l'endroit douloureux"));
   }
+  // Tableau de surveillance : une colonne par prise (bilan initial puis chaque réévaluation), une ligne par valeur
+  function blSuiviTable(b) {
+    var f = b.f || {}, sv = f.suivi || [], zs = f.zones || [];
+    function nv(x) { return x === "" || x == null ? null : x; }
+    var cols = [{ h: "Bilan", t: b.start, pouls: nv(f.c_freq), resp: nv(f.b_freq), cons: f.n_pc === "bad" ? "Perte de connaissance" : "", zd: {}, dl: null, note: "" }];
+    zs.forEach(function (id) { var d = (f.zd || {})[id]; cols[0].zd[id] = d ? nv(d.dl) : null; });
+    sv.forEach(function (e) { cols.push({ h: "", t: e.t, pouls: nv(e.pouls), resp: nv(e.resp), cons: e.cons || "", zd: e.zd || {}, dl: nv(e.dl), note: e.note || "" }); });
+    var rows = [["Pouls", "/min", function (c) { return c.pouls; }, 1], ["Ventilation", "/min", function (c) { return c.resp; }, 1], ["Conscience", "", function (c) { return c.cons || null; }]];
+    zs.forEach(function (id) { rows.push(["Douleur " + blZoneName(id).toLowerCase(), "/10", function (c) { return c.zd && c.zd[id] !== undefined ? nv(c.zd[id]) : null; }, 1, 1]); });
+    rows.push(["Douleur", "/10", function (c) { return c.dl; }, 1, 1], ["Remarque", "", function (c) { return c.note || null; }]);
+    rows = rows.filter(function (r) { return cols.some(function (c) { return r[2](c) != null; }); });
+    var wrap = el("div", "bl-tw"), tb = document.createElement("table"); tb.className = "bl-tb";
+    var tr = document.createElement("tr"); tr.appendChild(el("th", "lab", ""));
+    cols.forEach(function (c, i) { var th = el("th", i === cols.length - 1 && i ? "last" : ""); th.appendChild(el("b", null, blHM(c.t))); if (c.h) th.appendChild(el("small", null, c.h)); tr.appendChild(th); });
+    tb.appendChild(tr);
+    rows.forEach(function (r) {
+      var tr = document.createElement("tr"); tr.appendChild(el("th", "lab", r[0] + (r[1] ? " " + r[1] : ""))); var prev = null;
+      cols.forEach(function (c, i) {
+        var v = r[2](c), td = el("td", i === cols.length - 1 && i ? "last" : "");
+        if (v == null) td.appendChild(el("span", "na", "—"));
+        else {
+          td.appendChild(el("span", null, String(v)));
+          if (r[3] && prev != null && +v !== +prev) { var up = +v > +prev, bad = r[4] ? up : false; td.appendChild(el("i", "ar" + (r[4] ? (bad ? " bad" : " good") : ""), up ? "↑" : "↓")); }
+          if (r[3]) prev = v;
+        }
+        tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+    wrap.appendChild(tb);
+    setTimeout(function () { wrap.scrollLeft = wrap.scrollWidth; }, 0);
+    return wrap;
+  }
   function blSuiviTxt(e) {
     var zt = e.zd ? Object.keys(e.zd).map(function (id) { var n = e.zd[id], p = e.zp && e.zp[id]; return blZoneName(id).toLowerCase() + " " + n + "/10" + (p === "" || p == null ? "" : n > p ? " ↑" : n < p ? " ↓" : " ="); }) : [];
     return [e.cons || "", e.pouls !== "" && e.pouls != null ? "pouls " + e.pouls + "/min" : "", e.resp !== "" && e.resp != null ? "ventilation " + e.resp + "/min" : "", e.dl !== "" && e.dl != null ? "douleur " + e.dl + "/10" : ""].concat(zt, [e.note || ""]).filter(Boolean).join(" · ") || "—";
@@ -2424,9 +2470,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (who) L.push(["Victime", who]);
     if (f.meca) L.push(["Circonstances", BL_MECA_TXT[f.meca] || f.meca]);
     var pls = blLesTxt(f).concat(f.plus ? [f.plus] : []);
-    var les = blLesTxt(f).map(function (x, i) { return (i + 1) + ". " + x; }), pls = les.concat(f.plus ? [f.plus] : []);
+    pls = blLesTxt(f).concat(f.plus ? [f.plus] : []);
     if (pls.length) L.push(["Plainte principale", pls.join(" · "), false, pls.map(function (x) { return [x, false]; })]);
-    if ((f.zones || []).length) L.push({ fig: 1 });
     var bad = BL_ABC.filter(function (x) { return abc[x.L] === "bad"; });
     if (bad.length) {
       var g = []; if (f.garrot) g.push("garrot " + blHM(f.garrot)); if (f.rcp) g.push("RCP " + blHM(f.rcp));
@@ -2444,19 +2489,20 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     BL_MHTA.forEach(function (m) { L.push([m.q, f[m.id + "_x"] ? (f[m.id] || "oui, à préciser") : "rien", !!f[m.id + "_x"]]); });
     if ((f.suivi || []).length) {
       L.push({ head: "Suivi · réévaluations" });
-      f.suivi.forEach(function (e) { L.push([blHM(e.t), blSuiviTxt(e)]); });
+      L.push({ table: 1 });
     }
     if (f.evac) L.push({ head: "Évacuation", val: f.evac });
     if ((f.mat || []).length) { if (!f.evac) L.push({ head: "Évacuation" }); L.push(["Matériel demandé", f.mat.join(" · "), true, f.mat.map(function (x) { return [x, true]; })]); }
     return L;
   }
   function blResume(b) {
-    return blLines(b).filter(function (l) { return !l.fig; }).map(function (l) { return l.head ? (l.val ? l.head.toUpperCase() + " : " + l.val : l.head.toUpperCase()) : l[3] && l[3].length > 1 ? l[0] + " :\n" + l[3].map(function (p) { return "  - " + p[0]; }).join("\n") : (l[0] + " : " + l[1]); }).join("\n");
+    return blLines(b).filter(function (l) { return !l.fig; }).map(function (l) { if (l.table) return (b.f.suivi || []).map(function (e) { return blHM(e.t) + " : " + blSuiviTxt(e); }).join("\n"); return l.head ? (l.val ? l.head.toUpperCase() + " : " + l.val : l.head.toUpperCase()) : l[3] && l[3].length > 1 ? l[0] + " :\n" + l[3].map(function (p) { return "  - " + p[0]; }).join("\n") : (l[0] + " : " + l[1]); }).join("\n");
   }
   function blSheet(b) {
     var box = el("div", "fbm");
     blLines(b).forEach(function (l) {
       if (l.fig) { box.appendChild(blFigsRO(b.f)); return; }
+      if (l.table) { box.appendChild(blSuiviTable(b)); return; }
       if (l.head) { var h = el("div", "fbm-h"); h.appendChild(el("span", null, l.head)); if (l.val) h.appendChild(el("b", null, l.val)); box.appendChild(h); return; }
       var r = el("div", "fbm-r" + (l[2] ? " bad" : "")); r.appendChild(el("span", null, l[0]));
       if (l[3]) { var vb = el("b", "list"); l[3].forEach(function (p) { vb.appendChild(el("i", p[1] ? "bad" : "", p[0])); }); r.appendChild(vb); }
@@ -2597,7 +2643,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var s6 = blSec(v, "5", "Suivi · réévaluations", "#00838F");
     var sv = f.suivi || [], last = sv.length ? sv[sv.length - 1].t : b.start;
     s6.appendChild(el("div", "bl-zl", sv.length ? "Dernière réévaluation à " + blHM(last) + " (il y a " + Math.floor((Date.now() - last) / 60000) + " min)" : "Refaire les constantes régulièrement (toutes les 10 min environ)"));
-    sv.forEach(function (e) { var r = el("div", "bl-sv"); r.appendChild(el("b", null, blHM(e.t))); r.appendChild(el("span", null, blSuiviTxt(e))); s6.appendChild(r); });
+    if (sv.length) s6.appendChild(blSuiviTable(b));
     var sd = el("div", "bl-svf"); s6.appendChild(sd);
     blNum(b, sd, "sv_pouls", "Pouls", "/min", 250, [-1, 1], 80);
     blNum(b, sd, "sv_resp", "Ventilation", "/min", 80, [-1, 1], 16);
@@ -2661,8 +2707,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var f = x.b.f || {}, sv = f.suivi || [], last = sv[sv.length - 1];
     var hd = el("div", "bl-revh"); hd.appendChild(el("b", null, "Réévaluation · " + blHM(Date.now())));
     hd.appendChild(el("span", null, "Fiche de " + blHM(x.start) + " · " + ([f.sexe, f.age !== "" && f.age != null ? f.age + " ans" : ""].filter(Boolean).join(", ") || "victime")));
-    if (last) hd.appendChild(el("span", null, "Dernière prise à " + blHM(last.t) + " : " + blSuiviTxt(last)));
     v.appendChild(hd);
+    var hs = blSec(v, "≡", "Déjà pris", "#455a64"); hs.appendChild(blSuiviTable(x.b));
     var s1 = blSec(v, "♥", "Constantes", "#00838F");
     blNum(r, s1, "pouls", "Circulation · pouls", "/min", 250, [-5, 5], last && last.pouls !== "" && last.pouls != null ? +last.pouls : 80);
     blNum(r, s1, "resp", "Ventilation", "/min", 80, [-1, 1], last && last.resp !== "" && last.resp != null ? +last.resp : 16);
