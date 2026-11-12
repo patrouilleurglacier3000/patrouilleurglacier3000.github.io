@@ -604,6 +604,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .bl-mh .bf-x { min-width: 0; width: 100%; }
 .bl-dur { min-width: 74px; text-align: center; font: 800 18px var(--body); }
 .bl-sum.big { font-size: 18px; line-height: 1.6; padding: 16px; background: var(--paper); }
+.bl-cur { display: flex; flex-direction: column; gap: 10px; background: var(--paper); border: 2px solid #C62828; border-radius: 14px; padding: 14px; }
+.bl-cur b { font-size: 17px; }
 .bl-fin { width: 100%; min-height: 52px; border: 0; background: #2e9461; color: #fff; border-radius: 10px; font: 800 17px var(--body); cursor: pointer; margin-top: 4px; }
 .bl-card.done { border-left-color: #2e9461; }
 .bl-card small.st { font-weight: 700; }
@@ -636,6 +638,18 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .fbm-h b { text-transform: none; letter-spacing: 0; font-size: 17px; }
 .fbm-r:last-child { border-bottom: 0; }
 @media (max-width: 480px) { .fbm-r { grid-template-columns: 1fr; gap: 0; padding: 6px 0; } .fbm-r span { font-size: 13px; } }
+.bl-body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; flex: 1 1 100%; }
+.bl-fig { display: flex; flex-direction: column; align-items: center; background: var(--bg); border-radius: 12px; padding: 6px 2px; }
+.bl-fig-t { font: 800 14px var(--body); letter-spacing: .08em; }
+.bl-fig-r { display: flex; align-items: center; gap: 2px; width: 100%; justify-content: center; }
+.bl-side { font: 800 20px var(--body); color: #C62828; width: 16px; text-align: center; flex: none; }
+.bl-svg { width: 100%; max-width: 190px; height: auto; touch-action: manipulation; }
+.bl-z { fill: color-mix(in srgb, var(--ink) 9%, var(--paper)); stroke: color-mix(in srgb, var(--ink) 45%, transparent); stroke-width: 1.2; cursor: pointer; }
+.bl-z.on { fill: #d63a3a; stroke: #8f1d1d; }
+.bl-z:focus { outline: none; stroke: var(--accent); stroke-width: 2.5; }
+.bl-zl { flex: 1 1 100%; font: 600 14px var(--body); color: var(--muted); }
+.bl-zl.on { font: 800 16px var(--body); color: var(--red); }
+.bl-ab span { font-size: 9.5px !important; line-height: 1.1; text-align: center; overflow-wrap: anywhere; padding: 0 1px; }
 .bl-sum { white-space: pre-wrap; font: 15px/1.5 var(--body); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin: 4px 0 0; }
 .bl-acts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
 .bl-del { width: 100%; min-height: 48px; border: 2px solid var(--red); color: var(--red); background: transparent; border-radius: 10px; font: 800 15px var(--body); cursor: pointer; margin-top: 4px; }
@@ -665,7 +679,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pisteurs">
-<script>window.APP_V="1794487581";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794487800";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -820,7 +834,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   }
   // Mise à jour automatique toutes les 30 s (sans déranger une saisie en cours)
   setInterval(function () {
-    if (!data || busy || panel || document.hidden || Object.keys(countDraft).length || cmdOpen || evEdit || dmEdit || tkEdit || tkConfirm || tkDel || tkDraft || swOpen || (area === "bilan" && !blViewId && blLoad())) return;
+    if (!data || busy || panel || document.hidden || Object.keys(countDraft).length || cmdOpen || evEdit || dmEdit || tkEdit || tkConfirm || tkDel || tkDraft || swOpen || (area === "bilan" && blEdit)) return;
     var a = document.activeElement; if (a && /INPUT|SELECT|TEXTAREA/.test(a.tagName)) return;
     load(true);
   }, 30000);
@@ -881,7 +895,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     else if (area === "stock" && panel) up = ["‹ Stock", function () { closePanel(); }];
     else if (area === "stock" && current === "cmd" && cmdOpen) up = ["‹ Transferts", function () { cmdOpen = false; renderAll(); }];
     else if (area === "achat" && dmEdit && dmEdit.created) up = ["‹ Retour", function () { dmEdit = null; dmFile = null; renderAchat(); }];
-    else if (area === "bilan" && blViewId) up = ["‹ Bilans", function () { blViewId = null; renderBilan(); }];
+    else if (area === "bilan" && (blViewId || blEdit)) up = ["‹ Fiches", function () { blViewId = null; blEdit = false; renderBilan(); goTop(); }];
     else if (area === "achat" && (dmEdit || dmOpen)) up = ["‹ Achats", function () { dmEdit = null; dmFile = null; dmOpen = null; lowOpen = false; renderAchat(); }];
     if (up) { back.textContent = up[0]; back.addEventListener("click", up[1]); }
     else { back.appendChild(icon("home")); back.lastChild.style.cssText = "width:18px;height:18px"; back.appendChild(document.createTextNode("Accueil")); back.addEventListener("click", function () { goArea("home"); }); }
@@ -908,7 +922,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var nx = nextEvents(1)[0], pj = data.planjour;
     var tkOpenN = (data.taches || []).filter(function (t) { return t.state !== "fait"; }), tkUrg = tkOpenN.filter(function (t) { return t.prio === "urgent"; }).length;
     var blMine = blLoad(), blAll = (data.bilans || []).filter(function (x) { return (!blMine || x.id !== blMine.id) && x.b && x.b.v === 3; }), blN = blAll.filter(function (x) { return !x.b.done; }).length;
-    g.appendChild(bigTile("cross", "#C62828", "Bilan victime", blMine ? "En cours depuis " + blHM(blMine.start) : blN ? blN + " bilan" + (blN > 1 ? "s" : "") + " en cours" : blAll.length ? blAll.length + " fiche" + (blAll.length > 1 ? "s" : "") + " · dernière à " + blHM(blAll[0].start) : "Fiche bilan · message radio", function () { blViewId = null; goArea("bilan"); }));
+    g.appendChild(bigTile("cross", "#C62828", "Bilan victime", blMine ? "En cours depuis " + blHM(blMine.start) : blN ? blN + " bilan" + (blN > 1 ? "s" : "") + " en cours" : blAll.length ? blAll.length + " fiche" + (blAll.length > 1 ? "s" : "") + " · dernière à " + blHM(blAll[0].start) : "Fiche bilan · message radio", function () { blViewId = null; blEdit = false; goArea("bilan"); }));
     g.appendChild(bigTile("tasks", "#6b4fbb", "Tâches équipe", tkOpenN.length ? tkOpenN.length + " à faire" + (tkUrg ? " · dont " + tkUrg + " urgente" + (tkUrg > 1 ? "s" : "") : "") : "Rien à faire pour l'instant", function () { goArea("taches"); }));
     g.appendChild(bigTile("box", "#d63a3a", "Stock matériel", subS, function () { goArea("stock"); }));
     g.appendChild(bigTile("cal", "#0e8a9a", "Agenda", nx ? "Prochain : " + nx.title + " · " + dayShort(nx.date) + (nx.start ? " " + nx.start : "") : "Rien de prévu pour l'instant", function () { goArea("plan"); }));
@@ -2008,11 +2022,11 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   }
 
   /* ---------- Bilan victime : fiche sur un écran. Tout est « OK » d'office, on touche seulement ce qui ne va pas ---------- */
-  var BL_KEY = "pisteurs-bilan", BL_MAX = 24 * 3600 * 1000, blViewId = null;
+  var BL_KEY = "pisteurs-bilan", BL_MAX = 24 * 3600 * 1000, blViewId = null, blEdit = false, blAbArm = false;
   var BL_ABC = [
-    { L: "x", q: "Hémorr.", bad: "Hémorragie massive", col: "#C62828" }, { L: "A", q: "Voies", bad: "Voies aériennes obstruées", col: "#E65100" },
-    { L: "B", q: "Respir.", bad: "Respiration anormale", col: "#F2A900" }, { L: "C", q: "Circul.", bad: "Circulation anormale", col: "#2E7D32" },
-    { L: "D", q: "Consc.", bad: "Trouble de conscience", col: "#1565C0" }, { L: "E", q: "Froid", bad: "Hypothermie / exposé", col: "#6A1B9A" }];
+    { L: "x", q: "Hémorragie", bad: "Hémorragie massive", col: "#C62828" }, { L: "A", q: "Voies aériennes", bad: "Voies aériennes obstruées", col: "#E65100" },
+    { L: "B", q: "Respiration", bad: "Respiration anormale", col: "#F2A900" }, { L: "C", q: "Circulation", bad: "Circulation anormale", col: "#2E7D32" },
+    { L: "D", q: "Conscience", bad: "Trouble de conscience", col: "#1565C0" }, { L: "E", q: "Froid", bad: "Hypothermie / exposé", col: "#6A1B9A" }];
   var BL_NEURO = [
     { id: "n_pc", ok: "Pas de perte de connaissance", bad: "Perte de connaissance" },
     { id: "n_pup", ok: "Pupilles symétriques", bad: "Pupilles asymétriques" },
@@ -2022,6 +2036,62 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   var BL_MHTA = [{ id: "m", q: "Maladies" }, { id: "h", q: "Hospitalisations" }, { id: "tr", q: "Traitements" }, { id: "al", q: "Allergies" }];
   var BL_MECA = { "Chute à ski": "", "Chute à pied": "", "Chute": "une chute", "Coll. skieur": "une collision avec un skieur", "Coll. obstacle": "une collision avec un obstacle", "Avalanche": "une avalanche", "Malaise": "un malaise", "Autre": "" };
   var BL_OU = ["Tête", "Nuque", "Dos", "Épaule", "Bras", "Poignet / main", "Thorax", "Ventre", "Bassin", "Hanche", "Genou", "Jambe", "Cheville"];
+  /* Bonhomme : on touche l'endroit douloureux. Face : la droite de la victime est à gauche de l'écran. */
+  var BL_PARTS = [
+    { k: "tete", f: "Tête", b: "Arrière de la tête", s: 0, sh: ["e", 60, 22, 15, 18] },
+    { k: "cou", f: "Cou", b: "Nuque", s: 0, sh: ["r", 53, 41, 14, 10, 3] },
+    { k: "epaule", f: "Épaule", fem: 1, s: 1, sh: ["r", 27, 52, 17, 16, 7] },
+    { k: "thorax", f: "Thorax", b: "Haut du dos", s: 0, sh: ["r", 45, 52, 30, 38, 4] },
+    { k: "ventre", f: "Ventre", b: "Bas du dos", s: 0, sh: ["r", 45, 91, 30, 26, 4] },
+    { k: "bassin", f: "Bassin", b: "Fesses", s: 0, sh: ["r", 45, 118, 30, 20, 5] },
+    { k: "bras", f: "Bras", s: 1, sh: ["r", 25, 69, 15, 38, 6] },
+    { k: "avbras", f: "Avant-bras", s: 1, sh: ["r", 21, 108, 15, 34, 6] },
+    { k: "main", f: "Main", fem: 1, s: 1, sh: ["r", 18, 143, 15, 17, 6] },
+    { k: "cuisse", f: "Cuisse", fem: 1, s: 1, sh: ["r", 45, 139, 14, 46, 6] },
+    { k: "genou", f: "Genou", s: 1, sh: ["r", 46, 186, 13, 13, 5] },
+    { k: "jambe", f: "Jambe", fem: 1, s: 1, sh: ["r", 46, 200, 13, 36, 5] },
+    { k: "pied", f: "Pied / cheville", s: 1, sh: ["r", 43, 237, 16, 12, 5] }];
+  function blZoneName(id) {
+    var p = id.split("|"), part = BL_PARTS.filter(function (x) { return x.k === p[1]; })[0]; if (!part) return id;
+    if (!part.s) return p[0] === "F" ? part.f : part.b;
+    return part.f + " " + (p[2] === "d" ? (part.fem ? "droite" : "droit") : (part.fem ? "gauche" : "gauche")) + (p[0] === "B" ? " (arrière)" : "");
+  }
+  function blBody(b, host) {
+    var NS = "http://www.w3.org/2000/svg", sel = b.f.zones || [];
+    var wrap = el("div", "bl-body");
+    ["F", "B"].forEach(function (side) {
+      var col = el("div", "bl-fig");
+      col.appendChild(el("div", "bl-fig-t", side === "F" ? "FACE" : "DOS"));
+      var row = el("div", "bl-fig-r");
+      // côté de la victime affiché de part et d'autre
+      var leftLab = side === "F" ? "D" : "G", rightLab = side === "F" ? "G" : "D";
+      row.appendChild(el("span", "bl-side", leftLab));
+      var svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", "0 0 120 252"); svg.setAttribute("class", "bl-svg"); svg.setAttribute("role", "group"); svg.setAttribute("aria-label", side === "F" ? "Silhouette de face" : "Silhouette de dos");
+      BL_PARTS.forEach(function (pt) {
+        var inst = pt.s ? [["v", "l"], ["v", "r"]] : [["c", ""]];
+        inst.forEach(function (it) {
+          var sh = pt.sh.slice(), x = sh[1];
+          var mir = it[1] === "r";
+          // côté réel de la victime : face -> gauche de l'écran = droite ; dos -> gauche de l'écran = gauche
+          var vside = !pt.s ? "" : (side === "F" ? (mir ? "g" : "d") : (mir ? "d" : "g"));
+          var id = side + "|" + pt.k + (vside ? "|" + vside : ""), on = sel.indexOf(id) >= 0, node;
+          if (sh[0] === "e") { node = document.createElementNS(NS, "ellipse"); node.setAttribute("cx", sh[1]); node.setAttribute("cy", sh[2]); node.setAttribute("rx", sh[3]); node.setAttribute("ry", sh[4]); }
+          else { node = document.createElementNS(NS, "rect"); node.setAttribute("x", mir ? 120 - x - sh[3] : x); node.setAttribute("y", sh[2]); node.setAttribute("width", sh[3]); node.setAttribute("height", sh[4]); node.setAttribute("rx", sh[5] || 3); }
+          node.setAttribute("class", "bl-z" + (on ? " on" : "")); node.setAttribute("tabindex", "0"); node.setAttribute("role", "button");
+          node.setAttribute("aria-label", blZoneName(id)); node.setAttribute("aria-pressed", on ? "true" : "false");
+          var t = document.createElementNS(NS, "title"); t.textContent = blZoneName(id); node.appendChild(t);
+          var tog = function () { var a = (b.f.zones || []).slice(), i = a.indexOf(id); if (i >= 0) a.splice(i, 1); else a.push(id); b.f.zones = a; blSave(b); blRefresh(); };
+          node.addEventListener("click", tog); node.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tog(); } });
+          svg.appendChild(node);
+        });
+      });
+      row.appendChild(svg); row.appendChild(el("span", "bl-side", rightLab)); col.appendChild(row);
+      wrap.appendChild(col);
+    });
+    host.appendChild(wrap);
+    var names = (b.f.zones || []).map(blZoneName);
+    host.appendChild(el("div", "bl-zl" + (names.length ? " on" : ""), names.length ? names.join(" · ") : "Toucher l'endroit douloureux sur le bonhomme (D = droite de la victime)"));
+  }
   function blLoad() { try { var b = JSON.parse(localStorage.getItem(BL_KEY) || "null"); if (b && (b.v !== 3 || Date.now() - b.start > BL_MAX)) { localStorage.removeItem(BL_KEY); return null; } return b; } catch (e) { return null; } }
   function blSave(b) { try { localStorage.setItem(BL_KEY, JSON.stringify(b)); } catch (e) {} blShare(); }
   var blShareT = null, blShareSt = "", blShareOff = false;
@@ -2042,13 +2112,13 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   function blHM(t) { var d = new Date(t); return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2); }
   function blDur(m) { m = +m || 0; var h = Math.floor(m / 60), r = m % 60; return h ? h + " h" + (r ? " " + ("0" + r).slice(-2) : "") : r + " min"; }
   function blAbc(b) { return b.f.abc || {}; }
-  var BL_MECA_TXT = { "Coll. skieur": "Collision avec un skieur", "Coll. obstacle": "Collision avec un obstacle" };
+  var BL_MECA_TXT = {};
   function blLines(b) {
     var f = b.f, abc = blAbc(b), L = [];
     var who = [f.sexe, f.age !== "" && f.age != null ? f.age + " ans" : ""].filter(Boolean).join(" · ");
     if (who) L.push(["Victime", who]);
     if (f.meca) L.push(["Circonstances", BL_MECA_TXT[f.meca] || f.meca]);
-    var pl = [((f.ou || []).join(", ") + (f.cote ? " " + f.cote.toLowerCase() : "")).trim(), f.plus || "", f.dl !== "" && f.dl != null ? f.dl + "/10" : ""].filter(Boolean).join(" · ");
+    var pl = [(f.zones || []).map(blZoneName).join(", "), f.plus || "", f.dl !== "" && f.dl != null ? f.dl + "/10" : ""].filter(Boolean).join(" · ");
     if (pl) L.push(["Plainte principale", pl]);
     var bad = BL_ABC.filter(function (x) { return abc[x.L] === "bad"; });
     if (bad.length) {
@@ -2083,7 +2153,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     return box;
   }
   function blRefresh() { var y = window.scrollY; renderBilan(); window.scrollTo(0, y); }
-  function blStart() { var b = { v: 3, id: "b" + Date.now().toString(36), start: Date.now(), f: { abc: {} } }; blShareOff = false; blShareSt = ""; blSave(b); renderBilan(); goTop(); }
+  function blStart() { var b = { v: 3, id: "b" + Date.now().toString(36), start: Date.now(), f: { abc: {} } }; blShareOff = false; blShareSt = ""; blEdit = true; blSave(b); renderBilan(); goTop(); }
   function blSec(v, L, title, col, fg) {
     var sec = el("section", "bf"); sec.style.setProperty("--c", col); sec.style.setProperty("--f", fg || "#fff");
     var lt = el("div", "bf-l"); lt.appendChild(el("b", null, L)); sec.appendChild(lt);
@@ -2124,23 +2194,36 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     row.appendChild(sb); body.appendChild(row);
   }
   function renderBilan() {
-    var v = clearView(); v.classList.add("bl"); var b = blLoad();
+    renderHomebar(); var v = clearView(); v.classList.add("bl"); var b = blLoad();
     if (blViewId) return blView(v);
-    if (!b) {
+    if (!b || !blEdit) {
       var w = el("div", "bl-start");
-      w.appendChild(el("p", "bl-lead", "Tout est OK d'office : tu touches seulement ce qui ne va pas, le message radio s'écrit tout seul. Le poste de secours voit la fiche en direct."));
-      var go = el("button", "bl-go", "Nouvelle fiche bilan"); go.type = "button"; go.addEventListener("click", blStart); w.appendChild(go);
+      if (b) {
+        var cur = el("div", "bl-cur"); cur.appendChild(el("b", null, "Fiche en cours sur cet appareil · début " + blHM(b.start)));
+        var rs = el("button", "bl-go", "Reprendre la fiche"); rs.type = "button"; rs.addEventListener("click", function () { blEdit = true; renderBilan(); goTop(); }); cur.appendChild(rs);
+        var ab = el("button", "bl-del", blAbArm ? "Confirmer : abandonner et effacer cette fiche" : "Abandonner cette fiche"); ab.type = "button";
+        ab.addEventListener("click", function () {
+          if (!blAbArm) { blAbArm = true; renderBilan(); setTimeout(function () { if (blAbArm) { blAbArm = false; if (area === "bilan") renderBilan(); } }, 5000); return; }
+          blAbArm = false; clearTimeout(blShareT); try { localStorage.removeItem(BL_KEY); } catch (e) {}
+          if (!blShareOff) act("supprimerBilan", [b.id], "Fiche abandonnée"); else showStatus("Fiche abandonnée", false); renderBilan();
+        });
+        cur.appendChild(ab); w.appendChild(cur);
+      } else {
+        w.appendChild(el("p", "bl-lead", "Tout est OK d'office : tu touches seulement ce qui ne va pas. Le poste de secours voit la fiche en direct."));
+        var go = el("button", "bl-go", "Nouvelle fiche bilan"); go.type = "button"; go.addEventListener("click", blStart); w.appendChild(go);
+      }
       v.appendChild(w); blTeam(v); return;
     }
+    var bkF = el("button", "pbtn", "‹ Toutes les fiches"); bkF.type = "button"; bkF.addEventListener("click", function () { blEdit = false; renderBilan(); goTop(); }); v.appendChild(bkF);
     var f = b.f, top = el("div", "bl-info"); top.appendChild(el("span", null, "Début " + blHM(b.start)));
     var shs = el("span", "bl-share", blShareSt); shs.id = "bl-share"; top.appendChild(shs); v.appendChild(top);
     // 1. Circonstances
     var s1 = blSec(v, "1", "Circonstances", "#455a64");
     blNum(b, s1, "age", "Âge", "ans", 110, [-5, -1, 1, 5], 30);
     blSeg(b, s1, "sexe", "Sexe", ["Homme", "Femme"]);
-    blSeg(b, s1, "meca", "Suite à", ["Chute à ski", "Chute à pied", "Coll. skieur", "Coll. obstacle", "Avalanche", "Malaise", "Autre"]);
-    blSeg(b, s1, "ou", "Douleur", BL_OU, true);
-    blSeg(b, s1, "cote", "Côté", ["Gauche", "Droit"]);
+    blSeg(b, s1, "meca", "Suite à", ["Chute à ski", "Chute à pied", "Collision avec un skieur", "Collision avec un obstacle", "Avalanche", "Malaise", "Autre"]);
+    var dh = el("div", "bf-sub", "Douleur · où ?"); dh.style.setProperty("--s", "#455a64"); s1.appendChild(dh);
+    blBody(b, s1);
     var pr = el("div", "bf-r t"); pr.appendChild(el("span", "bf-q", "Précision")); var pc = el("div", "bf-c"), px = document.createElement("input"); px.type = "text"; px.className = "bf-x"; px.placeholder = "Autre blessure, détail…"; px.value = f.plus || ""; px.setAttribute("aria-label", "Précision sur la plainte");
     px.addEventListener("input", function () { b.f.plus = px.value; blSave(b); }); pc.appendChild(px); pr.appendChild(pc); s1.appendChild(pr);
     blNum(b, s1, "dl", "Intensité", "/10", 10, [-1, 1], 5);
@@ -2162,8 +2245,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     // 3. Bilan complémentaire
     var s3 = blSec(v, "3", "Bilan complémentaire", "#1565C0");
     s3.appendChild(el("div", "bf-sub", "Ventilation")).style.setProperty("--s", "#B98100");
-    blNum(b, s3, "b_freq", "Fréq.", "/min", 80, [-1, 1], 16);
-    blSeg(b, s3, "b_amp", "Ampl.", ["Normale", "Superficielle", "Ample"]);
+    blNum(b, s3, "b_freq", "Fréquence", "/min", 80, [-1, 1], 16);
+    blSeg(b, s3, "b_amp", "Amplitude", ["Normale", "Superficielle", "Ample"]);
     blSeg(b, s3, "b_reg", "Rythme", ["Régulière", "Irrégulière"]);
     s3.appendChild(el("div", "bf-sub", "Circulation")).style.setProperty("--s", "#2E7D32");
     blNum(b, s3, "c_freq", "Pouls", "/min", 250, [-1, 1], 80);
@@ -2190,13 +2273,13 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     });
     blSeg(b, s4, "prem", "1re fois", ["Oui", "Non"]);
     var dr = el("div", "bf-r"); dr.appendChild(el("span", "bf-q", "Depuis")); var dc = el("div", "bf-c");
-    [-60, -15].forEach(function (d) { var s = el("button", "bf-o st", d === -60 ? "−1 h" : "−15"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = Math.max(0, (+b.f.depuis || 0) + d); blSave(b); blRefresh(); }); dc.appendChild(s); });
+    [-60, -15].forEach(function (d) { var s = el("button", "bf-o st", d === -60 ? "−1 h" : "−15 min"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = Math.max(0, (+b.f.depuis || 0) + d); blSave(b); blRefresh(); }); dc.appendChild(s); });
     dc.appendChild(el("span", "bl-dur", f.depuis ? blDur(f.depuis) : "—"));
-    [15, 60].forEach(function (d) { var s = el("button", "bf-o st", d === 60 ? "+1 h" : "+15"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = (+b.f.depuis || 0) + d; blSave(b); blRefresh(); }); dc.appendChild(s); });
+    [15, 60].forEach(function (d) { var s = el("button", "bf-o st", d === 60 ? "+1 h" : "+15 min"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = (+b.f.depuis || 0) + d; blSave(b); blRefresh(); }); dc.appendChild(s); });
     dr.appendChild(dc); s4.appendChild(dr);
     // 5. Radio
     var s5 = blSec(v, "5", "Évacuation · message radio", "#17324a");
-    blSeg(b, s5, "evac", "", ["Luge", "Skidoo", "Ambulance", "Hélico", "Aucune"]);
+    blSeg(b, s5, "evac", "", ["Luge", "Skidoo", "Ambulance", "Hélicoptère", "Aucune"]);
     blEnd(b, s5);
   }
   function blAbcMini(b) {
@@ -2255,7 +2338,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       call("enregistrerBilan", code, b, "").then(function (d) {
         if (data && d && d.bilans) data.bilans = d.bilans;
         try { localStorage.removeItem(BL_KEY); } catch (e) {}
-        blViewId = b.id; showStatus("Fiche terminée et envoyée", false); renderBilan(); goTop();
+        blEdit = false; blViewId = b.id; showStatus("Fiche terminée et envoyée", false); renderBilan(); goTop();
       }, function () { showStatus("Pas de réseau : la fiche reste sur ce téléphone, réessaie dans un moment.", true); });
     });
     body.appendChild(del);
