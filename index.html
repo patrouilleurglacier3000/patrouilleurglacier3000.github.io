@@ -573,6 +573,25 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 /* ===== Bilan victime : fiche sur un écran ===== */
 #view.bl { padding-bottom: 40px; }
 .bl-start { display: flex; flex-direction: column; gap: 16px; }
+/* Bilan : toujours clair et contrasté, lisible au soleil (même si le téléphone est en mode sombre) */
+body:has(#view.bl) { background: #fff; }
+#view.bl { --bg: #eef2f5; --paper: #fff; --ink: #0b1620; --muted: #33424e; --line: #6b7a86; --red: #c62828; --red-bg: #fde8e6; color: #0b1620; background: #fff; color-scheme: light; }
+#view.bl .bf-q { font-size: 16px; color: #0b1620; }
+#view.bl .bf-o { min-height: 48px; font-size: 16.5px; border-color: #6b7a86; color: #0b1620; background: #fff; }
+#view.bl .bf-t { color: #0b1620; font-size: 17px; }
+#view.bl .bf-b.big .bf-q { font-size: 21px; font-weight: 800; min-width: 74px; }
+#view.bl .bf-b.big .bf-o { min-height: 60px; font-size: 20px; padding: 4px 14px; border-width: 3px; }
+#view.bl .bf-b.big .bf-n { width: 78px; min-height: 60px; font-size: 28px; border-width: 3px; }
+#view.bl .bf-b.big .bf-o.st { min-width: 50px; padding: 4px 8px; font-size: 19px; }
+#view.bl .bf-b.big .bf-u { font-size: 18px; font-weight: 700; color: #0b1620; }
+#view.bl .stack > .bf-r { flex: 1 1 100%; flex-wrap: wrap; row-gap: 4px; }
+#view.bl .stack > .bf-r > .bf-q { flex: 1 1 100%; }
+#view.bl .stack > .bf-r > .bf-c { flex-wrap: wrap; }
+.bl-alert { flex: 1 1 100%; background: #c62828; color: #fff; border-radius: 12px; padding: 10px 12px; font: 700 17px/1.35 var(--body); }
+.bl-alert.mal { background: #6A1B9A; }
+.bl-tip { flex: 1 1 100%; font: 600 14.5px/1.35 var(--body); color: #33424e; }
+.bl-add { flex: 1 1 100%; min-height: 52px; border: 2px dashed #455a64; border-radius: 12px; background: #fff; color: #0b1620; font: 700 17px var(--body); cursor: pointer; }
+.bf-tm { min-height: 48px; font: 800 22px var(--body); border: 2px solid #6b7a86; border-radius: 9px; padding: 0 8px; background: #fff; color: #0b1620; }
 .bl-lead { font-size: 17px; line-height: 1.45; margin: 4px 0 0; }
 .bl-go { width: 100%; min-height: 64px; border: 0; border-radius: 16px; background: #C62828; color: #fff; font: 800 21px var(--body); cursor: pointer; }
 .bl-info { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 14px; color: var(--muted); }
@@ -1031,7 +1050,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794598396";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794598696";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2515,6 +2534,23 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     { id: "n_sen", ok: "Sensibilité des 4 membres", bad: "Trouble de la sensibilité", limbs: 1 }];
   var BL_LIMBS = ["Membre supérieur droit", "Membre supérieur gauche", "Membre inférieur droit", "Membre inférieur gauche"];
   function blNeuroTxt(f, n) { if (f[n.id] !== "bad") return n.ok; var m = f[n.id + "_m"] || []; return n.bad + (n.limbs && m.length ? " : " + m.join(", ").toLowerCase() : ""); }
+  var BL_MSIG = ["Douleur dans la poitrine", "Essoufflé", "Sueurs", "Pâle", "Vertiges", "Nausées / vomit", "Confus", "Convulsions", "A perdu connaissance", "Faiblesse d'un côté"];
+  var BL_TR = [{ id: "t_tete", q: "Tête", o: ["Plaie", "Déformation", "Pupilles inégales", "Ne se souvient pas", "Vomit"] },
+    { id: "t_rach", q: "Dos, nuque", o: ["Douleur", "Fourmis / sensibilité", "Déformation"] },
+    { id: "t_bas", q: "Bassin, ventre", o: ["Douleur", "Ventre dur", "Hématome"] },
+    { id: "t_fem", q: "Cuisse (fémur)", o: ["Déformation", "Hémorragie", "Très douloureux"] }];
+  function blGestes(isMal, isTr) { return ["Oxygène", "PLS", "Demi-assis", "Jambes surélevées"].concat(isTr ? ["Collier cervical", "Matelas coquille", "Ceinture pelvienne", "Attelle", "Pansement compressif"] : []).concat(isMal ? ["Resucrage"] : []).concat(["Couverture de survie"]); }
+  function blKind(f) { var m = [].concat(f.meca || []); return { mal: m.indexOf("Malaise") >= 0, tr: m.some(function (x) { return x !== "Malaise" && x !== "Autre"; }) || !!f.malBl }; }
+  function blTime(b, body, id, q) {
+    var row = el("div", "bf-r"); row.appendChild(el("span", "bf-q", q)); var c = el("div", "bf-c"), t = document.createElement("input"); t.type = "time"; t.className = "bf-tm"; t.value = b.f[id] || ""; t.setAttribute("aria-label", q);
+    t.addEventListener("input", function () { b.f[id] = t.value; blSave(b); }); c.appendChild(t);
+    var nw = el("button", "bf-o st", "Maintenant"); nw.type = "button"; nw.addEventListener("click", function () { var d = new Date(); b.f[id] = ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2); blSave(b); blRefresh(); }); c.appendChild(nw);
+    row.appendChild(c); body.appendChild(row);
+  }
+  function blDec(b, body, id, q, u) {
+    var row = el("div", "bf-r"); row.appendChild(el("span", "bf-q", q)); var c = el("div", "bf-c"), t = document.createElement("input"); t.type = "text"; t.inputMode = "decimal"; t.className = "bf-n"; t.value = b.f[id] || ""; t.setAttribute("aria-label", q);
+    t.addEventListener("input", function () { b.f[id] = t.value.replace(".", ","); blSave(b); }); c.appendChild(t); if (u) c.appendChild(el("span", "bf-u", u)); row.appendChild(c); body.appendChild(row);
+  }
   var BL_MAT = ["Matelas coquille", "Collier cervical", "Attelle de jambe", "Attelle de bras", "Planche de sauvetage", "Civière à aubes", "Barquette"];
   var BL_MHTA = [{ id: "m", q: "Maladies" }, { id: "h", q: "Hospitalisations" }, { id: "tr", q: "Traitements" }, { id: "al", q: "Allergies" }];
   var BL_MECA = { "Chute à ski": "", "Chute à pied": "", "Chute": "une chute", "Coll. skieur": "une collision avec un skieur", "Coll. obstacle": "une collision avec un obstacle", "Avalanche": "une avalanche", "Malaise": "un malaise", "Autre": "" };
@@ -2898,27 +2934,39 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (!bad.length && !g.length) L.push(["xABCDE", "RAS", "ok"]);
     else { var it6 = bad.map(function (x) { return [x.L + " · " + x.en + " : " + x.bad.toLowerCase(), true]; }).concat(g.map(function (x) { return [x, true]; })).concat(bad.length < 6 ? [["le reste RAS", false]] : []);
       L.push(["xABCDE", it6.map(function (x) { return x[0]; }).join(" · "), true, it6]); }
+    if (f.cons === "Inconscient") L.push(["Conscience", "inconscient" + (f.resp0 ? ", " + f.resp0.toLowerCase() : ""), true]);
+    var K = blKind(f);
+    if (K.mal) {
+      L.push({ head: "Malaise" });
+      if (f.prem) L.push(["Première fois", f.prem.toLowerCase()]);
+      if (f.depuis) L.push(["Depuis", blDur(f.depuis)]);
+      var sg = [].concat(f.m_sig || []); if (sg.length) L.push(["Signes", sg.join(" · "), true, sg.map(function (x) { return [x, true]; })]);
+      var fa = [f.fa_v === "De travers" ? "sourire de travers" : "", f.fa_b === "Un bras tombe" ? "un bras tombe" : "", f.fa_p === "Troublée" ? "parole troublée" : ""].filter(Boolean);
+      if (fa.length) L.push(["FAST (AVC)", fa.join(" · ") + (f.fa_t ? " · début des signes " + f.fa_t : ""), true]); else if (f.fa_v || f.fa_b || f.fa_p) L.push(["FAST (AVC)", "normal", "ok"]);
+      if (sg.indexOf("Douleur dans la poitrine") >= 0) { var pq = [[].concat(f.pq_r || []).join(", "), f.pq_s !== "" && f.pq_s != null ? f.pq_s + "/10" : "", f.pq_p ? f.pq_p.toLowerCase() : ""].filter(Boolean); if (pq.length) L.push(["Douleur thoracique", pq.join(" · "), true]); }
+      var gl = [f.diab === "Oui" ? "diabétique" : f.diab === "Non" ? "pas diabétique" : "", f.glyc ? f.glyc + " mmol/l" : ""].filter(Boolean); if (gl.length) L.push(["Glycémie", gl.join(" · "), f.diab === "Oui"]);
+      var me = [f.c_freq ? "pouls " + f.c_freq + "/min" : "", f.b_freq ? "respiration " + f.b_freq + "/min" : "", f.c_trc ? "recoloration " + f.c_trc : "", f.c_ta ? "tension " + f.c_ta + " mmHg" : "", f.b_sat ? "saturation " + f.b_sat + " %" : ""].filter(Boolean);
+      if (me.length) L.push(["Mesures", me.join(" · "), f.c_trc === "> 2 s", me.map(function (x) { return [x, false]; })]);
+    }
+    if (K.tr) BL_TR.forEach(function (t) { var x = [].concat(f[t.id] || []); if (x.length) L.push([t.q, x.join(" · "), true, x.map(function (y) { return [y, true]; })]); });
+    if ((f.gestes || []).length) L.push(["Gestes faits", f.gestes.join(" · "), false, f.gestes.map(function (x) { return [x, false]; })]);
     var cDone = !b.part || b.part !== "first" || b.compl;
     if (!cDone) L.push(["Bilan complémentaire", "pas encore fait", "todo"]);
     if (cDone) {
-    var cBad = f.c_reg === "Irrégulier" || f.c_force === "Filant" || (f.c_coul && f.c_coul !== "Normale") || f.c_sue === "Oui";
-    var c = [f.c_freq ? f.c_freq + "/min" : "", f.c_reg ? f.c_reg.toLowerCase() : "", f.c_force ? f.c_force.toLowerCase() : "", f.c_coul ? "peau " + f.c_coul.toLowerCase() : "", f.c_sue === "Oui" ? "sueurs" : ""].filter(Boolean);
+    var cBad = (f.c_trc === "> 2 s" && !K.mal) || f.c_reg === "Irrégulier" || f.c_force === "Filant" || (f.c_coul && f.c_coul !== "Normale") || f.c_sue === "Oui";
+    var c = [f.c_freq && !K.mal ? f.c_freq + "/min" : "", f.c_trc && !K.mal ? "recoloration " + f.c_trc : "", f.c_ta && !K.mal ? "tension " + f.c_ta + " mmHg" : "", f.c_reg ? f.c_reg.toLowerCase() : "", f.c_force ? f.c_force.toLowerCase() : "", f.c_coul ? "peau " + f.c_coul.toLowerCase() : "", f.c_sue === "Oui" ? "sueurs" : ""].filter(Boolean);
     if (c.length) L.push(["Circulation", c.join(" · "), cBad]);
     var vBad = (f.b_amp && f.b_amp !== "Normale") || f.b_reg === "Irrégulière";
-    var v = [f.b_freq ? f.b_freq + "/min" : "", f.b_amp ? f.b_amp.toLowerCase() : "", f.b_reg ? f.b_reg.toLowerCase() : ""].filter(Boolean);
+    var v = [f.b_freq && !K.mal ? f.b_freq + "/min" : "", f.b_sat && !K.mal ? "saturation " + f.b_sat + " %" : "", f.b_amp ? f.b_amp.toLowerCase() : "", f.b_reg ? f.b_reg.toLowerCase() : ""].filter(Boolean);
     if (v.length) L.push(["Ventilation", v.join(" · "), vBad]);
     var nb = BL_NEURO.filter(function (n) { return f[n.id] === "bad"; });
     var n2 = { bad: nb.map(function (n) { return blNeuroTxt(f, n); }), ok: BL_NEURO.filter(function (n) { return f[n.id] !== "bad"; }).map(function (n) { return n.ok; }) };
     if (!nb.length) L.push(["Neurologique", "RAS", "ok", null, null, n2]);
     else { var ni = n2.bad.concat(nb.length < BL_NEURO.length ? ["le reste RAS"] : []); L.push(["Neurologique", ni.join(" · "), true, ni.map(function (x, i) { return [x, i < nb.length]; }), null, n2]); }
     }
-    var isMal = [].concat(f.meca || []).indexOf("Malaise") >= 0;
-    if (isMal && (f.prem || f.depuis)) L.push({ head: "Malaise" });
-    if (isMal && f.prem) L.push(["Première fois", f.prem.toLowerCase()]);
-    if (isMal && f.depuis) L.push(["Depuis", blDur(f.depuis)]);
     var mh = BL_MHTA.filter(function (m) { return f[m.id + "_x"]; });
     var a2 = { bad: mh.map(function (m) { return m.q + " : " + (f[m.id] || "oui, à préciser"); }), ok: BL_MHTA.filter(function (m) { return !f[m.id + "_x"]; }).map(function (m) { return m.q + " : rien"; }) };
-    if (!cDone) {} else if (!mh.length) L.push(["Antécédents", "aucun", "ok", null, null, a2]);
+    if (!cDone && !K.mal) {} else if (!mh.length) L.push(["Antécédents", "aucun", "ok", null, null, a2]);
     else L.push(["Antécédents", a2.bad.join(" · "), true, a2.bad.map(function (x) { return [x, true]; }), null, a2]);
     if ((f.suivi || []).length) {
       L.push({ head: "Suivi · réévaluations" });
@@ -2950,9 +2998,10 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     return w;
   }
   // Fiche en blocs : un bloc de couleur par partie, dans l'ordre du message radio
-  var BL_GRP = { "Plainte principale": "pl", "xABCDE": "abc", "Circulation": "cv", "Ventilation": "cv", "Neurologique": "cv", "Bilan complémentaire": "cv", "Première fois": "mal", "Depuis": "mal", "Malaise": "mal",
+  var BL_GRP = { "Plainte principale": "pl", "xABCDE": "abc", "Circulation": "cv", "Ventilation": "cv", "Neurologique": "cv", "Bilan complémentaire": "cv", "Première fois": "mal", "Depuis": "mal", "Malaise": "mal", "Conscience": "abc", "Signes": "mal", "FAST (AVC)": "mal", "Douleur thoracique": "mal", "Glycémie": "mal", "Mesures": "mal",
+    "Tête": "tr", "Dos, nuque": "tr", "Bassin, ventre": "tr", "Cuisse (fémur)": "tr", "Gestes faits": "ge",
     "Antécédents": "ant", "Antécédents (MHTA)": "ant", "Maladies": "ant", "Hospitalisations": "ant", "Traitements": "ant", "Allergies": "ant", "Suivi · réévaluations": "sv", "Évacuation": "ev", "Matériel demandé": "ev" };
-  var BL_GTT = { pl: ["Plainte principale", "#d63a3a"], abc: ["xABCDE", "#2e9461"], cv: ["Bilan complémentaire", "#2f7fb8"], mal: ["Malaise", "#8e4fc2"], ant: ["Antécédents médicaux", "#8e4fc2"], sv: ["Suivi · réévaluations", "#00838F"], ev: ["Évacuation", "#e8622c"] };
+  var BL_GTT = { pl: ["Plainte principale", "#d63a3a"], abc: ["xABCDE", "#2e9461"], cv: ["Bilan complémentaire", "#2f7fb8"], mal: ["Malaise", "#8e4fc2"], ant: ["Antécédents médicaux", "#8e4fc2"], sv: ["Suivi · réévaluations", "#00838F"], ev: ["Évacuation", "#e8622c"], tr: ["Trauma", "#d63a3a"], ge: ["Gestes faits", "#17324a"] };
   function blSheet(b) {
     var box = el("div", "fbm blk"), cur = null, curK = "";
     function block(k, bad) {
@@ -3035,6 +3084,17 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (!want && blWL) { var l = blWL; blWL = null; l.release().catch(function () {}); }
   }
   setInterval(blWake, 3000); document.addEventListener("visibilitychange", blWake);
+  function blMhta(b, s4) {
+    var f = b.f;
+    BL_MHTA.forEach(function (m) {
+      var bad = !!f[m.id + "_x"], wrap = el("div", "bl-mh" + (bad ? " bad" : ""));
+      var bt = el("button", "bl-chk" + (bad ? " bad" : ""), (bad ? "! " : "✓ ") + m.q + (bad ? "" : " : rien")); bt.type = "button";
+      bt.addEventListener("click", function () { b.f[m.id + "_x"] = !bad; if (bad) b.f[m.id] = ""; blSave(b); blRefresh(); if (!bad) setTimeout(function () { var x = $("mh-" + m.id); if (x) x.focus(); }, 0); });
+      wrap.appendChild(bt);
+      if (bad) { var tx = document.createElement("input"); tx.type = "text"; tx.className = "bf-x"; tx.id = "mh-" + m.id; tx.placeholder = "Lesquel(le)s ?"; tx.value = f[m.id] || ""; tx.setAttribute("aria-label", m.q); tx.addEventListener("input", function () { b.f[m.id] = tx.value; blSave(b); }); wrap.appendChild(tx); }
+      s4.appendChild(wrap);
+    });
+  }
   function renderBilan() {
     setTimeout(blWake, 0);
     renderHomebar(); var v = clearView(); v.classList.add("bl"); var b = blLoad();
@@ -3076,26 +3136,29 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (!g && !blGpsBusy) gp.insertBefore(el("div", "bl-gps-t"), null).appendChild(el("b", null, "📍 Position inconnue"));
     gb.addEventListener("click", function () { blGps(b); }); gp.appendChild(gb); v.appendChild(gp);
     var tbh = document.querySelector(".topbar"); if (tbh) document.documentElement.style.setProperty("--tb", tbh.offsetHeight + "px");
-    var s1 = blSec(v, N(), "Circonstances", "#455a64");
+    var s1 = blSec(v, N(), "Circonstances", "#455a64"); s1.classList.add("big", "stack");
     blNum(b, s1, "age", "Âge", "ans", 110, [-5, -1, 1, 5], 30);
     blSeg(b, s1, "sexe", "Sexe", ["Homme", "Femme"]);
     if (typeof b.f.meca === "string") b.f.meca = [b.f.meca];
     blSeg(b, s1, "meca", "Suite à", ["Chute à ski", "Chute à pied", "Collision avec un skieur", "Collision avec un obstacle", "Avalanche", "Malaise", "Autre"], true);
-    if ([].concat(f.meca || []).indexOf("Malaise") >= 0) {
-    var mal = el("div", "bf-sub big", "Malaise : première fois et depuis quand"); mal.style.setProperty("--s", "#6A1B9A"); s1.appendChild(mal);
-    blSeg(b, s1, "prem", "Première fois ?", ["Oui", "Non"]);
-    var dr = el("div", "bf-r"); dr.appendChild(el("span", "bf-q", "Depuis combien de temps ?")); var dc = el("div", "bf-c");
-    [-60, -15].forEach(function (d) { var s = el("button", "bf-o st", d === -60 ? "−1 h" : "−15 min"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = Math.max(0, (+b.f.depuis || 0) + d); blSave(b); blRefresh(); }); dc.appendChild(s); });
-    dc.appendChild(el("span", "bl-dur", f.depuis ? blDur(f.depuis) : "—"));
-    [15, 60].forEach(function (d) { var s = el("button", "bf-o st", d === 60 ? "+1 h" : "+15 min"); s.type = "button"; s.addEventListener("click", function () { b.f.depuis = (+b.f.depuis || 0) + d; blSave(b); blRefresh(); }); dc.appendChild(s); });
-    dr.appendChild(dc); s1.appendChild(dr);
-    }
+    var K = blKind(f), malOnly = K.mal && !K.tr;
+    if (malOnly) {
+      var ab2 = el("button", "bl-add", "＋ Il y a aussi une blessure (chute pendant le malaise)"); ab2.type = "button";
+      ab2.addEventListener("click", function () { b.f.malBl = true; blSave(b); blRefresh(); }); s1.appendChild(ab2);
+    } else {
     var dh = el("div", "bf-sub", "Douleurs et lésions · toucher le bonhomme"); dh.style.setProperty("--s", "#455a64"); s1.appendChild(dh);
     blBody(b, s1);
     var pr = el("div", "bf-r t"); pr.appendChild(el("span", "bf-q", "Précision")); var pc = el("div", "bf-c"), px = document.createElement("input"); px.type = "text"; px.className = "bf-x"; px.placeholder = "Autre blessure, détail…"; px.value = f.plus || ""; px.setAttribute("aria-label", "Précision sur la plainte");
     px.addEventListener("input", function () { b.f.plus = px.value; blSave(b); }); pc.appendChild(px); pr.appendChild(pc); s1.appendChild(pr);
+    }
     // 2. xABCDE : vert d'office
     var s2 = blSec(v, N(), "xABCDE · toucher ce qui ne va pas", "#C62828");
+    blSeg(b, s2, "cons", "Conscience", ["Conscient", "Inconscient"]);
+    if (f.cons === "Inconscient" && ((f.abc || {}).D !== "bad" || f.n_pc !== "bad")) { b.f.abc = Object.assign({}, f.abc || {}, { D: "bad" }); b.f.n_pc = "bad"; blSave(b); f = b.f; }
+    if (f.cons === "Inconscient") {
+      s2.appendChild(el("div", "bl-alert", "Inconscient : libérer les voies aériennes, regarder s'il respire (10 s). Ne respire pas : RCP + DAE. Respire : PLS."));
+      blSeg(b, s2, "resp0", "Respire ?", ["Respire", "Ne respire pas"]);
+    }
     var abc = blAbc(b), line = el("div", "bl-abc");
     BL_ABC.forEach(function (it) {
       var bad = abc[it.L] === "bad", bt = el("button", "bl-ab" + (bad ? " bad" : " ok")); bt.type = "button"; bt.style.setProperty("--c", it.col);
@@ -3109,19 +3172,69 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var bads = BL_ABC.filter(function (x) { return abc[x.L] === "bad"; });
     if (bads.length) s2.appendChild(el("div", "bl-badl", bads.map(function (x) { return x.L + " : " + x.bad; }).join(" · ")));
     if (abc.x === "bad") blStamp(b, s2, "garrot", "Garrot");
-    if (abc.B === "bad" || abc.C === "bad") blStamp(b, s2, "rcp", "RCP / DAE");
+    if (abc.B === "bad" || abc.C === "bad" || f.resp0 === "Ne respire pas") blStamp(b, s2, "rcp", "RCP / DAE");
+    // Fiche malaise : tout de suite après le xABCDE
+    if (K.mal) {
+      var sm = blSec(v, N(), "Fiche malaise", "#6A1B9A"); sm.classList.add("stack");
+      blSeg(b, sm, "prem", "Première fois ?", ["Oui", "Non"]);
+      var dr = el("div", "bf-r"); dr.appendChild(el("span", "bf-q", "Depuis combien de temps ?")); var dc = el("div", "bf-c");
+      [-60, -15].forEach(function (d) { var x = el("button", "bf-o st", d === -60 ? "−1 h" : "−15 min"); x.type = "button"; x.addEventListener("click", function () { b.f.depuis = Math.max(0, (+b.f.depuis || 0) + d); blSave(b); blRefresh(); }); dc.appendChild(x); });
+      dc.appendChild(el("span", "bl-dur", f.depuis ? blDur(f.depuis) : "—"));
+      [15, 60].forEach(function (d) { var x = el("button", "bf-o st", d === 60 ? "+1 h" : "+15 min"); x.type = "button"; x.addEventListener("click", function () { b.f.depuis = (+b.f.depuis || 0) + d; blSave(b); blRefresh(); }); dc.appendChild(x); });
+      dr.appendChild(dc); sm.appendChild(dr);
+      sm.appendChild(el("div", "bf-sub", "Ce qu'il ressent, ce qu'on voit")).style.setProperty("--s", "#6A1B9A");
+      blSeg(b, sm, "m_sig", "", BL_MSIG, true);
+      sm.appendChild(el("div", "bf-sub", "AVC ? Test FAST")).style.setProperty("--s", "#1565C0");
+      blSeg(b, sm, "fa_v", "Sourire", ["Normal", "De travers"]);
+      blSeg(b, sm, "fa_b", "Bras tendus", ["Tiennent", "Un bras tombe"]);
+      blSeg(b, sm, "fa_p", "Parole", ["Normale", "Troublée"]);
+      if (f.fa_v === "De travers" || f.fa_b === "Un bras tombe" || f.fa_p === "Troublée") {
+        sm.appendChild(el("div", "bl-alert", "AVC possible : chaque minute compte. Noter l'heure où les signes ont commencé."));
+        blTime(b, sm, "fa_t", "Début des signes");
+      }
+      if ([].concat(f.m_sig || []).indexOf("Douleur dans la poitrine") >= 0) {
+        sm.appendChild(el("div", "bf-sub", "Cœur ? La douleur")).style.setProperty("--s", "#C62828");
+        blSeg(b, sm, "pq_r", "Où", ["Poitrine", "Bras gauche", "Mâchoire", "Dos", "Ventre"], true);
+        blNum(b, sm, "pq_s", "Intensité", "/10", 10, [-1, 1], 5);
+        blSeg(b, sm, "pq_p", "Arrivée", ["Au repos", "À l'effort"]);
+      }
+      sm.appendChild(el("div", "bf-sub", "Hypoglycémie ?")).style.setProperty("--s", "#B98100");
+      blSeg(b, sm, "diab", "Diabétique", ["Non", "Oui"]);
+      blDec(b, sm, "glyc", "Glycémie", "mmol/l");
+      sm.appendChild(el("div", "bf-sub", "Mesures")).style.setProperty("--s", "#2E7D32");
+      blNum(b, sm, "c_freq", "Pouls", "/min", 250, [-1, 1], 80);
+      blNum(b, sm, "b_freq", "Respiration", "/min", 80, [-1, 1], 16);
+      blSeg(b, sm, "c_trc", "Recoloration", ["< 2 s", "> 2 s"]);
+      blNum(b, sm, "c_ta", "Tension (haute)", "mmHg", 300, [-10, 10], 120);
+      blNum(b, sm, "b_sat", "Saturation", "%", 100, [-1, 1], 97);
+      sm.appendChild(el("div", "bf-sub", "Antécédents : maladies, allergies, traitements, hospitalisations")).style.setProperty("--s", "#6A1B9A");
+      blMhta(b, sm);
+    }
+    // Trauma : les points à vérifier
+    if (K.tr) {
+      var st = blSec(v, N(), "Trauma · toucher ce qu'on trouve", "#d63a3a"); st.classList.add("stack");
+      st.appendChild(el("div", "bl-tip", "Rien de touché = rien d'anormal."));
+      BL_TR.forEach(function (t) { blSeg(b, st, t.id, t.q, t.o, true); });
+    }
+    // Gestes faits
+    var sg2 = blSec(v, N(), "Gestes faits", "#17324a"); sg2.classList.add("pick");
+    blSeg(b, sg2, "gestes", "", blGestes(K.mal, K.tr), true);
     }
     if (part !== "first") {
     // 3. Bilan complémentaire
+    var K2 = blKind(f);
     var s3 = blSec(v, N(), "Bilan complémentaire", "#1565C0"); s3.classList.add("full");
     s3.appendChild(el("div", "bf-sub", "Circulation")).style.setProperty("--s", "#2E7D32");
-    blNum(b, s3, "c_freq", "Pouls", "/min", 250, [-1, 1], 80);
+    if (!K2.mal) blNum(b, s3, "c_freq", "Pouls", "/min", 250, [-1, 1], 80);
+    if (!K2.mal) blSeg(b, s3, "c_trc", "Recoloration", ["< 2 s", "> 2 s"]);
+    if (!K2.mal) blNum(b, s3, "c_ta", "Tension (haute)", "mmHg", 300, [-10, 10], 120);
     blSeg(b, s3, "c_reg", "Rythme", ["Régulier", "Irrégulier"]);
     blSeg(b, s3, "c_force", "Pouls", ["Bien frappé", "Filant"]);
     blSeg(b, s3, "c_coul", "Peau", ["Normale", "Pâle", "Rouge", "Bleutée"]);
     blSeg(b, s3, "c_sue", "Sueurs", ["Non", "Oui"]);
     s3.appendChild(el("div", "bf-sub", "Ventilation")).style.setProperty("--s", "#B98100");
-    blNum(b, s3, "b_freq", "Fréquence", "/min", 80, [-1, 1], 16);
+    if (!K2.mal) blNum(b, s3, "b_freq", "Fréquence", "/min", 80, [-1, 1], 16);
+    if (!K2.mal) blNum(b, s3, "b_sat", "Saturation", "%", 100, [-1, 1], 97);
     blSeg(b, s3, "b_amp", "Amplitude", ["Normale", "Superficielle", "Ample"]);
     blSeg(b, s3, "b_reg", "Rythme", ["Régulière", "Irrégulière"]);
     s3.appendChild(el("div", "bf-sub", "Neurologique")).style.setProperty("--s", "#1565C0");
@@ -3132,17 +3245,9 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       if (bad && n.limbs) { var lw = el("div", "bl-limbs"); lw.appendChild(el("div", "bf-q", (n.id === "n_mot" ? "Motricité" : "Sensibilité") + " : toucher le ou les membres atteints")); lw.appendChild(blLimbFig(b, n.id + "_m")); var lm = (b.f[n.id + "_m"] || []); lw.appendChild(el("div", "bl-zl" + (lm.length ? " on" : ""), lm.length ? lm.join(" · ") : "Aucun membre choisi")); ng.appendChild(lw); }
     });
     s3.appendChild(ng);
-    // 4. MHTA
-    var s4 = blSec(v, N(), "Antécédents médicaux", "#6A1B9A");
-    var mhh = el("div", "bf-sub", "Maladies, hospitalisations, traitements, allergies"); mhh.style.setProperty("--s", "#6A1B9A"); s4.appendChild(mhh);
-    BL_MHTA.forEach(function (m) {
-      var bad = !!f[m.id + "_x"], wrap = el("div", "bl-mh" + (bad ? " bad" : ""));
-      var bt = el("button", "bl-chk" + (bad ? " bad" : ""), (bad ? "! " : "✓ ") + m.q + (bad ? "" : " : rien")); bt.type = "button";
-      bt.addEventListener("click", function () { b.f[m.id + "_x"] = !bad; if (bad) b.f[m.id] = ""; blSave(b); blRefresh(); if (!bad) setTimeout(function () { var x = $("mh-" + m.id); if (x) x.focus(); }, 0); });
-      wrap.appendChild(bt);
-      if (bad) { var tx = document.createElement("input"); tx.type = "text"; tx.className = "bf-x"; tx.id = "mh-" + m.id; tx.placeholder = "Lesquel(le)s ?"; tx.value = f[m.id] || ""; tx.setAttribute("aria-label", m.q); tx.addEventListener("input", function () { b.f[m.id] = tx.value; blSave(b); }); wrap.appendChild(tx); }
-      s4.appendChild(wrap);
-    });
+    // 4. MHTA (déjà dans la fiche malaise)
+    if (!K2.mal) { var s4 = blSec(v, N(), "Antécédents médicaux", "#6A1B9A");
+      var mhh = el("div", "bf-sub", "Maladies, hospitalisations, traitements, allergies"); mhh.style.setProperty("--s", "#6A1B9A"); s4.appendChild(mhh); blMhta(b, s4); }
     }
     if (part === "compl") { var sc = blSec(v, N(), "Enregistrer", "#17324a"); blFinish(b, sc, "✓ Enregistrer le complément"); return; }
     // Évacuation / radio
