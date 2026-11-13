@@ -833,6 +833,50 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .bl-vl span { color: var(--muted); }
 .bl-vl b { text-align: right; }
 .bl-vl.bad b { color: var(--red); }
+
+/* Avalanches */
+.av-wrap { position: relative; height: 46vh; min-height: 300px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); margin: 10px 0 12px; background: #dfe8ef; touch-action: none; }
+.av-wrap.tall { height: 58vh; }
+.av-wrap.full { position: fixed; inset: 0; height: auto; z-index: 60; border-radius: 0; margin: 0; border: 0; }
+.av-wrap .av-map { position: absolute; inset: 0; width: 100%; height: 100%; }
+.av-bar { position: absolute; top: 8px; left: 8px; right: 8px; display: flex; gap: 6px; flex-wrap: wrap; z-index: 3; pointer-events: none; }
+.av-b { pointer-events: auto; border: 0; background: rgba(255,255,255,.94); color: #1d2b36; font: 800 15px var(--body); padding: 11px 14px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.25); cursor: pointer; min-height: 46px; }
+.av-b.on { background: #7a5fb0; color: #fff; }
+.av-draw { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; touch-action: none; cursor: crosshair; }
+.av-hint { position: absolute; left: 8px; right: 8px; bottom: 10px; z-index: 3; background: rgba(29,43,54,.88); color: #fff; font: 700 14px var(--body); padding: 10px 12px; border-radius: 12px; pointer-events: none; }
+.av-peak { pointer-events: none; text-align: center; line-height: 1.05; color: #1d2b36; text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 5px #fff; }
+.av-peak b { display: block; font: 800 13px var(--body); }
+.av-peak span { font: 700 11px var(--body); }
+.av-peak::after { content: "▲"; display: block; font-size: 10px; color: #6b4a2e; }
+.av-pname { pointer-events: none; font: 800 11px var(--body); color: #fff; background: var(--pc); padding: 2px 6px; border-radius: 6px; border: 1.5px solid #fff; white-space: nowrap; }
+.av-pin { pointer-events: none; text-align: center; font: 800 12px var(--body); color: #fff; padding: 3px 7px; border-radius: 8px; border: 2px solid #fff; line-height: 1.1; }
+.av-pin b, .av-pin span { display: block; }
+.av-pin.top { background: #b00000; } .av-pin.bot { background: #1d2b36; }
+.av-h { font: 800 20px var(--head, var(--body)); margin: 4px 0 0; }
+.av-h3 { font: 800 17px var(--body); margin: 6px 0 8px; }
+.av-new { width: 100%; font-size: 19px !important; padding: 16px !important; background: #7a5fb0 !important; border-color: #7a5fb0 !important; }
+.av-per { margin-top: 10px; }
+.av-ch button { font-size: 16px; padding: 11px 15px; min-height: 46px; }
+.av-meas { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 12px; }
+.av-meas > div { background: var(--paper); border: 1px solid var(--line); border-left: 5px solid #7a5fb0; border-radius: 12px; padding: 10px 12px; min-width: 0; }
+.av-meas > div.full { grid-column: 1 / -1; }
+.av-meas b { display: block; font: 800 21px var(--body); }
+.av-meas span { display: block; font-size: 13px; color: var(--muted); }
+.av-form { display: grid; gap: 14px; margin: 6px 0 14px; }
+.av-lbl { font: 800 14px var(--body); color: var(--muted); text-transform: uppercase; letter-spacing: .03em; margin-bottom: 6px; }
+.av-in { width: 100%; box-sizing: border-box; font: 600 18px var(--body); padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); }
+.av-row { display: flex; gap: 8px; }
+.av-go { flex: 1; font-size: 18px !important; padding: 15px !important; background: #2e9461 !important; border-color: #2e9461 !important; }
+.av-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.av-tag { font: 800 14px var(--body); padding: 6px 11px; border-radius: 999px; background: #efe9f8; color: #4b347c; }
+.av-rem { font-size: 16px; white-space: pre-wrap; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+.av-acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.av-acts .pbtn { min-height: 52px; font-size: 16px; }
+.av-item { display: flex; gap: 12px; width: 100%; text-align: left; align-items: center; background: var(--paper); border: 1px solid var(--line); border-left: 6px solid #e02020; border-radius: 12px; padding: 12px; margin-bottom: 8px; cursor: pointer; color: var(--ink); font: inherit; }
+.av-when b { display: block; font: 800 20px var(--body); }
+.av-when span, .av-txt span { font-size: 13px; color: var(--muted); }
+.av-txt { min-width: 0; } .av-txt b { display: block; font: 800 16px var(--body); }
+.av-txt span { display: block; }
 </style>
 <script>window.__LOGO="data:image/jpeg;base64,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";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -843,7 +887,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794532256";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794533379";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -858,6 +902,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   var NS = "http://www.w3.org/2000/svg";
   var ICONS = {
+    aval: "M2 20L9 7l3 5 3-3 7 11z M9 7l1.5 6 M15 9l-1 5",
     book: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14zM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5M8 7h8M8 11h6",
     box: "M3 7l9-4 9 4v10l-9 4-9-4z M3 7l9 4 9-4 M12 11v10",
     flag: "M5 21V4 M5 4h12l-2 4 2 4H5",
@@ -966,6 +1011,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     terminerTache: function (id, p, sortir) { var t = byId(data.taches, id); if (!t || (sortir && t.mat)) return false; t.state = "fait"; t.doneBy = p || ""; t.doneAt = Date.now(); },
     rouvrirTache: function (id) { var t = byId(data.taches, id); if (!t) return false; t.state = "afaire"; t.by = ""; t.doneBy = ""; t.doneAt = 0; },
     ordonnerTaches: function (pairs) { (pairs || []).forEach(function (p) { var t = byId(data.taches, p.id); if (t) t.ord = p.ord; }); },
+    enregistrerAvalanche: function (av, par) { var old = (data.avalanches || []).filter(function (x) { return x.id === av.id; })[0], o = JSON.parse(JSON.stringify(av)); o.photos = old ? old.photos : []; o.by = par || ""; data.avalanches = (data.avalanches || []).filter(function (x) { return x.id !== av.id; }); data.avalanches.unshift(o); },
+    supprimerAvalanche: function (id) { data.avalanches = (data.avalanches || []).filter(function (x) { return x.id !== id; }); },
     supprimerTache: function (id) { if (!byId(data.taches, id)) return false; data.taches = data.taches.filter(function (x) { return String(x.id) !== String(id); }); }
   };
   function full(d) { if (d && !d.stock && data && data.stock) { Object.keys(d).forEach(function (k) { data[k] = d[k]; }); return data; } return d; }
@@ -995,7 +1042,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   function handleError(e) {
     var m = String(e && e.message || e);
     if (/CODE/.test(m)) { data = null; try { localStorage.removeItem(CACHE_KEY); } catch (x) {} renderGate(true); return; }
-    showStatus(/Article introuvable|Préparation introuvable|Commande introuvable|Événement introuvable|Format non pris en charge|Lecture du PDF|Demande introuvable|Tâche introuvable|Écris ce qu|Choisis une zone|titre à la demande|heure|Donne un nom|Format de photo|liste est vide|mêmes|YouTube|rubrique/.test(m) ? m.replace(/^Error:\s*/, "") : "Pas de connexion ou erreur. Réessaie dans un moment. (" + m.replace(/^Error:\s*/, "").slice(0, 60) + ")", true);
+    showStatus(/Article introuvable|Préparation introuvable|Commande introuvable|Événement introuvable|Format non pris en charge|Lecture du PDF|Demande introuvable|Tâche introuvable|Écris ce qu|Choisis une zone|titre à la demande|heure|Donne un nom|Format de photo|liste est vide|mêmes|YouTube|rubrique|Avalanche|contour|Contour/.test(m) ? m.replace(/^Error:\s*/, "") : "Pas de connexion ou erreur. Réessaie dans un moment. (" + m.replace(/^Error:\s*/, "").slice(0, 60) + ")", true);
   }
   function load(silent) {
     if (!silent) busy++;
@@ -1083,11 +1130,12 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     else if (area === "stock" && current === "cmd" && cmdOpen) up = ["‹ Transferts", function () { cmdOpen = false; renderAll(); }];
     else if (area === "achat" && dmEdit && dmEdit.created) up = ["‹ Retour", function () { dmEdit = null; dmFile = null; renderAchat(); }];
     else if (area === "bilan" && (blViewId || blEdit || blRev)) up = ["‹ Fiches", function () { blViewId = null; blEdit = false; blRev = null; renderBilan(); goTop(); }];
+    else if (area === "aval" && (avEdit || avView)) up = ["‹ Avalanches", function () { avEdit = null; avView = null; avDraw = false; avFull = false; renderAval(); goTop(); }];
     else if (area === "achat" && (dmEdit || dmOpen)) up = ["‹ Achats", function () { dmEdit = null; dmFile = null; dmOpen = null; lowOpen = false; renderAchat(); }];
     if (up) { back.textContent = up[0]; back.addEventListener("click", up[1]); }
     else { back.appendChild(icon("home")); back.lastChild.style.cssText = "width:18px;height:18px"; back.appendChild(document.createTextNode("Accueil")); back.addEventListener("click", function () { goArea("home"); }); }
     b.appendChild(back);
-    b.appendChild(el("span", "where", area === "stock" ? "Stock matériel" : area === "plan" ? "Agenda" : area === "presence" ? "Planning" : area === "taches" ? "Tâches équipe" : area === "bilan" ? "Bilan victime" : area === "achat" ? "Achats & fabrication" : formRub || "Formation"));
+    b.appendChild(el("span", "where", area === "stock" ? "Stock matériel" : area === "plan" ? "Agenda" : area === "presence" ? "Planning" : area === "taches" ? "Tâches équipe" : area === "bilan" ? "Bilan victime" : area === "achat" ? "Achats & fabrication" : area === "aval" ? "Avalanches" : formRub || "Formation"));
   }
   function bigTile(ic, color, title, sub, onClick, light) {
     var t = el("button", "tile" + (light ? " light" : "")); t.type = "button"; t.style.setProperty("--tc", color);
@@ -1111,6 +1159,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var blMine = blLoad(), blAll = blList().filter(function (x) { return (!blMine || x.id !== blMine.id) && x.b && x.b.v === 3; }), blN = blAll.filter(function (x) { return !x.b.done; }).length;
     g.appendChild(bigTile("cross", "#C62828", "Bilan victime", blMine ? "En cours depuis " + blHM(blMine.start) : blN ? blN + " bilan" + (blN > 1 ? "s" : "") + " en cours" : blAll.length ? blAll.length + " fiche" + (blAll.length > 1 ? "s" : "") + " · dernière à " + blHM(blAll[0].start) : "Fiche bilan · message radio", function () { blViewId = null; blEdit = false; blRev = null; goArea("bilan"); }));
     g.appendChild(bigTile("tasks", "#6b4fbb", "Tâches équipe", tkOpenN.length ? (tkAtt ? "⚠ " + tkAtt + " attention · " : "") + (tkOpenN.length - tkAtt) + " à faire" + (tkUrg ? " · dont " + tkUrg + " urgente" + (tkUrg > 1 ? "s" : "") : "") : "Rien à faire pour l'instant", function () { goArea("taches"); }));
+    var avT = (data.avalanches || []).filter(function (a) { return a.at >= avDayStart(Date.now()); }).length, avS = (data.avalanches || []).filter(function (a) { return a.at >= avSeasonStart(); }).length;
+    g.appendChild(bigTile("aval", AV_C, "Avalanches", avT ? avT + " notée" + (avT > 1 ? "s" : "") + " aujourd'hui · " + avS + " cette saison" : "Carte 3D · dessine la coulée" + (avS ? " · " + avS + " cette saison" : ""), function () { avEdit = null; avView = null; goArea("aval"); }));
     g.appendChild(bigTile("box", "#d63a3a", "Stock matériel", subS, function () { goArea("stock"); }));
     g.appendChild(bigTile("cal", "#0e8a9a", "Agenda", nx ? "Prochain : " + nx.title + " · " + dayShort(nx.date) + (nx.start ? " " + nx.start : "") : "Rien de prévu pour l'instant", function () { goArea("plan"); }));
     g.appendChild(bigTile("team", "#2e9461", "Planning", pj && pj.pages && pj.pages.length ? "Qui travaille · mis à jour le " + shortDate(pj.updated) : "Qui travaille · pas encore de planning", function () { goArea("presence"); }));
@@ -3083,6 +3133,470 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var n = el("button", "pbtn", "Non"); n.type = "button"; n.addEventListener("click", function () { history.replaceState(null, "", location.pathname + location.search); renderTaches(); });
     r.appendChild(y); r.appendChild(n); bx.appendChild(r); v.appendChild(bx);
   }
+  /* ---------- Avalanches : carte 3D, contour au doigt, mesures sur le relief ---------- */
+  var AV_C = "#7a5fb0";
+  var avEdit = null, avView = null, avDraw = false, avFull = false, avPer = "jour", avDel = null, avBusy = false, avPhDel = null;
+  var avBase = "hiver", avSlope = false;
+  try { avBase = localStorage.getItem("stock-pistes-avbase") || "hiver"; } catch (e) {}
+  var AV_BASES = [["hiver", "Hiver", "ch.swisstopo.pixelkarte-farbe-winter", "jpeg", 17], ["carte", "Carte", "ch.swisstopo.pixelkarte-farbe", "jpeg", 18], ["photo", "Photo", "ch.swisstopo.swissimage", "jpeg", 18]];
+  function avTiles(b) { if (window.__AV_BASE) return window.__AV_BASE(b[2]); return "https://wmts.geo.admin.ch/1.0.0/" + b[2] + "/default/current/3857/{z}/{x}/{y}." + b[3]; }
+  var AV_DEM = "https://tiles.mapterhorn.com/tilejson.json";
+  // Sommets (position recalée sur le point le plus haut du relief autour)
+  var AV_PEAKS = [["Les Diablerets", 3210, 7.18889, 46.30389, 250], ["Scex Rouge", 2971, 7.2025, 46.32722, 150], ["Oldenhorn", 3123, 7.22164, 46.32925, 150], ["Sanetschhorn", 2924, 7.26264, 46.33842, 150], ["Dôme", 3016, 7.2005, 46.3070, 450], ["Quille du Diable", 2908, 7.2255, 46.3120, 500], ["Tête Ronde", 3037, 7.1790, 46.2985, 450]];
+  var AV_TYPES = [["plaque", "Plaque"], ["meuble", "Neige meuble"], ["glisse", "Glissement"], ["?", "Je ne sais pas"]];
+  var AV_HUM = [["seche", "Sèche"], ["humide", "Humide / mouillée"], ["?", "?"]];
+  var AV_TRIG = [["naturel", "Naturel"], ["minage", "Minage"], ["personne", "Personne(s)"], ["?", "Inconnu"]];
+  var AV_SIZE = [[1, "1 · petite"], [2, "2 · moyenne"], [3, "3 · grande"], [4, "4 · très grande"], [5, "5 · extrême"]];
+  var AV_PERS = [["non", "Non"], ["oui", "Oui, quelqu'un pris"], ["?", "Pas su"]];
+  function avLbl(list, v) { var x = list.filter(function (a) { return a[0] === v; })[0]; return x ? x[1] : ""; }
+  function avList() { return (data.avalanches || []).slice().sort(function (a, b) { return b.at - a.at; }); }
+  function avById(id) { return (data.avalanches || []).filter(function (a) { return a.id === id; })[0]; }
+  function avDayStart(t) { var d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); }
+  function avSeasonStart() { var d = new Date(), y = d.getMonth() >= 8 ? d.getFullYear() : d.getFullYear() - 1; return new Date(y, 8, 1).getTime(); }
+  function avInPer(a) { return avPer === "jour" ? a.at >= avDayStart(Date.now()) : avPer === "7j" ? a.at >= Date.now() - 7 * 864e5 : a.at >= avSeasonStart(); }
+  function avFmtA(m2) { return m2 >= 10000 ? (m2 / 10000).toFixed(m2 >= 1e5 ? 1 : 2).replace(".", ",") + " ha" : blGrp3(Math.round(m2 / 10) * 10) + " m²"; }
+  function avFmtL(m) { return m >= 1000 ? (m / 1000).toFixed(2).replace(".", ",") + " km" : Math.round(m) + " m"; }
+  function avExpo(deg) { var n = ["N", "NE", "E", "SE", "S", "SO", "O", "NO"]; return n[Math.round(((deg % 360) + 360) % 360 / 45) % 8]; }
+  function avWgs(lat, lng) { return lat.toFixed(5) + " N, " + lng.toFixed(5) + " E"; }
+
+  // --- chargement de MapLibre (seulement quand on ouvre l'onglet) ---
+  var avLib = null;
+  function avLoad() {
+    if (window.maplibregl) return Promise.resolve();
+    if (avLib) return avLib;
+    avLib = new Promise(function (ok, ko) {
+      var l = document.createElement("link"); l.rel = "stylesheet"; l.href = "lib/maplibre-gl.css"; document.head.appendChild(l);
+      var s = document.createElement("script"); s.src = "lib/maplibre-gl.js"; s.onload = function () { ok(); }; s.onerror = function () { avLib = null; ko(new Error("Carte indisponible : pas de connexion ?")); };
+      document.head.appendChild(s);
+    });
+    return avLib;
+  }
+
+  // --- relief : tuiles terrarium décodées dans le téléphone pour mesurer juste ---
+  var avDemTpl = null, avDemTiles = {}, avDemSize = 512;
+  function avDemTemplate() {
+    if (avDemTpl) return Promise.resolve(avDemTpl);
+    var src = window.__AV_DEM || AV_DEM;
+    if (typeof src === "object") { avDemTpl = src.tiles[0]; return Promise.resolve(avDemTpl); }
+    return fetch(src).then(function (r) { return r.json(); }).then(function (j) { avDemTpl = j.tiles[0]; return avDemTpl; });
+  }
+  function avTileXY(lng, lat, z) {
+    var n = Math.pow(2, z), x = (lng + 180) / 360 * n, s = Math.sin(lat * Math.PI / 180), y = (0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * n;
+    return [x, y];
+  }
+  function avGetTile(z, x, y) {
+    var k = z + "/" + x + "/" + y;
+    if (!avDemTiles[k]) avDemTiles[k] = avDemTemplate().then(function (t) {
+      var u = t.replace("{z}", z).replace("{x}", x).replace("{y}", y);
+      return fetch(u).then(function (r) { if (!r.ok) throw new Error("relief"); return r.blob(); }).then(function (b) { return createImageBitmap(b); }).then(function (im) {
+        var c = document.createElement("canvas"); c.width = im.width; c.height = im.height; var g = c.getContext("2d", { willReadFrequently: true });
+        g.drawImage(im, 0, 0); var d = g.getImageData(0, 0, im.width, im.height).data, w = im.width, e = new Float32Array(w * im.height);
+        for (var i = 0; i < e.length; i++) e[i] = d[i * 4] * 256 + d[i * 4 + 1] + d[i * 4 + 2] / 256 - 32768;
+        return { w: w, h: im.height, e: e };
+      });
+    }).catch(function (er) { delete avDemTiles[k]; throw er; });
+    return avDemTiles[k];
+  }
+  // Charge les tuiles d'une zone, puis renvoie une fonction altitude(lng, lat)
+  function avDem(lng1, lat1, lng2, lat2, z) {
+    var a = avTileXY(Math.min(lng1, lng2), Math.max(lat1, lat2), z), b = avTileXY(Math.max(lng1, lng2), Math.min(lat1, lat2), z), jobs = [], keys = [];
+    for (var x = Math.floor(a[0]); x <= Math.floor(b[0]); x++) for (var y = Math.floor(a[1]); y <= Math.floor(b[1]); y++) { keys.push(x + "/" + y); jobs.push(avGetTile(z, x, y)); }
+    if (jobs.length > 36) return Promise.reject(new Error("Zone trop grande."));
+    return Promise.all(jobs).then(function (ts) {
+      var M = {}; keys.forEach(function (k, i) { M[k] = ts[i]; });
+      return function (lng, lat) {
+        var p = avTileXY(lng, lat, z), tx = Math.floor(p[0]), ty = Math.floor(p[1]), t = M[tx + "/" + ty];
+        if (!t) return NaN;
+        var fx = (p[0] - tx) * t.w - 0.5, fy = (p[1] - ty) * t.h - 0.5;
+        var x0 = Math.max(0, Math.min(t.w - 2, Math.floor(fx))), y0 = Math.max(0, Math.min(t.h - 2, Math.floor(fy))), u = Math.max(0, Math.min(1, fx - x0)), v = Math.max(0, Math.min(1, fy - y0));
+        var e = t.e, i = y0 * t.w + x0;
+        return e[i] * (1 - u) * (1 - v) + e[i + 1] * u * (1 - v) + e[i + t.w] * (1 - u) * v + e[i + t.w + 1] * u * v;
+      };
+    });
+  }
+  function avInside(x, y, P) {
+    var c = false;
+    for (var i = 0, j = P.length - 1; i < P.length; j = i++) if ((P[i][1] > y) !== (P[j][1] > y) && x < (P[j][0] - P[i][0]) * (y - P[i][1]) / (P[j][1] - P[i][1]) + P[i][0]) c = !c;
+    return c;
+  }
+  // Mesures : surface à plat et réelle (pente), longueur, dénivelé, pente et exposition de la zone de départ
+  function avMeasure(poly) {
+    var lng0 = 0, lat0 = 0; poly.forEach(function (p) { lng0 += p[0]; lat0 += p[1]; }); lng0 /= poly.length; lat0 /= poly.length;
+    var kx = 111320 * Math.cos(lat0 * Math.PI / 180), ky = 110574;
+    var P = poly.map(function (p) { return [(p[0] - lng0) * kx, (p[1] - lat0) * ky]; });
+    var A = 0; for (var i = 0, j = P.length - 1; i < P.length; j = i++) A += (P[j][0] + P[i][0]) * (P[j][1] - P[i][1]); A = Math.abs(A / 2);
+    var xs = P.map(function (p) { return p[0]; }), ys = P.map(function (p) { return p[1]; });
+    var x1 = Math.min.apply(null, xs), x2 = Math.max.apply(null, xs), y1 = Math.min.apply(null, ys), y2 = Math.max.apply(null, ys);
+    var lngs = poly.map(function (p) { return p[0]; }), lats = poly.map(function (p) { return p[1]; });
+    var z = (x2 - x1) > 3000 || (y2 - y1) > 3000 ? 13 : 14;
+    var pad = 0.0004;
+    return avDem(Math.min.apply(null, lngs) - pad, Math.min.apply(null, lats) - pad, Math.max.apply(null, lngs) + pad, Math.max.apply(null, lats) + pad, z).then(function (Z) {
+      function zAt(x, y) { return Z(lng0 + x / kx, lat0 + y / ky); }
+      var s = Math.max(2, Math.sqrt(A) / 70), cells = [], h = s / 2;
+      for (var y = y1 + h; y < y2; y += s) for (var x = x1 + h; x < x2; x += s) if (avInside(x, y, P)) {
+        var gx = (zAt(x + h, y) - zAt(x - h, y)) / s, gy = (zAt(x, y + h) - zAt(x, y - h)) / s, zz = zAt(x, y);
+        if (!isNaN(zz) && !isNaN(gx) && !isNaN(gy)) cells.push([x, y, zz, gx, gy]);
+      }
+      if (!cells.length) throw new Error("Contour trop petit : redessine-le plus grand.");
+      var A3 = 0, top = cells[0], bot = cells[0];
+      cells.forEach(function (c) { A3 += Math.sqrt(1 + c[3] * c[3] + c[4] * c[4]); if (c[2] > top[2]) top = c; if (c[2] < bot[2]) bot = c; });
+      A3 *= A / cells.length; // même surface à plat que le contour, corrigée de la pente
+      var lim = top[2] - (top[2] - bot[2]) * 0.2, sx = 0, sy = 0, sl = 0, n = 0, smax = 0;
+      cells.forEach(function (c) {
+        var sd = Math.atan(Math.sqrt(c[3] * c[3] + c[4] * c[4])) * 180 / Math.PI; if (sd > smax) smax = sd;
+        if (c[2] >= lim) { sx += c[3]; sy += c[4]; sl += sd; n++; }
+      });
+      var aspect = (Math.atan2(-sx, -sy) * 180 / Math.PI + 360) % 360;
+      // longueur le long du terrain, du point le plus haut au plus bas
+      var dx = bot[0] - top[0], dy = bot[1] - top[1], dh = Math.sqrt(dx * dx + dy * dy), L = 0, steps = Math.max(10, Math.ceil(dh / 5)), pz = zAt(top[0], top[1]);
+      for (var k = 1; k <= steps; k++) { var t = k / steps, zk = zAt(top[0] + dx * t, top[1] + dy * t), d = dh / steps; L += Math.sqrt(d * d + (zk - pz) * (zk - pz)); pz = zk; }
+      function ll(c) { return [lng0 + c[0] / kx, lat0 + c[1] / ky]; }
+      var tl = ll(top), bl = ll(bot), ct = blCH(tl[1], tl[0]), cb = blCH(bl[1], bl[0]);
+      return {
+        area2d: Math.round(A), area3d: Math.round(A3), len: Math.round(L), lenH: Math.round(dh), dz: Math.round(top[2] - bot[2]), wid: Math.round(A / Math.max(dh, 1)),
+        zTop: Math.round(top[2]), zBot: Math.round(bot[2]), slope: Math.round(sl / n), slopeMax: Math.round(smax), aspect: Math.round(aspect),
+        top: [+tl[0].toFixed(6), +tl[1].toFixed(6)], bot: [+bl[0].toFixed(6), +bl[1].toFixed(6)], e: ct.e, n: ct.n, eb: cb.e, nb: cb.n
+      };
+    });
+  }
+
+  // --- pistes et remontées : tracé réel OpenStreetMap, gardé 30 jours dans le téléphone ---
+  var AV_BBOX = [46.285, 7.15, 46.372, 7.29];
+  function avOsm() {
+    if (window.__AV_OSM) return Promise.resolve(window.__AV_OSM);
+    try { var c = JSON.parse(localStorage.getItem("stock-pistes-osm") || "null"); if (c && Date.now() - c.t < 30 * 864e5) return Promise.resolve(c.d); } catch (e) {}
+    var b = AV_BBOX.join(","), q = '[out:json][timeout:25];(way["piste:type"="downhill"](' + b + ');way["piste:type"="skitour"](' + b + ');way["aerialway"](' + b + '););out geom;';
+    return fetch("https://overpass-api.de/api/interpreter", { method: "POST", body: "data=" + encodeURIComponent(q), headers: { "Content-Type": "application/x-www-form-urlencoded" } })
+      .then(function (r) { if (!r.ok) throw new Error("osm"); return r.json(); })
+      .then(function (j) {
+        var d = (j.elements || []).filter(function (w) { return w.geometry; }).map(function (w) {
+          var t = w.tags || {};
+          return { k: t.aerialway ? "lift" : t["piste:type"] === "skitour" ? "tour" : "piste", d: t["piste:difficulty"] || "", n: t["piste:name"] || t.name || t["piste:ref"] || t.ref || "", g: w.geometry.map(function (p) { return [+p.lon.toFixed(5), +p.lat.toFixed(5)]; }) };
+        });
+        try { localStorage.setItem("stock-pistes-osm", JSON.stringify({ t: Date.now(), d: d })); } catch (e) {}
+        return d;
+      });
+  }
+  function avPisteColor(w) { return w.k === "lift" ? "#33363b" : w.k === "tour" ? "#e08a00" : w.d === "novice" || w.d === "easy" ? "#1f6fd1" : w.d === "intermediate" ? "#d62828" : w.d === "advanced" || w.d === "expert" ? "#111" : w.d === "freeride" ? "#e08a00" : "#d62828"; }
+
+  // --- la carte (créée une seule fois, déplacée d'un écran à l'autre) ---
+  var avMap = null, avMapEl = null, avMarks = [], avReady = false, avCanvas = null;
+  function avPolyGeo(list, cur) {
+    var today = avDayStart(Date.now());
+    return { type: "FeatureCollection", features: list.map(function (a) {
+      var r = a.poly.concat([a.poly[0]]);
+      return { type: "Feature", properties: { id: a.id, c: cur ? 2 : a.at >= today ? 1 : 0 }, geometry: { type: "Polygon", coordinates: [r] } };
+    }) };
+  }
+  function avStyle() {
+    var b = AV_BASES.filter(function (x) { return x[0] === avBase; })[0] || AV_BASES[0], dem = window.__AV_DEM;
+    return {
+      version: 8,
+      sources: {
+        base: { type: "raster", tiles: [avTiles(b)], tileSize: 256, maxzoom: b[4], attribution: "© swisstopo" },
+        slope: { type: "raster", tiles: [window.__AV_BASE ? window.__AV_BASE("slope") : "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.hangneigung-ueber_30/default/current/3857/{z}/{x}/{y}.png"], tileSize: 256, maxzoom: 17 },
+        dem: typeof dem === "object" ? { type: "raster-dem", tiles: dem.tiles, tileSize: dem.tileSize || 512, maxzoom: dem.maxzoom || 14, encoding: "terrarium" } : { type: "raster-dem", url: dem || AV_DEM, encoding: "terrarium", attribution: "Relief © Mapterhorn / swisstopo" },
+        pistes: { type: "geojson", data: { type: "FeatureCollection", features: [] } },
+        avs: { type: "geojson", data: { type: "FeatureCollection", features: [] } },
+        cur: { type: "geojson", data: { type: "FeatureCollection", features: [] } }
+      },
+      layers: [
+        { id: "base", type: "raster", source: "base" },
+        { id: "slope", type: "raster", source: "slope", layout: { visibility: avSlope ? "visible" : "none" }, paint: { "raster-opacity": 0.5 } },
+        { id: "lifts", type: "line", source: "pistes", filter: ["==", ["get", "k"], "lift"], paint: { "line-color": "#33363b", "line-width": 2, "line-dasharray": [3, 2] } },
+        { id: "pistes", type: "line", source: "pistes", filter: ["!=", ["get", "k"], "lift"], paint: { "line-color": ["get", "c"], "line-width": ["interpolate", ["linear"], ["zoom"], 12, 2, 16, 5], "line-opacity": 0.85 } },
+        { id: "avs-f", type: "fill", source: "avs", paint: { "fill-color": ["case", ["==", ["get", "c"], 1], "#e02020", "#ff8a3d"], "fill-opacity": 0.38 } },
+        { id: "avs-l", type: "line", source: "avs", paint: { "line-color": ["case", ["==", ["get", "c"], 1], "#b00000", "#d0601a"], "line-width": 3 } },
+        { id: "cur-f", type: "fill", source: "cur", paint: { "fill-color": "#e02020", "fill-opacity": 0.45 } },
+        { id: "cur-l", type: "line", source: "cur", paint: { "line-color": "#fff", "line-width": 5 } },
+        { id: "cur-l2", type: "line", source: "cur", paint: { "line-color": "#c00000", "line-width": 3 } }
+      ],
+      terrain: { source: "dem", exaggeration: 1 },
+      sky: { "sky-color": "#9cc7ea", "horizon-color": "#e8f1f8", "fog-color": "#ffffff", "sky-horizon-blend": 0.6, "horizon-fog-blend": 0.6, "fog-ground-blend": 0.9 }
+    };
+  }
+  function avMarker(lng, lat, cls, txt) {
+    var e = el("div", cls); if (txt) { var parts = txt.split("\n"); e.appendChild(el("b", null, parts[0])); if (parts[1]) e.appendChild(el("span", null, parts[1])); }
+    var m = new maplibregl.Marker({ element: e, anchor: "bottom" }).setLngLat([lng, lat]).addTo(avMap); return m;
+  }
+  function avInitMap() {
+    if (avMap) return;
+    avMapEl = el("div", "av-map");
+    avMap = new maplibregl.Map({ container: avMapEl, style: avStyle(), center: [7.212, 46.335], zoom: 13.2, pitch: 58, bearing: 170, maxPitch: 80, attributionControl: { compact: true }, fadeDuration: 0, preserveDrawingBuffer: !!window.__AV_TEST });
+    window.__avMap = avMap; if (window.__AV_TEST) window.__avRay = avRay;
+    avMap.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "bottom-right");
+    avMap.on("load", function () {
+      avReady = true; avPaint();
+      // sommets
+      AV_PEAKS.forEach(function (p) {
+        var mk = avMarker(p[2], p[3], "av-peak", p[0] + "\n" + p[1] + " m");
+        var r = p[4] / 111000;
+        avDem(p[2] - r * 1.5, p[3] - r, p[2] + r * 1.5, p[3] + r, 13).then(function (Z) {
+          var best = null, bz = -1e9;
+          for (var dy = -r; dy <= r; dy += r / 12) for (var dx = -r * 1.45; dx <= r * 1.45; dx += r / 8) { var zz = Z(p[2] + dx, p[3] + dy); if (zz > bz) { bz = zz; best = [p[2] + dx, p[3] + dy]; } }
+          if (best) mk.setLngLat(best);
+        }).catch(function () {});
+      });
+      // pistes OSM
+      avOsm().then(function (ws) {
+        var feats = ws.map(function (w) { return { type: "Feature", properties: { k: w.k, c: avPisteColor(w), n: w.n }, geometry: { type: "LineString", coordinates: w.g } }; });
+        avMap.getSource("pistes").setData({ type: "FeatureCollection", features: feats });
+        var seen = {};
+        ws.filter(function (w) { return w.n && w.k !== "lift"; }).sort(function (a, b) { return b.g.length - a.g.length; }).forEach(function (w) {
+          if (seen[w.n]) return; seen[w.n] = 1; var m = w.g[Math.floor(w.g.length / 2)];
+          var e = el("div", "av-pname", w.n); e.style.setProperty("--pc", avPisteColor(w));
+          new maplibregl.Marker({ element: e }).setLngLat(m).addTo(avMap);
+        });
+      }).catch(function () {});
+    });
+    avMap.on("click", "avs-f", function (ev) {
+      if (avDraw || avEdit) return; var f = ev.features && ev.features[0]; if (!f) return;
+      avView = f.properties.id; avDel = null; renderAval(); goTop();
+    });
+    avMap.on("error", function () {});
+  }
+  function avPaint() {
+    if (!avReady) return;
+    avMarks.forEach(function (m) { m.remove(); }); avMarks = [];
+    var shown = avEdit ? avList().filter(function (a) { return a.id !== avEdit.id && avInPer(a); }) : avView ? avList().filter(function (a) { return a.id === avView; }) : avList().filter(avInPer);
+    avMap.getSource("avs").setData(avPolyGeo(shown));
+    var cur = avEdit && avEdit.poly ? [avEdit] : [];
+    avMap.getSource("cur").setData(avPolyGeo(cur, true));
+    var one = avEdit && avEdit.poly ? avEdit : avView ? avById(avView) : null;
+    if (one && one.m && one.m.top) {
+      avMarks.push(avMarker(one.m.top[0], one.m.top[1], "av-pin top", "Départ\n" + one.m.zTop + " m"));
+      avMarks.push(avMarker(one.m.bot[0], one.m.bot[1], "av-pin bot", "Arrêt\n" + one.m.zBot + " m"));
+    }
+    avMap.setLayoutProperty("slope", "visibility", avSlope ? "visible" : "none");
+  }
+  function avFit(poly, aspect) { // aspect connu : on se place en face de la pente (en bas, regard vers le haut)
+    if (!avMap || !poly) return;
+    var b = new maplibregl.LngLatBounds(); poly.forEach(function (p) { b.extend(p); });
+    avMap.fitBounds(b, { padding: 70, maxZoom: 16, pitch: aspect != null ? 50 : Math.min(avMap.getPitch(), 55), bearing: aspect != null ? (aspect + 180) % 360 : avMap.getBearing(), duration: 800 });
+  }
+  var avFitKey = null;
+  function avFitOnce(k, poly, asp) { if (avFitKey === k) return; avFitKey = k; setTimeout(function () { avFit(poly, asp); }, 60); }
+  function avSetBase(k) {
+    avBase = k; try { localStorage.setItem("stock-pistes-avbase", k); } catch (e) {}
+    var b = AV_BASES.filter(function (x) { return x[0] === k; })[0];
+    if (avMap && avMap.getSource("base")) avMap.getSource("base").setTiles([avTiles(b)]);
+    renderAval();
+  }
+  // point du relief sous le doigt : on suit le rayon de la caméra jusqu'à toucher le terrain
+  function avRay(p) {
+    var m = avMap, tr = m.transform, fl = m.unproject(p);
+    if (!tr || !tr.screenPointToMercatorCoordinateAtZ || m.getPitch() < 3) return fl;
+    var P = new maplibregl.Point(p[0], p[1]);
+    function at(alt) { var mc = tr.screenPointToMercatorCoordinateAtZ(P, alt - (tr.elevation || 0)); return mc ? mc.toLngLat() : null; } // hauteur en mètres, comptée depuis l'altitude du centre de la carte
+    function gap(alt) { var l = at(alt); if (!l) return null; var e = m.queryTerrainElevation(l); return e == null ? null : [alt - e, l]; }
+    var cam = tr.getCameraAltitude ? tr.getCameraAltitude() : 4800, hi = Math.min(cam - 2, 6000), lo;
+    for (var alt = hi - 20; alt >= 300; alt -= 20) {
+      var g = gap(alt); if (!g) continue;
+      if (g[0] <= 0) { lo = alt; break; }
+      hi = alt;
+    }
+    if (lo == null) return fl;
+    for (var i = 0; i < 12; i++) { var mid = (hi + lo) / 2, gm = gap(mid); if (!gm) break; if (gm[0] > 0) hi = mid; else lo = mid; }
+    return at((hi + lo) / 2) || fl;
+  }
+  // dessin au doigt : une couche transparente par-dessus la carte attrape le tracé
+  function avDrawLayer(wrap) {
+    var c = document.createElement("canvas"); c.className = "av-draw"; wrap.appendChild(c); avCanvas = c;
+    var pts = [], g = null, on = false;
+    function size() { var r = wrap.getBoundingClientRect(), d = window.devicePixelRatio || 1; c.width = r.width * d; c.height = r.height * d; g = c.getContext("2d"); g.scale(d, d); }
+    setTimeout(size, 0);
+    function xy(ev) { var r = c.getBoundingClientRect(); return [ev.clientX - r.left, ev.clientY - r.top]; }
+    function draw() {
+      g.clearRect(0, 0, c.width, c.height); if (pts.length < 2) return;
+      g.lineJoin = "round"; g.lineCap = "round";
+      g.beginPath(); pts.forEach(function (p, i) { if (i) g.lineTo(p[0], p[1]); else g.moveTo(p[0], p[1]); });
+      if (pts.length > 2) { g.closePath(); g.fillStyle = "rgba(224,32,32,.28)"; g.fill(); }
+      g.strokeStyle = "#fff"; g.lineWidth = 7; g.stroke(); g.strokeStyle = "#c00000"; g.lineWidth = 4; g.stroke();
+    }
+    c.addEventListener("pointerdown", function (ev) { ev.preventDefault(); if (!g) size(); on = true; pts = [xy(ev)]; try { c.setPointerCapture(ev.pointerId); } catch (e) {} draw(); });
+    c.addEventListener("pointermove", function (ev) {
+      if (!on) return; ev.preventDefault(); var p = xy(ev), q = pts[pts.length - 1];
+      if (Math.abs(p[0] - q[0]) + Math.abs(p[1] - q[1]) >= 5) { pts.push(p); draw(); }
+    });
+    function end() {
+      if (!on) return; on = false;
+      if (pts.length < 6) { pts = []; draw(); showStatus("Trace le tour de l'avalanche sans lever le doigt.", true); return; }
+      var poly = [];
+      pts.forEach(function (p) { var l = avRay(p); poly.push([+l.lng.toFixed(6), +l.lat.toFixed(6)]); });
+      if (poly.length > 300) { var k = poly.length / 300; poly = poly.filter(function (p, i) { return Math.floor(i % k) === 0; }); }
+      pts = []; draw(); avDraw = false; avFull = false;
+      avEdit.poly = poly; avEdit.m = null; avBusy = true; renderAval();
+      avMeasure(poly).then(function (m) { avBusy = false; if (avEdit && avEdit.poly === poly) { avEdit.m = m; renderAval(); } })
+        .catch(function (e) { avBusy = false; showStatus("Mesure impossible : " + (e && e.message === "relief" ? "relief indisponible (connexion ?)" : e.message), true); renderAval(); });
+    }
+    c.addEventListener("pointerup", end); c.addEventListener("pointercancel", end);
+  }
+  function avNew() {
+    avEdit = { id: "a" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), at: Date.now(), poly: null, m: null, f: { type: "", hum: "", trig: "", size: 0, pers: "", piste: [], rem: "", obs: "" }, isNew: true };
+    try { avEdit.f.obs = localStorage.getItem("stock-pistes-avobs") || ""; } catch (e) {}
+    avView = null; avDraw = true; renderAval(); goTop();
+  }
+  function avChoice(list, cur, on, color) {
+    var w = el("div", "tk-types av-ch"); w.style.setProperty("--tc", color || AV_C);
+    list.forEach(function (o) {
+      var b = el("button", null, o[1]); b.type = "button"; b.setAttribute("aria-pressed", String(Array.isArray(cur) ? cur.indexOf(o[0]) >= 0 : cur === o[0]));
+      b.addEventListener("click", function () { on(o[0]); }); w.appendChild(b);
+    });
+    return w;
+  }
+  function avField(box, label, node) { var f = el("div", "av-fld"); f.appendChild(el("div", "av-lbl", label)); f.appendChild(node); box.appendChild(f); }
+  function avMeasBox(m) {
+    var g = el("div", "av-meas");
+    function it(big, small, full) { var d = el("div", full ? "full" : null); d.appendChild(el("b", null, big)); d.appendChild(el("span", null, small)); g.appendChild(d); }
+    it(avFmtA(m.area3d), "surface réelle (pente) · à plat " + avFmtA(m.area2d));
+    it(avFmtL(m.len), "longueur · " + m.dz + " m de dénivelé");
+    it(m.zTop + " → " + m.zBot + " m", "altitude départ → arrêt");
+    it(m.slope + "° " + avExpo(m.aspect), "pente et expo du départ · max " + m.slopeMax + "°");
+    it("≈ " + avFmtL(m.wid), "largeur moyenne");
+    it(blPosTxt({ e: m.e, n: m.n }), "point de départ (CH1903+) · " + avWgs(m.top[1], m.top[0]), true);
+    return g;
+  }
+  function avText(a) {
+    var m = a.m || {}, f = a.f || {}, d = new Date(a.at);
+    var L = ["Avalanche " + d.getDate() + "." + (d.getMonth() + 1) + "." + d.getFullYear() + " " + blHM(a.at)];
+    var q = [avLbl(AV_TYPES, f.type), avLbl(AV_HUM, f.hum), f.trig ? "déclenchement " + avLbl(AV_TRIG, f.trig).toLowerCase() : "", f.size ? "taille " + f.size : ""].filter(Boolean);
+    if (q.length) L.push(q.join(", "));
+    if (m.area3d) {
+      L.push("Départ " + m.zTop + " m, arrêt " + m.zBot + " m (" + m.dz + " m de dénivelé), expo " + avExpo(m.aspect) + ", pente " + m.slope + "°");
+      L.push("Longueur " + avFmtL(m.len) + ", surface " + avFmtA(m.area3d));
+      L.push("Départ : " + blPosTxt({ e: m.e, n: m.n }) + " (" + avWgs(m.top[1], m.top[0]) + ")");
+    }
+    if (f.piste && f.piste.length) L.push("Piste : " + f.piste.join(", "));
+    if (f.pers) L.push("Personnes prises : " + avLbl(AV_PERS, f.pers).toLowerCase());
+    if (f.rem) L.push(f.rem);
+    return L.join("\n");
+  }
+  function avSave() {
+    var a = avEdit; if (!a.poly || !a.m) return;
+    try { localStorage.setItem("stock-pistes-avobs", a.f.obs || ""); } catch (e) {}
+    var rec = { id: a.id, at: a.at, poly: a.poly, m: a.m, f: a.f };
+    var pend = a.photo; avEdit = null; avView = a.id; avDraw = false;
+    act("enregistrerAvalanche", [rec, a.f.obs || ""], "Avalanche enregistrée").then(function () { if (pend) avPhoto(rec.id, pend); });
+    goTop();
+  }
+  function avPhoto(id, file) {
+    showStatus("Envoi de la photo…", false, true);
+    return syncChain.then(function () { return shrink(file); }).then(function (u) { return act("ajouterPhotoAvalanche", [id, u], "Photo ajoutée"); })
+      .catch(function (er) { if (er && /Format/.test(er.message)) showStatus(er.message.replace(/^Error:\s*/, ""), true); });
+  }
+  function avMapBlock(v, tall) {
+    var wrap = el("div", "av-wrap" + (avFull ? " full" : "") + (tall ? " tall" : ""));
+    wrap.appendChild(avMapEl);
+    var bar = el("div", "av-bar");
+    if (avEdit) {
+      var d = el("button", "av-b" + (avDraw ? " on" : ""), avDraw ? "✏ Dessine avec le doigt…" : avEdit.poly ? "✏ Redessiner" : "✏ Dessiner"); d.type = "button";
+      d.addEventListener("click", function () { avDraw = !avDraw; renderAval(); }); bar.appendChild(d);
+    }
+    var bs = el("button", "av-b", "Fond : " + (AV_BASES.filter(function (x) { return x[0] === avBase; })[0] || AV_BASES[0])[1]); bs.type = "button";
+    bs.addEventListener("click", function () { var i = AV_BASES.map(function (x) { return x[0]; }).indexOf(avBase); avSetBase(AV_BASES[(i + 1) % AV_BASES.length][0]); }); bar.appendChild(bs);
+    var sl = el("button", "av-b" + (avSlope ? " on" : ""), "Pentes > 30°"); sl.type = "button";
+    sl.addEventListener("click", function () { avSlope = !avSlope; avPaint(); renderAval(); }); bar.appendChild(sl);
+    var fs = el("button", "av-b", avFull ? "✕ Réduire" : "⛶ Plein écran"); fs.type = "button";
+    fs.addEventListener("click", function () { avFull = !avFull; renderAval(); }); bar.appendChild(fs);
+    wrap.appendChild(bar);
+    if (avEdit && avDraw) { var hint = el("div", "av-hint", "Fais le tour de l'avalanche d'un seul trait. Pour bouger la carte, touche d'abord « ✏ » pour arrêter de dessiner."); wrap.appendChild(hint); avDrawLayer(wrap); }
+    if (avBusy) wrap.appendChild(el("div", "av-hint", "Mesure sur le relief…"));
+    v.appendChild(wrap);
+    setTimeout(function () { if (avMap) avMap.resize(); }, 0);
+    return wrap;
+  }
+  function renderAval() {
+    if (area !== "aval") return;
+    renderHomebar();
+    var v = clearView(); v.style.setProperty("--tc", AV_C);
+    if (!window.maplibregl || !avMap) {
+      v.appendChild(el("p", "pmeta", "Chargement de la carte 3D…"));
+      avLoad().then(function () { avInitMap(); renderAval(); }).catch(function (e) { v.textContent = ""; v.appendChild(el("p", "pmeta", e.message)); });
+      return;
+    }
+    avPaint();
+    if (avEdit) {
+      var a = avEdit, f = a.f;
+      v.appendChild(el("h2", "av-h", a.isNew ? "Nouvelle avalanche" : "Modifier l'avalanche"));
+      avMapBlock(v, true);
+      if (!a.isNew && a.poly) avFitOnce("e" + a.id, a.poly, a.m && a.m.aspect);
+      if (!a.poly) { v.appendChild(el("p", "pmeta", "Tourne la carte à deux doigts pour voir la pente de face, puis touche « ✏ Dessiner » et fais le tour de la coulée.")); }
+      if (a.m) v.appendChild(avMeasBox(a.m));
+      var box = el("div", "av-form");
+      var tm = document.createElement("input"); tm.type = "time"; tm.className = "av-in"; tm.value = blHM(a.at);
+      tm.addEventListener("change", function () { var p = tm.value.split(":"), d = new Date(a.at); d.setHours(+p[0] || 0, +p[1] || 0, 0, 0); a.at = d.getTime(); });
+      avField(box, "Heure de l'observation", tm);
+      avField(box, "Type", avChoice(AV_TYPES, f.type, function (k) { f.type = k; renderAval(); }));
+      avField(box, "Neige", avChoice(AV_HUM, f.hum, function (k) { f.hum = k; renderAval(); }));
+      avField(box, "Déclenchement", avChoice(AV_TRIG, f.trig, function (k) { f.trig = k; renderAval(); }));
+      avField(box, "Taille (échelle européenne)", avChoice(AV_SIZE, f.size, function (k) { f.size = k; renderAval(); }));
+      avField(box, "Piste ou secteur touché", avChoice(TK_ZONES.concat(["Hors piste"]).map(function (z) { return [z, z]; }), f.piste, function (k) { var i = f.piste.indexOf(k); if (i >= 0) f.piste.splice(i, 1); else f.piste.push(k); renderAval(); }));
+      avField(box, "Personnes prises ?", avChoice(AV_PERS, f.pers, function (k) { f.pers = k; renderAval(); }, "#d63a3a"));
+      var rm = document.createElement("textarea"); rm.className = "av-in"; rm.rows = 3; rm.placeholder = "Ex. cassure 50 cm, dépôt sur la piste, piste fermée, contrôlé DVA…"; rm.value = f.rem || "";
+      rm.addEventListener("input", function () { f.rem = rm.value; }); avField(box, "Remarque", rm);
+      var ob = document.createElement("input"); ob.className = "av-in"; ob.placeholder = "Initiales"; ob.maxLength = 12; ob.value = f.obs || "";
+      ob.addEventListener("input", function () { f.obs = ob.value; }); avField(box, "Observé par", ob);
+      if (a.isNew) {
+        var ph = el("button", "pbtn", a.photo ? "📷 Photo prête ✓" : "📷 Ajouter une photo"); ph.type = "button";
+        ph.addEventListener("click", function () { tkPickPhoto(function (fl) { a.photo = fl; renderAval(); }); }); box.appendChild(ph);
+      }
+      v.appendChild(box);
+      var r = el("div", "row av-row"), sv = el("button", "pbtn main av-go", a.m ? "✓ Enregistrer l'avalanche" : "Dessine d'abord le contour"); sv.type = "button"; sv.disabled = !a.m;
+      sv.addEventListener("click", avSave);
+      var cn = el("button", "pbtn", "Annuler"); cn.type = "button"; cn.addEventListener("click", function () { var back = a.isNew ? null : a.id; avEdit = null; avDraw = false; avView = back; renderAval(); goTop(); });
+      r.appendChild(sv); r.appendChild(cn); v.appendChild(r);
+      return;
+    }
+    if (avView) {
+      var x = avById(avView); if (!x) { avView = null; return renderAval(); }
+      var dd = new Date(x.at);
+      v.appendChild(el("h2", "av-h", "Avalanche du " + dd.getDate() + " " + MOIS_C2[dd.getMonth()] + " · " + blHM(x.at)));
+      avMapBlock(v, true);
+      avFitOnce("v" + x.id + x.at, x.poly, x.m && x.m.aspect);
+      if (x.m) v.appendChild(avMeasBox(x.m));
+      var tags = el("div", "av-tags");
+      [avLbl(AV_TYPES, x.f.type), avLbl(AV_HUM, x.f.hum), x.f.trig ? "Déclenchement : " + avLbl(AV_TRIG, x.f.trig) : "", x.f.size ? "Taille " + x.f.size : "", (x.f.piste || []).join(", "), x.f.pers === "oui" ? "⚠ Personnes prises" : "", x.by ? "par " + x.by : ""].filter(Boolean).forEach(function (t) { tags.appendChild(el("span", "av-tag", t)); });
+      v.appendChild(tags);
+      if (x.f.rem) v.appendChild(el("p", "av-rem", x.f.rem));
+      if (x.photos && x.photos.length) {
+        var phs = el("div", "tk-phs");
+        x.photos.forEach(function (pid) {
+          var b = el("button", "tk-ph" + (avPhDel === pid ? " del" : "")); b.type = "button"; var im = document.createElement("img"); im.src = photoUrl(pid); im.alt = "Photo de l'avalanche"; b.appendChild(im);
+          b.addEventListener("click", function () { if (avPhDel === "arm") { avPhDel = pid; renderAval(); } else if (avPhDel === pid) { avPhDel = null; act("retirerPhotoAvalanche", [x.id, pid], "Photo retirée"); } else lightbox({ name: "Avalanche", photos: [pid] }); });
+          phs.appendChild(b);
+        });
+        v.appendChild(phs);
+      }
+      var r2 = el("div", "av-acts");
+      function ab(t, cls, fn) { var b = el("button", "pbtn " + (cls || ""), t); b.type = "button"; b.addEventListener("click", fn); r2.appendChild(b); return b; }
+      ab("📋 Copier le texte", "", function () { var t = avText(x); (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { showStatus("Texte copié : colle-le dans un message"); }, function () { showStatus("Copie impossible sur ce téléphone.", true); }); });
+      ab("✏ Modifier", "", function () { avEdit = JSON.parse(JSON.stringify(x)); avEdit.f.piste = avEdit.f.piste || []; avDraw = false; renderAval(); goTop(); });
+      if ((x.photos || []).length < 4) ab("📷 Photo", "", function () { tkPickPhoto(function (fl) { avPhoto(x.id, fl); }); });
+      if ((x.photos || []).length) ab(avPhDel ? "Touche la photo à retirer" : "Retirer une photo", "", function () { avPhDel = avPhDel ? null : "arm"; renderAval(); });
+      if (avDel === x.id) ab("Oui, supprimer définitivement", "dang", function () { avDel = null; avView = null; act("supprimerAvalanche", [x.id], "Avalanche supprimée"); });
+      else ab("Supprimer", "dang", function () { avDel = x.id; renderAval(); setTimeout(function () { if (avDel === x.id) { avDel = null; renderAval(); } }, 6000); });
+      v.appendChild(r2);
+      return;
+    }
+    var nb = el("button", "pbtn main av-new", "＋ Noter une avalanche"); nb.type = "button"; nb.addEventListener("click", avNew); v.appendChild(nb);
+    var per = avChoice([["jour", "Aujourd'hui"], ["7j", "7 jours"], ["saison", "Saison"]], avPer, function (k) { avPer = k; renderAval(); });
+    per.classList.add("av-per"); v.appendChild(per);
+    avMapBlock(v, false);
+    var L = avList().filter(avInPer);
+    v.appendChild(el("h3", "av-h3", L.length ? L.length + " avalanche" + (L.length > 1 ? "s" : "") + (avPer === "jour" ? " aujourd'hui" : avPer === "7j" ? " en 7 jours" : " cette saison") : avPer === "jour" ? "Aucune avalanche notée aujourd'hui" : "Aucune avalanche sur cette période"));
+    L.forEach(function (a) {
+      var b = el("button", "av-item"); b.type = "button"; var d = new Date(a.at), m = a.m || {}, f = a.f || {};
+      var l = el("div", "av-when"); l.appendChild(el("b", null, blHM(a.at))); l.appendChild(el("span", null, d.getDate() + " " + MOIS_C2[d.getMonth()])); b.appendChild(l);
+      var t = el("div", "av-txt");
+      t.appendChild(el("b", null, [avLbl(AV_TYPES, f.type) || "Avalanche", f.size ? "taille " + f.size : "", m.zTop ? m.zTop + " m " + avExpo(m.aspect) : ""].filter(Boolean).join(" · ")));
+      t.appendChild(el("span", null, [m.area3d ? avFmtA(m.area3d) : "", m.len ? avFmtL(m.len) : "", (f.piste || []).join(", "), f.trig ? avLbl(AV_TRIG, f.trig) : "", f.pers === "oui" ? "⚠ personnes prises" : "", a.photos && a.photos.length ? "📷 " + a.photos.length : ""].filter(Boolean).join(" · ")));
+      b.appendChild(t);
+      b.addEventListener("click", function () { avView = a.id; avDel = null; renderAval(); goTop(); });
+      v.appendChild(b);
+    });
+    var all = []; L.forEach(function (a) { all = all.concat(a.poly); });
+    if (all.length) avFitOnce("l" + avPer + L.length, all); else avFitKey = "l" + avPer;
+  }
   function renderAll() {
     if (location.hash === "#exemples" && area !== "taches") area = "taches";
     if (area !== "taches") $("view").classList.remove("chalk");
@@ -3097,6 +3611,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (area === "taches") return renderTaches();
     if (area === "bilan") return renderBilan();
     if (area === "presence") return renderPresence();
+    if (area === "aval") return renderAval();
     renderTabs();
     if (current === "prep") renderPrep(); else if (current === "cmd") renderCmd(); else if (current === "count") renderCount(); else if (current === "hist") renderHist(); else renderStock();
   }
