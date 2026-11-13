@@ -1031,7 +1031,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794580224";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794580283";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -3967,7 +3967,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     function add(t) { var k = t.indexOf(" : "); L.push([t.slice(0, k), t.slice(k + 3)]); }
     function z(n) { return (n < 10 ? "0" : "") + n; }
     add("Lieu : Les Diablerets, Glacier 3000" + (f.piste && f.piste.length ? ", " + f.piste.join(", ") : ""));
-    add("Date / heure : " + z(d.getDate()) + "." + z(d.getMonth() + 1) + "." + d.getFullYear() + " " + blHM(a.at)");
+    add("Date / heure : " + z(d.getDate()) + "." + z(d.getMonth() + 1) + "." + d.getFullYear() + " " + blHM(a.at));
     if (m.zTop) add("Altitude zone de départ : " + m.zTop + " m");
     if (m.aspect != null && m.zTop) add("Exposition : " + avExpo(m.aspect));
     if (f.size) add("Taille : " + f.size + " (échelle 1 à 5)");
