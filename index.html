@@ -877,6 +877,34 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .av-when span, .av-txt span { font-size: 13px; color: var(--muted); }
 .av-txt { min-width: 0; } .av-txt b { display: block; font: 800 16px var(--body); }
 .av-txt span { display: block; }
+
+.av-b.go { background: #2e9461; color: #fff; }
+.av-b.dang { background: #d63a3a; color: #fff; }
+.av-p { font-size: 17px; line-height: 1.4; margin: 6px 0 12px; }
+.av-sens { display: grid; gap: 6px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-bottom: 14px; font: 700 16px var(--body); color: var(--muted); }
+.av-sens .ok { color: #2e9461; }
+.av-alt { width: 100%; margin-top: 10px; min-height: 54px; font-size: 17px !important; }
+.av-thumb { position: absolute; right: 8px; top: 64px; width: 96px; border-radius: 10px; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0,0,0,.35); z-index: 3; cursor: pointer; }
+.av-thumb.big { width: 72%; }
+.av-v { width: 26px; height: 26px; border-radius: 50%; background: #fff; border: 4px solid #7a5fb0; box-shadow: 0 1px 4px rgba(0,0,0,.4); box-sizing: border-box; cursor: grab; }
+.av-v.sel { background: #d63a3a; border-color: #fff; width: 32px; height: 32px; }
+.av-mid { width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,.75); color: #7a5fb0; font: 900 18px/22px var(--body); text-align: center; border: 2px solid #7a5fb0; box-sizing: border-box; cursor: copy; }
+.av-me { position: relative; width: 22px; height: 22px; pointer-events: none; }
+.av-me .dot { position: absolute; inset: 0; border-radius: 50%; background: #1f6fd1; border: 3px solid #fff; box-shadow: 0 0 0 2px rgba(31,111,209,.4); box-sizing: border-box; }
+.av-me .cone { position: absolute; left: 50%; bottom: 50%; width: 0; height: 0; margin-left: -22px; border-left: 22px solid transparent; border-right: 22px solid transparent; border-bottom: 60px solid rgba(31,111,209,.35); transform-origin: 50% 100%; }
+.av-sec { margin-top: 6px; } .av-sec button { font-size: 14px; padding: 8px 12px; min-height: 40px; }
+.av-wrap.has-tl .maplibregl-ctrl-bottom-right { bottom: 112px; }
+.av-tl { position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; background: rgba(255,255,255,.95); padding: 8px 24px 6px; color: #1d2b36; }
+.av-tl-lab { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 15px; }
+.av-tl-lab b { font-weight: 800; } .av-tl-lab span { color: #7a5fb0; font-weight: 800; }
+.av-tl-track { position: relative; height: 58px; touch-action: none; }
+.av-tl-track::before { content: ""; position: absolute; left: 0; right: 0; top: 22px; height: 4px; border-radius: 2px; background: #c9d3dc; }
+.av-tl-sel { position: absolute; top: 18px; height: 12px; background: rgba(122,95,176,.35); border-radius: 6px; }
+.av-tl-dot { position: absolute; top: 24px; transform: translate(-50%, -50%); border-radius: 50%; background: #9aa8b4; border: 1.5px solid #fff; }
+.av-tl-dot.in { background: #e02020; z-index: 1; }
+.av-tl-m { position: absolute; top: 36px; transform: translateX(-50%); font: 700 11px var(--body); color: #6b7a87; border-left: 1px solid #9aa8b4; padding-left: 2px; }
+.av-tl-h { position: absolute; top: 24px; width: 34px; height: 34px; transform: translate(-50%, -50%); border-radius: 50%; background: #7a5fb0; border: 4px solid #fff; box-shadow: 0 1px 5px rgba(0,0,0,.4); box-sizing: border-box; z-index: 2; touch-action: none; cursor: ew-resize; }
+.av-tl-h.on { transform: translate(-50%, -50%) scale(1.25); }
 </style>
 <script>window.__LOGO="data:image/jpeg;base64,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";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -887,7 +915,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794533379";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794535104";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1130,7 +1158,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     else if (area === "stock" && current === "cmd" && cmdOpen) up = ["‹ Transferts", function () { cmdOpen = false; renderAll(); }];
     else if (area === "achat" && dmEdit && dmEdit.created) up = ["‹ Retour", function () { dmEdit = null; dmFile = null; renderAchat(); }];
     else if (area === "bilan" && (blViewId || blEdit || blRev)) up = ["‹ Fiches", function () { blViewId = null; blEdit = false; blRev = null; renderBilan(); goTop(); }];
-    else if (area === "aval" && (avEdit || avView)) up = ["‹ Avalanches", function () { avEdit = null; avView = null; avDraw = false; avFull = false; renderAval(); goTop(); }];
+    else if (area === "aval" && (avEdit || avView)) up = ["‹ Avalanches", function () { avEdit = null; avView = null; avDraw = false; avFull = false; avSensStop(); renderAval(); goTop(); }];
     else if (area === "achat" && (dmEdit || dmOpen)) up = ["‹ Achats", function () { dmEdit = null; dmFile = null; dmOpen = null; lowOpen = false; renderAchat(); }];
     if (up) { back.textContent = up[0]; back.addEventListener("click", up[1]); }
     else { back.appendChild(icon("home")); back.lastChild.style.cssText = "width:18px;height:18px"; back.appendChild(document.createTextNode("Accueil")); back.addEventListener("click", function () { goArea("home"); }); }
@@ -3135,7 +3163,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   }
   /* ---------- Avalanches : carte 3D, contour au doigt, mesures sur le relief ---------- */
   var AV_C = "#7a5fb0";
-  var avEdit = null, avView = null, avDraw = false, avFull = false, avPer = "jour", avDel = null, avBusy = false, avPhDel = null;
+  var avEdit = null, avView = null, avDraw = false, avFull = false, avDel = null, avBusy = false, avPhDel = null;
   var avBase = "hiver", avSlope = false;
   try { avBase = localStorage.getItem("stock-pistes-avbase") || "hiver"; } catch (e) {}
   var AV_BASES = [["hiver", "Hiver", "ch.swisstopo.pixelkarte-farbe-winter", "jpeg", 17], ["carte", "Carte", "ch.swisstopo.pixelkarte-farbe", "jpeg", 18], ["photo", "Photo", "ch.swisstopo.swissimage", "jpeg", 18]];
@@ -3153,7 +3181,6 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   function avById(id) { return (data.avalanches || []).filter(function (a) { return a.id === id; })[0]; }
   function avDayStart(t) { var d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); }
   function avSeasonStart() { var d = new Date(), y = d.getMonth() >= 8 ? d.getFullYear() : d.getFullYear() - 1; return new Date(y, 8, 1).getTime(); }
-  function avInPer(a) { return avPer === "jour" ? a.at >= avDayStart(Date.now()) : avPer === "7j" ? a.at >= Date.now() - 7 * 864e5 : a.at >= avSeasonStart(); }
   function avFmtA(m2) { return m2 >= 10000 ? (m2 / 10000).toFixed(m2 >= 1e5 ? 1 : 2).replace(".", ",") + " ha" : blGrp3(Math.round(m2 / 10) * 10) + " m²"; }
   function avFmtL(m) { return m >= 1000 ? (m / 1000).toFixed(2).replace(".", ",") + " km" : Math.round(m) + " m"; }
   function avExpo(deg) { var n = ["N", "NE", "E", "SE", "S", "SO", "O", "NO"]; return n[Math.round(((deg % 360) + 360) % 360 / 45) % 8]; }
@@ -3358,10 +3385,12 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   function avPaint() {
     if (!avReady) return;
     avMarks.forEach(function (m) { m.remove(); }); avMarks = [];
-    var shown = avEdit ? avList().filter(function (a) { return a.id !== avEdit.id && avInPer(a); }) : avView ? avList().filter(function (a) { return a.id === avView; }) : avList().filter(avInPer);
+    var shown = avEdit ? avList().filter(function (a) { return a.id !== avEdit.id && a.at >= Date.now() - 7 * 864e5; }) : avView ? avList().filter(function (a) { return a.id === avView; }) : avList().filter(avInSel);
     avMap.getSource("avs").setData(avPolyGeo(shown));
     var cur = avEdit && avEdit.poly ? [avEdit] : [];
-    avMap.getSource("cur").setData(avPolyGeo(cur, true));
+    if (avEdit && avEdit.strokes) avDraftPaint(); else avMap.getSource("cur").setData(avPolyGeo(cur, true));
+    avHandlesPaint();
+    if (!avEdit) avShowMe(null);
     var one = avEdit && avEdit.poly ? avEdit : avView ? avById(avView) : null;
     if (one && one.m && one.m.top) {
       avMarks.push(avMarker(one.m.top[0], one.m.top[1], "av-pin top", "Départ\n" + one.m.zTop + " m"));
@@ -3400,6 +3429,110 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     return at((hi + lo) / 2) || fl;
   }
   // dessin au doigt : une couche transparente par-dessus la carte attrape le tracé
+  // --- capteurs du téléphone : position GPS et direction où pointe l'appareil photo ---
+  var avSens = { pos: null, head: null, watch: null, on: false, err: "" };
+  function avOri(e) {
+    var h = null;
+    if (e.webkitCompassHeading != null && !isNaN(e.webkitCompassHeading)) h = e.webkitCompassHeading; // iPhone
+    else if ((e.absolute || e.type === "deviceorientationabsolute") && e.alpha != null) {
+      // direction de l'appareil photo (dos du téléphone), que le téléphone soit à plat ou debout
+      var r = Math.PI / 180, a = e.alpha * r, b = (e.beta || 0) * r, g = (e.gamma || 0) * r;
+      var E = -(Math.cos(a) * Math.sin(g) + Math.sin(a) * Math.sin(b) * Math.cos(g)), N = -(Math.sin(a) * Math.sin(g) - Math.cos(a) * Math.sin(b) * Math.cos(g));
+      h = (Math.atan2(E, N) / r + 360) % 360;
+      if (Math.abs(E) + Math.abs(N) < 0.15) h = (360 - e.alpha) % 360; // téléphone à plat
+    }
+    if (h != null) { avSens.head = Math.round(h); if (area === "aval" && avEdit && avEdit.step === "photo") avSensTxt(); }
+  }
+  function avSensStart() {
+    if (avSens.on) return; avSens.on = true; avSens.err = "";
+    if (navigator.geolocation) avSens.watch = navigator.geolocation.watchPosition(function (p) {
+      avSens.pos = { lat: p.coords.latitude, lng: p.coords.longitude, acc: Math.round(p.coords.accuracy || 0), t: Date.now() };
+      if (area === "aval" && avEdit && avEdit.step === "photo") avSensTxt();
+    }, function (e) { avSens.err = e && e.code === 1 ? "refusée" : "introuvable"; avSensTxt(); }, { enableHighAccuracy: true, maximumAge: 5000, timeout: 30000 });
+    if ("ondeviceorientationabsolute" in window) window.addEventListener("deviceorientationabsolute", avOri);
+    else window.addEventListener("deviceorientation", avOri);
+  }
+  function avSensStop() {
+    if (!avSens.on) return; avSens.on = false;
+    if (avSens.watch != null && navigator.geolocation) navigator.geolocation.clearWatch(avSens.watch); avSens.watch = null;
+    window.removeEventListener("deviceorientationabsolute", avOri); window.removeEventListener("deviceorientation", avOri);
+  }
+  function avAskCompass() { // iPhone : la boussole demande une autorisation, à donner au moment du toucher
+    try { if (window.DeviceOrientationEvent && DeviceOrientationEvent.requestPermission) return DeviceOrientationEvent.requestPermission().catch(function () {}); } catch (e) {}
+    return Promise.resolve();
+  }
+  function avSensTxt() {
+    var b = document.getElementById("av-sens"); if (!b) return;
+    var p = avSens.pos, h = avSens.head;
+    b.textContent = "";
+    b.appendChild(el("div", p ? "ok" : "", p ? "📍 Position trouvée (± " + p.acc + " m)" : avSens.err ? "📍 Position " + avSens.err + " : autorise la localisation" : "📍 Recherche de ta position…"));
+    b.appendChild(el("div", h != null ? "ok" : "", h != null ? "🧭 Tu regardes vers " + avExpo(h) + " (" + h + "°)" : "🧭 Boussole : pas encore de direction"));
+  }
+  // Infos cachées dans la photo (EXIF) : lieu, direction et heure de prise de vue
+  function avExif(file) {
+    return file.slice(0, 196608).arrayBuffer().then(function (buf) {
+      var d = new DataView(buf), o = 2;
+      if (d.getUint16(0) !== 0xFFD8) return null;
+      while (o + 4 < d.byteLength) {
+        var mk = d.getUint16(o), len = d.getUint16(o + 2);
+        if (mk === 0xFFE1 && d.getUint32(o + 4) === 0x45786966) {
+          var t = o + 10, le = d.getUint16(t) === 0x4949;
+          function u16(p) { return d.getUint16(t + p, le); } function u32(p) { return d.getUint32(t + p, le); }
+          function ifd(p) { var n = u16(p), r = {}; for (var i = 0; i < n; i++) { var e = p + 2 + i * 12; r[u16(e)] = { ty: u16(e + 2), n: u32(e + 4), v: e + 8 }; } return r; }
+          function rat(en, k) { var p = en.n * (en.ty === 5 ? 8 : 0) > 4 ? u32(en.v) : en.v; var a = []; for (var i = 0; i < en.n; i++) { var de = u32(p + i * 8 + 4); a.push(de ? u32(p + i * 8) / de : 0); } return a; }
+          function str(en) { var p = en.n > 4 ? u32(en.v) : en.v, s = ""; for (var i = 0; i < en.n - 1; i++) s += String.fromCharCode(d.getUint8(t + p + i)); return s; }
+          var i0 = ifd(u32(4)), res = {};
+          if (i0[0x8769]) { var ex = ifd(u32(i0[0x8769].v)); if (ex[0x9003]) { var m = /(\d+):(\d+):(\d+) (\d+):(\d+):(\d+)/.exec(str(ex[0x9003])); if (m) res.time = new Date(+m[1], m[2] - 1, +m[3], +m[4], +m[5], +m[6]).getTime(); } }
+          if (i0[0x8825]) {
+            var g = ifd(u32(i0[0x8825].v));
+            if (g[2] && g[4]) {
+              var la = rat(g[2]), lo = rat(g[4]);
+              res.lat = la[0] + la[1] / 60 + la[2] / 3600; res.lng = lo[0] + lo[1] / 60 + lo[2] / 3600;
+              if (g[1] && String.fromCharCode(d.getUint8(g[1].v + t)) === "S") res.lat = -res.lat;
+              if (g[3] && String.fromCharCode(d.getUint8(g[3].v + t)) === "W") res.lng = -res.lng;
+            }
+            if (g[17]) res.head = Math.round(rat(g[17])[0]) % 360;
+          }
+          return res;
+        }
+        if ((mk & 0xFF00) !== 0xFF00) break;
+        o += 2 + len;
+      }
+      return null;
+    }).catch(function () { return null; });
+  }
+  function avAhead(lng, lat, head, dist) { var r = Math.PI / 180; return [lng + dist * Math.sin(head * r) / (111320 * Math.cos(lat * r)), lat + dist * Math.cos(head * r) / 110574]; }
+  var avMe = null;
+  function avShowMe(v) {
+    if (avMe) { avMe.remove(); avMe = null; }
+    if (!v || !avMap) return;
+    var e = el("div", "av-me"); if (v.head != null) { var c = el("div", "cone"); c.style.transform = "rotate(" + v.head + "deg)"; e.appendChild(c); } e.appendChild(el("div", "dot"));
+    avMe = new maplibregl.Marker({ element: e, rotationAlignment: "map" }).setLngLat([v.lng, v.lat]).addTo(avMap);
+  }
+  // Place la carte comme si on regardait depuis l'endroit de la photo
+  function avLookFrom(v) {
+    if (!v || !avMap) return;
+    avShowMe(v);
+    if (v.head == null) { avMap.jumpTo({ center: [v.lng, v.lat], zoom: 14.6, pitch: 55 }); return; }
+    var to = avAhead(v.lng, v.lat, v.head, 1400);
+    avDem(Math.min(v.lng, to[0]) - 0.002, Math.min(v.lat, to[1]) - 0.002, Math.max(v.lng, to[0]) + 0.002, Math.max(v.lat, to[1]) + 0.002, 13).then(function (Z) {
+      var z0 = Z(v.lng, v.lat), z1 = Z(to[0], to[1]); if (isNaN(z0)) z0 = 2500; if (isNaN(z1)) z1 = z0;
+      var back = avAhead(v.lng, v.lat, v.head, -150); // un peu en retrait et au-dessus de toi
+      var o = avMap.calculateCameraOptionsFromTo(back, Math.max(z0, Z(back[0], back[1]) || z0) + 140, to, z1);
+      o.pitch = Math.min(o.pitch, 78); avMap.jumpTo(o);
+    }).catch(function () { avMap.jumpTo({ center: avAhead(v.lng, v.lat, v.head, 700), zoom: 14.6, pitch: 70, bearing: v.head }); });
+  }
+  function avLocate() {
+    var p = avSens.pos;
+    function go(q) { avLookFrom({ lat: q.lat, lng: q.lng, head: null }); }
+    if (p && Date.now() - p.t < 60000) return go(p);
+    if (!navigator.geolocation) return showStatus("Ce téléphone ne donne pas sa position.", true);
+    showStatus("Recherche de ta position…", false, true);
+    navigator.geolocation.getCurrentPosition(function (q) { showStatus("Position trouvée"); go({ lat: q.coords.latitude, lng: q.coords.longitude }); },
+      function (e) { showStatus(e && e.code === 1 ? "Position refusée : autorise la localisation pour ce site." : "Position introuvable pour l'instant.", true); }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 });
+  }
+
+  // --- dessin au doigt, comme sur une feuille : plusieurs traits, puis « Terminer » ---
   function avDrawLayer(wrap) {
     var c = document.createElement("canvas"); c.className = "av-draw"; wrap.appendChild(c); avCanvas = c;
     var pts = [], g = null, on = false;
@@ -3409,32 +3542,245 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     function draw() {
       g.clearRect(0, 0, c.width, c.height); if (pts.length < 2) return;
       g.lineJoin = "round"; g.lineCap = "round";
-      g.beginPath(); pts.forEach(function (p, i) { if (i) g.lineTo(p[0], p[1]); else g.moveTo(p[0], p[1]); });
-      if (pts.length > 2) { g.closePath(); g.fillStyle = "rgba(224,32,32,.28)"; g.fill(); }
+      g.beginPath(); g.moveTo(pts[0][0], pts[0][1]);
+      for (var i = 1; i < pts.length - 1; i++) g.quadraticCurveTo(pts[i][0], pts[i][1], (pts[i][0] + pts[i + 1][0]) / 2, (pts[i][1] + pts[i + 1][1]) / 2);
+      g.lineTo(pts[pts.length - 1][0], pts[pts.length - 1][1]);
       g.strokeStyle = "#fff"; g.lineWidth = 7; g.stroke(); g.strokeStyle = "#c00000"; g.lineWidth = 4; g.stroke();
     }
     c.addEventListener("pointerdown", function (ev) { ev.preventDefault(); if (!g) size(); on = true; pts = [xy(ev)]; try { c.setPointerCapture(ev.pointerId); } catch (e) {} draw(); });
     c.addEventListener("pointermove", function (ev) {
       if (!on) return; ev.preventDefault(); var p = xy(ev), q = pts[pts.length - 1];
-      if (Math.abs(p[0] - q[0]) + Math.abs(p[1] - q[1]) >= 5) { pts.push(p); draw(); }
+      if (Math.abs(p[0] - q[0]) + Math.abs(p[1] - q[1]) >= 3) { pts.push(p); draw(); }
     });
     function end() {
       if (!on) return; on = false;
-      if (pts.length < 6) { pts = []; draw(); showStatus("Trace le tour de l'avalanche sans lever le doigt.", true); return; }
-      var poly = [];
-      pts.forEach(function (p) { var l = avRay(p); poly.push([+l.lng.toFixed(6), +l.lat.toFixed(6)]); });
-      if (poly.length > 300) { var k = poly.length / 300; poly = poly.filter(function (p, i) { return Math.floor(i % k) === 0; }); }
-      pts = []; draw(); avDraw = false; avFull = false;
-      avEdit.poly = poly; avEdit.m = null; avBusy = true; renderAval();
-      avMeasure(poly).then(function (m) { avBusy = false; if (avEdit && avEdit.poly === poly) { avEdit.m = m; renderAval(); } })
-        .catch(function (e) { avBusy = false; showStatus("Mesure impossible : " + (e && e.message === "relief" ? "relief indisponible (connexion ?)" : e.message), true); renderAval(); });
+      if (pts.length < 2) { pts = []; draw(); return; }
+      var line = pts.map(function (p) { var l = avRay(p); return [+l.lng.toFixed(6), +l.lat.toFixed(6)]; });
+      var S = avEdit.strokes = avEdit.strokes || [];
+      // un nouveau trait qui part près du début du tracé se raccroche à l'envers
+      if (S.length) {
+        var all = [].concat.apply([], S), st = avMap.project(all[0]), en = avMap.project(all[all.length - 1]);
+        var p0 = pts[0], dS = Math.hypot(p0[0] - st.x, p0[1] - st.y), dE = Math.hypot(p0[0] - en.x, p0[1] - en.y);
+        if (dS < dE && dS < 60) { S.forEach(function (s) { s.reverse(); }); S.reverse(); }
+      }
+      S.push(line); pts = []; draw(); avDraftPaint(); avBar();
     }
     c.addEventListener("pointerup", end); c.addEventListener("pointercancel", end);
   }
+  function avDraftPaint() {
+    if (!avReady) return;
+    var S = avEdit && avEdit.strokes ? [].concat.apply([], avEdit.strokes) : [];
+    if (S.length > 1) avMap.getSource("cur").setData({ type: "Feature", properties: { c: 2 }, geometry: { type: "LineString", coordinates: S } });
+    else if (!(avEdit && avEdit.poly)) avMap.getSource("cur").setData({ type: "FeatureCollection", features: [] });
+  }
+  // simplifie le tracé (Douglas-Peucker) pour avoir des points faciles à attraper
+  function avSimplify(line, maxN) {
+    var lat0 = line[0][1], kx = 111320 * Math.cos(lat0 * Math.PI / 180), ky = 110574;
+    var P = line.map(function (p) { return [p[0] * kx, p[1] * ky]; });
+    var xs = P.map(function (p) { return p[0]; }), ys = P.map(function (p) { return p[1]; });
+    var diag = Math.hypot(Math.max.apply(null, xs) - Math.min.apply(null, xs), Math.max.apply(null, ys) - Math.min.apply(null, ys));
+    function dp(tol) {
+      var keep = new Uint8Array(P.length); keep[0] = keep[P.length - 1] = 1; var st = [[0, P.length - 1]];
+      while (st.length) {
+        var s = st.pop(), a = P[s[0]], b = P[s[1]], best = -1, bi = 0, L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1e-9;
+        for (var i = s[0] + 1; i < s[1]; i++) { var dd = Math.abs((b[0] - a[0]) * (a[1] - P[i][1]) - (a[0] - P[i][0]) * (b[1] - a[1])) / L; if (dd > best) { best = dd; bi = i; } }
+        if (best > tol) { keep[bi] = 1; st.push([s[0], bi], [bi, s[1]]); }
+      }
+      return line.filter(function (p, i) { return keep[i]; });
+    }
+    var tol = Math.max(1, diag / 120), out = dp(tol);
+    while (out.length > maxN) { tol *= 1.4; out = dp(tol); }
+    return out;
+  }
+  function avFinish() {
+    var S = [].concat.apply([], avEdit.strokes || []);
+    if (S.length < 3) { showStatus("Trace d'abord le contour de l'avalanche.", true); return; }
+    var poly = avSimplify(S, 40);
+    // fin du tracé revenue près du début : on ne garde qu'un point à cet endroit
+    var kx = 111320 * Math.cos(poly[0][1] * Math.PI / 180), dd = function (u, w) { return Math.hypot((u[0] - w[0]) * kx, (u[1] - w[1]) * 110574); }, big = 0;
+    poly.forEach(function (q) { big = Math.max(big, dd(q, poly[0])); });
+    while (poly.length > 3 && dd(poly[0], poly[poly.length - 1]) < Math.max(4, big * 0.12)) poly.pop();
+    if (poly.length < 3) { showStatus("Contour trop petit : dessine-le plus grand.", true); return; }
+    avEdit.strokes = null; avEdit.poly = poly; avDraw = false; avFull = false; avSel = null;
+    avRemeasure(); renderAval();
+  }
+  var avMeasT = null;
+  function avRemeasure() {
+    var a = avEdit; if (!a || !a.poly) return;
+    clearTimeout(avMeasT); avBusy = true; a.m = null;
+    avMeasT = setTimeout(function () {
+      var poly = a.poly;
+      avMeasure(poly).then(function (m) { avBusy = false; if (avEdit === a && a.poly === poly) { a.m = m; renderAval(); } })
+        .catch(function (e) { avBusy = false; showStatus("Mesure impossible : " + (e && e.message === "relief" ? "relief indisponible (connexion ?)" : e.message), true); if (avEdit === a) renderAval(); });
+    }, 250);
+  }
+  // --- points tout autour du contour : on les fait glisser, « + » pour en ajouter ---
+  var avHandles = [], avSel = null;
+  function avCurSet(poly) { avMap.getSource("cur").setData(avPolyGeo([{ id: "cur", poly: poly, at: 0 }], true)); }
+  function avMid(a, b) { return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; }
+  function avHandlesPaint() {
+    avHandles.forEach(function (m) { m.remove(); }); avHandles = [];
+    var a = avEdit; if (!a || !a.poly || avDraw || a.strokes) return;
+    var P = a.poly, mids = [];
+    function changed(re) { avCurSet(P); mids.forEach(function (m, i) { m.setLngLat(avMid(P[i], P[(i + 1) % P.length])); }); if (re) { avRemeasure(); renderAval(); } }
+    P.forEach(function (p, i) {
+      var e = el("div", "av-v" + (avSel === i ? " sel" : ""));
+      var mk = new maplibregl.Marker({ element: e, draggable: true }).setLngLat(p).addTo(avMap);
+      mk.on("drag", function () { var l = mk.getLngLat(); P[i] = [+l.lng.toFixed(6), +l.lat.toFixed(6)]; changed(false); });
+      mk.on("dragend", function () { avSel = null; changed(true); });
+      e.addEventListener("click", function (ev) { ev.stopPropagation(); avSel = avSel === i ? null : i; renderAval(); });
+      avHandles.push(mk);
+    });
+    P.forEach(function (p, i) {
+      var e = el("div", "av-mid", "+"), j = i + 1, mk = new maplibregl.Marker({ element: e, draggable: true }).setLngLat(avMid(p, P[(i + 1) % P.length])).addTo(avMap), made = false;
+      mk.on("dragstart", function () { var l = mk.getLngLat(); P.splice(j, 0, [l.lng, l.lat]); made = true; });
+      mk.on("drag", function () { if (!made) return; var l = mk.getLngLat(); P[j] = [+l.lng.toFixed(6), +l.lat.toFixed(6)]; avCurSet(P); });
+      mk.on("dragend", function () { avSel = null; avRemeasure(); renderAval(); });
+      e.addEventListener("click", function (ev) { ev.stopPropagation(); if (made) return; var l = mk.getLngLat(); P.splice(j, 0, [+l.lng.toFixed(6), +l.lat.toFixed(6)]); avSel = j; avRemeasure(); renderAval(); });
+      mids.push(mk); avHandles.push(mk);
+    });
+  }
   function avNew() {
-    avEdit = { id: "a" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), at: Date.now(), poly: null, m: null, f: { type: "", hum: "", trig: "", size: 0, pers: "", piste: [], rem: "", obs: "" }, isNew: true };
+    avEdit = { id: "a" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), at: Date.now(), poly: null, m: null, f: { type: "", hum: "", trig: "", size: 0, pers: "", piste: [], rem: "", obs: "" }, isNew: true, step: "photo" };
     try { avEdit.f.obs = localStorage.getItem("stock-pistes-avobs") || ""; } catch (e) {}
-    avView = null; avDraw = true; renderAval(); goTop();
+    avView = null; avDraw = false; avSel = null; avSensStart(); renderAval(); goTop();
+  }
+  function avToMap(view) {
+    var a = avEdit; a.step = "map"; a.view = view || null; a.strokes = []; avDraw = true; renderAval(); goTop();
+    setTimeout(function () { avLookFrom(a.view); }, 80);
+  }
+  function avTakePhoto(camera) {
+    var a = avEdit, shot = { pos: avSens.pos, head: avSens.head };
+    (camera ? avAskCompass() : Promise.resolve()).then(function () {
+      var inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; if (camera) inp.setAttribute("capture", "environment");
+      inp.addEventListener("change", function () {
+        var f = inp.files && inp.files[0]; if (!f) return;
+        a.photo = f; try { a.photoUrl = URL.createObjectURL(f); } catch (e) {}
+        avExif(f).then(function (x) {
+          var p = camera ? (avSens.pos || shot.pos) : null, h = camera ? (shot.head != null ? shot.head : avSens.head) : null, v = null;
+          if (x && x.lat) v = { lat: x.lat, lng: x.lng, head: x.head != null ? x.head : h };
+          else if (p) v = { lat: p.lat, lng: p.lng, head: h };
+          if (x && x.time && Math.abs(Date.now() - x.time) < 3 * 864e5) a.at = x.time;
+          if (!v) showStatus(camera ? "Position introuvable : place la carte à la main." : "Cette photo ne dit pas où elle a été prise : place la carte à la main.", true);
+          avToMap(v);
+        });
+      });
+      inp.click();
+    });
+  }
+  function avBar() { var w = document.querySelector(".av-wrap"); if (!w) return; var old = w.querySelector(".av-bar"); if (old) w.replaceChild(avBarEl(), old); }
+  function avBarEl() {
+    var bar = el("div", "av-bar"), a = avEdit;
+    function B(t, cls, fn) { var b = el("button", "av-b" + (cls ? " " + cls : ""), t); b.type = "button"; b.addEventListener("click", function (ev) { ev.stopPropagation(); fn(); }); bar.appendChild(b); return b; }
+    if (a && a.step === "map" && a.strokes) {
+      B(avDraw ? "✋ Bouger la carte" : "✏ Dessiner", avDraw ? "" : "on", function () { avDraw = !avDraw; renderAval(); });
+      var n = [].concat.apply([], a.strokes).length;
+      if (a.strokes.length) B("↶ Effacer le trait", "", function () { a.strokes.pop(); avDraftPaint(); avBar(); });
+      if (n >= 3) B("✓ Terminer", "go", avFinish);
+    } else if (a && a.poly) {
+      B("✏ Redessiner", "", function () { a.poly = null; a.m = null; a.strokes = []; avSel = null; avDraw = true; avCurSet([]); renderAval(); });
+      if (avSel != null && a.poly.length > 3) B("🗑 Supprimer ce point", "dang", function () { a.poly.splice(avSel, 1); avSel = null; avRemeasure(); renderAval(); });
+    }
+    B("📍", "", avLocate).setAttribute("aria-label", "Ma position");
+    B("Fond : " + (AV_BASES.filter(function (x) { return x[0] === avBase; })[0] || AV_BASES[0])[1], "", function () { var i = AV_BASES.map(function (x) { return x[0]; }).indexOf(avBase); avSetBase(AV_BASES[(i + 1) % AV_BASES.length][0]); });
+    B("Pentes > 30°", avSlope ? "on" : "", function () { avSlope = !avSlope; avPaint(); avBar(); });
+    B(avFull ? "✕ Réduire" : "⛶ Plein écran", "", function () { avFull = !avFull; renderAval(); });
+    return bar;
+  }
+  function avMapBlock(v, tall) {
+    var wrap = el("div", "av-wrap" + (avFull ? " full" : "") + (tall ? " tall" : ""));
+    wrap.appendChild(avMapEl);
+    wrap.appendChild(avBarEl());
+    var a = avEdit;
+    if (a && a.photoUrl) {
+      var th = document.createElement("img"); th.className = "av-thumb" + (a.bigThumb ? " big" : ""); th.src = a.photoUrl; th.alt = "Ta photo";
+      th.addEventListener("click", function () { a.bigThumb = !a.bigThumb; th.className = "av-thumb" + (a.bigThumb ? " big" : ""); });
+      wrap.appendChild(th);
+    }
+    var hint = null;
+    if (a && a.strokes && avDraw) { hint = a.strokes.length ? "Continue le contour, même en plusieurs traits. Puis « ✓ Terminer »." : "Dessine le tour de l'avalanche avec le doigt, comme sur une feuille. Tu peux lever le doigt et reprendre."; avDrawLayer(wrap); }
+    else if (a && a.strokes && !avDraw) hint = "Bouge la carte (2 doigts pour tourner), puis « ✏ Dessiner » pour continuer.";
+    else if (a && a.poly && !avBusy) hint = avSel != null ? "Point choisi : fais-le glisser, ou supprime-le." : "Fais glisser les points pour corriger. Touche un « + » pour ajouter un point.";
+    if (avBusy) hint = "Mesure sur le relief…";
+    if (hint) wrap.appendChild(el("div", "av-hint", hint));
+    v.appendChild(wrap);
+    setTimeout(function () { if (avMap) avMap.resize(); }, 0);
+    return wrap;
+  }
+  function avPhotoStep(v) {
+    var a = avEdit;
+    v.appendChild(el("h2", "av-h", "Nouvelle avalanche"));
+    v.appendChild(el("p", "av-p", "Mets-toi face à l'avalanche et prends-la en photo. Je note où tu es et dans quelle direction tu regardes, puis la carte 3D s'ouvre sur la même vue."));
+    var s = el("div", "av-sens"); s.id = "av-sens"; v.appendChild(s); setTimeout(avSensTxt, 0);
+    var b1 = el("button", "pbtn main av-new", "📷 Prendre la photo"); b1.type = "button"; b1.addEventListener("click", function () { avTakePhoto(true); }); v.appendChild(b1);
+    var b2 = el("button", "pbtn av-alt", "🖼 Une photo déjà prise"); b2.type = "button"; b2.addEventListener("click", function () { avTakePhoto(false); }); v.appendChild(b2);
+    var b3 = el("button", "pbtn av-alt", "Sans photo → la carte"); b3.type = "button";
+    b3.addEventListener("click", function () { avAskCompass().then(function () { var p = avSens.pos; avToMap(p ? { lat: p.lat, lng: p.lng, head: avSens.head } : null); }); });
+    v.appendChild(b3);
+    var cn = el("button", "pbtn av-alt", "Annuler"); cn.type = "button"; cn.addEventListener("click", function () { avEdit = null; avSensStop(); renderAval(); }); v.appendChild(cn);
+  }
+  // --- frise du temps : deux curseurs pour choisir la période ---
+  var avChip = "saison", avRange = null, avSect = "";
+  function avDay0(t) { var d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); }
+  function avBounds() {
+    var t0 = avSeasonStart(), L = data.avalanches || [];
+    L.forEach(function (a) { if (a.at < t0) t0 = a.at; });
+    return [avDay0(t0), avDay0(Date.now()) + 864e5 - 1];
+  }
+  function avChipRange(k) {
+    var b = avBounds(), now = avDay0(Date.now()) + 864e5 - 1;
+    if (k === "jour") return [avDay0(Date.now()), now];
+    if (k === "7j") return [avDay0(Date.now() - 6 * 864e5), now];
+    if (k === "30j") return [avDay0(Date.now() - 29 * 864e5), now];
+    if (k === "saison") return [Math.max(b[0], avSeasonStart()), now];
+    return b;
+  }
+  function avGetRange() { if (!avRange) avRange = avChipRange(avChip); return avRange; }
+  function avInSel(a) {
+    var r = avGetRange();
+    return a.at >= r[0] && a.at <= r[1] && (!avSect || (a.f && (a.f.piste || []).indexOf(avSect) >= 0));
+  }
+  function avDTxt(t) { var d = new Date(t); return d.getDate() + " " + MOIS_C2[d.getMonth()] + (d.getFullYear() !== new Date().getFullYear() ? " " + d.getFullYear() : ""); }
+  function avTimeline(onEnd) {
+    var b = avBounds(), r = avGetRange(), span = b[1] - b[0];
+    var w = el("div", "av-tl"), lab = el("div", "av-tl-lab"), tr = el("div", "av-tl-track"), sel = el("div", "av-tl-sel");
+    tr.appendChild(sel);
+    // repères de mois
+    var m = new Date(b[0]); m.setDate(1); m.setMonth(m.getMonth() + 1);
+    for (; m.getTime() < b[1]; m.setMonth(m.getMonth() + 1)) { var tk = el("div", "av-tl-m", MOIS_C2[m.getMonth()]); tk.style.left = ((m.getTime() - b[0]) / span * 100) + "%"; tr.appendChild(tk); }
+    (data.avalanches || []).forEach(function (a) {
+      if (avSect && (a.f.piste || []).indexOf(avSect) < 0) return;
+      var d = el("div", "av-tl-dot"), s = 8 + (a.f && a.f.size ? a.f.size * 3 : 4); d.style.width = d.style.height = s + "px";
+      d.style.left = ((a.at - b[0]) / span * 100) + "%"; d.dataset.at = a.at; tr.appendChild(d);
+    });
+    var h1 = el("div", "av-tl-h"), h2 = el("div", "av-tl-h"); tr.appendChild(h1); tr.appendChild(h2);
+    function paint() {
+      var x1 = (r[0] - b[0]) / span * 100, x2 = (r[1] - b[0]) / span * 100;
+      h1.style.left = x1 + "%"; h2.style.left = x2 + "%"; sel.style.left = x1 + "%"; sel.style.width = Math.max(0, x2 - x1) + "%";
+      tr.querySelectorAll(".av-tl-dot").forEach(function (d) { var t = +d.dataset.at; d.classList.toggle("in", t >= r[0] && t <= r[1]); });
+      var n = (data.avalanches || []).filter(avInSel).length;
+      lab.textContent = "";
+      lab.appendChild(el("b", null, avDay0(r[0]) === avDay0(r[1]) ? "Le " + avDTxt(r[0]) : "Du " + avDTxt(r[0]) + " au " + avDTxt(r[1])));
+      lab.appendChild(el("span", null, n + " avalanche" + (n > 1 ? "s" : "")));
+    }
+    function drag(h, i) {
+      h.addEventListener("pointerdown", function (ev) {
+        ev.preventDefault(); ev.stopPropagation(); try { h.setPointerCapture(ev.pointerId); } catch (e) {}
+        h.classList.add("on");
+        function mv(e2) {
+          var R = tr.getBoundingClientRect(), f = Math.max(0, Math.min(1, (e2.clientX - R.left) / R.width)), t = b[0] + f * span;
+          var dT = avDay0(t);
+          if (i === 0) { if (dT > avDay0(r[1])) r[1] = dT + 864e5 - 1; else r[0] = dT; }
+          else { if (dT < avDay0(r[0])) r[0] = dT; else r[1] = dT + 864e5 - 1; }
+          r[1] = Math.min(r[1], b[1]); avRange = r; avChip = ""; paint(); avPaint();
+        }
+        function up() { h.classList.remove("on"); h.removeEventListener("pointermove", mv); h.removeEventListener("pointerup", up); h.removeEventListener("pointercancel", up); if (onEnd) onEnd(); }
+        h.addEventListener("pointermove", mv); h.addEventListener("pointerup", up); h.addEventListener("pointercancel", up);
+      });
+    }
+    drag(h1, 0); drag(h2, 1);
+    w.appendChild(lab); w.appendChild(tr); paint();
+    return w;
   }
   function avChoice(list, cur, on, color) {
     var w = el("div", "tk-types av-ch"); w.style.setProperty("--tc", color || AV_C);
@@ -3475,7 +3821,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var a = avEdit; if (!a.poly || !a.m) return;
     try { localStorage.setItem("stock-pistes-avobs", a.f.obs || ""); } catch (e) {}
     var rec = { id: a.id, at: a.at, poly: a.poly, m: a.m, f: a.f };
-    var pend = a.photo; avEdit = null; avView = a.id; avDraw = false;
+    var pend = a.photo; avEdit = null; avView = a.id; avDraw = false; avSensStop(); avShowMe(null);
     act("enregistrerAvalanche", [rec, a.f.obs || ""], "Avalanche enregistrée").then(function () { if (pend) avPhoto(rec.id, pend); });
     goTop();
   }
@@ -3483,27 +3829,6 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     showStatus("Envoi de la photo…", false, true);
     return syncChain.then(function () { return shrink(file); }).then(function (u) { return act("ajouterPhotoAvalanche", [id, u], "Photo ajoutée"); })
       .catch(function (er) { if (er && /Format/.test(er.message)) showStatus(er.message.replace(/^Error:\s*/, ""), true); });
-  }
-  function avMapBlock(v, tall) {
-    var wrap = el("div", "av-wrap" + (avFull ? " full" : "") + (tall ? " tall" : ""));
-    wrap.appendChild(avMapEl);
-    var bar = el("div", "av-bar");
-    if (avEdit) {
-      var d = el("button", "av-b" + (avDraw ? " on" : ""), avDraw ? "✏ Dessine avec le doigt…" : avEdit.poly ? "✏ Redessiner" : "✏ Dessiner"); d.type = "button";
-      d.addEventListener("click", function () { avDraw = !avDraw; renderAval(); }); bar.appendChild(d);
-    }
-    var bs = el("button", "av-b", "Fond : " + (AV_BASES.filter(function (x) { return x[0] === avBase; })[0] || AV_BASES[0])[1]); bs.type = "button";
-    bs.addEventListener("click", function () { var i = AV_BASES.map(function (x) { return x[0]; }).indexOf(avBase); avSetBase(AV_BASES[(i + 1) % AV_BASES.length][0]); }); bar.appendChild(bs);
-    var sl = el("button", "av-b" + (avSlope ? " on" : ""), "Pentes > 30°"); sl.type = "button";
-    sl.addEventListener("click", function () { avSlope = !avSlope; avPaint(); renderAval(); }); bar.appendChild(sl);
-    var fs = el("button", "av-b", avFull ? "✕ Réduire" : "⛶ Plein écran"); fs.type = "button";
-    fs.addEventListener("click", function () { avFull = !avFull; renderAval(); }); bar.appendChild(fs);
-    wrap.appendChild(bar);
-    if (avEdit && avDraw) { var hint = el("div", "av-hint", "Fais le tour de l'avalanche d'un seul trait. Pour bouger la carte, touche d'abord « ✏ » pour arrêter de dessiner."); wrap.appendChild(hint); avDrawLayer(wrap); }
-    if (avBusy) wrap.appendChild(el("div", "av-hint", "Mesure sur le relief…"));
-    v.appendChild(wrap);
-    setTimeout(function () { if (avMap) avMap.resize(); }, 0);
-    return wrap;
   }
   function renderAval() {
     if (area !== "aval") return;
@@ -3517,10 +3842,10 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     avPaint();
     if (avEdit) {
       var a = avEdit, f = a.f;
+      if (a.step === "photo") return avPhotoStep(v);
       v.appendChild(el("h2", "av-h", a.isNew ? "Nouvelle avalanche" : "Modifier l'avalanche"));
       avMapBlock(v, true);
       if (!a.isNew && a.poly) avFitOnce("e" + a.id, a.poly, a.m && a.m.aspect);
-      if (!a.poly) { v.appendChild(el("p", "pmeta", "Tourne la carte à deux doigts pour voir la pente de face, puis touche « ✏ Dessiner » et fais le tour de la coulée.")); }
       if (a.m) v.appendChild(avMeasBox(a.m));
       var box = el("div", "av-form");
       var tm = document.createElement("input"); tm.type = "time"; tm.className = "av-in"; tm.value = blHM(a.at);
@@ -3537,13 +3862,13 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       var ob = document.createElement("input"); ob.className = "av-in"; ob.placeholder = "Initiales"; ob.maxLength = 12; ob.value = f.obs || "";
       ob.addEventListener("input", function () { f.obs = ob.value; }); avField(box, "Observé par", ob);
       if (a.isNew) {
-        var ph = el("button", "pbtn", a.photo ? "📷 Photo prête ✓" : "📷 Ajouter une photo"); ph.type = "button";
-        ph.addEventListener("click", function () { tkPickPhoto(function (fl) { a.photo = fl; renderAval(); }); }); box.appendChild(ph);
+        var ph = el("button", "pbtn", a.photo ? "📷 Photo prête ✓ (changer)" : "📷 Ajouter une photo"); ph.type = "button";
+        ph.addEventListener("click", function () { tkPickPhoto(function (fl) { a.photo = fl; try { a.photoUrl = URL.createObjectURL(fl); } catch (e) {} renderAval(); }); }); box.appendChild(ph);
       }
       v.appendChild(box);
       var r = el("div", "row av-row"), sv = el("button", "pbtn main av-go", a.m ? "✓ Enregistrer l'avalanche" : "Dessine d'abord le contour"); sv.type = "button"; sv.disabled = !a.m;
       sv.addEventListener("click", avSave);
-      var cn = el("button", "pbtn", "Annuler"); cn.type = "button"; cn.addEventListener("click", function () { var back = a.isNew ? null : a.id; avEdit = null; avDraw = false; avView = back; renderAval(); goTop(); });
+      var cn = el("button", "pbtn", "Annuler"); cn.type = "button"; cn.addEventListener("click", function () { var back = a.isNew ? null : a.id; avEdit = null; avDraw = false; avView = back; avSensStop(); renderAval(); goTop(); });
       r.appendChild(sv); r.appendChild(cn); v.appendChild(r);
       return;
     }
@@ -3570,7 +3895,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       var r2 = el("div", "av-acts");
       function ab(t, cls, fn) { var b = el("button", "pbtn " + (cls || ""), t); b.type = "button"; b.addEventListener("click", fn); r2.appendChild(b); return b; }
       ab("📋 Copier le texte", "", function () { var t = avText(x); (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { showStatus("Texte copié : colle-le dans un message"); }, function () { showStatus("Copie impossible sur ce téléphone.", true); }); });
-      ab("✏ Modifier", "", function () { avEdit = JSON.parse(JSON.stringify(x)); avEdit.f.piste = avEdit.f.piste || []; avDraw = false; renderAval(); goTop(); });
+      ab("✏ Modifier", "", function () { avEdit = JSON.parse(JSON.stringify(x)); avEdit.f.piste = avEdit.f.piste || []; avEdit.step = "map"; avDraw = false; avSel = null; renderAval(); goTop(); });
       if ((x.photos || []).length < 4) ab("📷 Photo", "", function () { tkPickPhoto(function (fl) { avPhoto(x.id, fl); }); });
       if ((x.photos || []).length) ab(avPhDel ? "Touche la photo à retirer" : "Retirer une photo", "", function () { avPhDel = avPhDel ? null : "arm"; renderAval(); });
       if (avDel === x.id) ab("Oui, supprimer définitivement", "dang", function () { avDel = null; avView = null; act("supprimerAvalanche", [x.id], "Avalanche supprimée"); });
@@ -3579,11 +3904,14 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       return;
     }
     var nb = el("button", "pbtn main av-new", "＋ Noter une avalanche"); nb.type = "button"; nb.addEventListener("click", avNew); v.appendChild(nb);
-    var per = avChoice([["jour", "Aujourd'hui"], ["7j", "7 jours"], ["saison", "Saison"]], avPer, function (k) { avPer = k; renderAval(); });
+    var per = avChoice([["jour", "Aujourd'hui"], ["7j", "7 jours"], ["30j", "30 jours"], ["saison", "Saison"], ["tout", "Tout"]], avChip, function (k) { avChip = k; avRange = avChipRange(k); renderAval(); });
     per.classList.add("av-per"); v.appendChild(per);
-    avMapBlock(v, false);
-    var L = avList().filter(avInPer);
-    v.appendChild(el("h3", "av-h3", L.length ? L.length + " avalanche" + (L.length > 1 ? "s" : "") + (avPer === "jour" ? " aujourd'hui" : avPer === "7j" ? " en 7 jours" : " cette saison") : avPer === "jour" ? "Aucune avalanche notée aujourd'hui" : "Aucune avalanche sur cette période"));
+    var sec = avChoice([["", "Tous secteurs"]].concat(TK_ZONES.concat(["Hors piste"]).map(function (z) { return [z, z]; })), avSect, function (k) { avSect = k; renderAval(); });
+    sec.classList.add("av-per", "av-sec"); v.appendChild(sec);
+    var wrap = avMapBlock(v, true);
+    wrap.classList.add("has-tl"); wrap.appendChild(avTimeline(function () { renderAval(); }));
+    var L = avList().filter(avInSel);
+    v.appendChild(el("h3", "av-h3", L.length ? L.length + " avalanche" + (L.length > 1 ? "s" : "") + " sur la période" : "Aucune avalanche sur cette période"));
     L.forEach(function (a) {
       var b = el("button", "av-item"); b.type = "button"; var d = new Date(a.at), m = a.m || {}, f = a.f || {};
       var l = el("div", "av-when"); l.appendChild(el("b", null, blHM(a.at))); l.appendChild(el("span", null, d.getDate() + " " + MOIS_C2[d.getMonth()])); b.appendChild(l);
@@ -3595,9 +3923,11 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       v.appendChild(b);
     });
     var all = []; L.forEach(function (a) { all = all.concat(a.poly); });
-    if (all.length) avFitOnce("l" + avPer + L.length, all); else avFitKey = "l" + avPer;
+    var fk = "l" + avChip + avSect;
+    if (avChip && all.length) avFitOnce(fk, all); else avFitKey = avFitKey || fk;
   }
   function renderAll() {
+    if (area !== "aval" && avSens.on) { avSensStop(); avEdit = null; }
     if (location.hash === "#exemples" && area !== "taches") area = "taches";
     if (area !== "taches") $("view").classList.remove("chalk");
     if (area !== "bilan") $("view").classList.remove("bl");
