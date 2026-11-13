@@ -927,11 +927,12 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .rc-bar { position: sticky; top: calc(var(--tb, 56px) + 4px); z-index: 20; display: flex; gap: 6px; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 6px; margin-bottom: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
 .rc-b { border: 0; background: #f1ece4; color: #1d2b36; font: 800 16px var(--body); min-height: 48px; min-width: 48px; padding: 0 12px; border-radius: 10px; cursor: pointer; }
 .rc-b.menu { background: #b3261e; color: #fff; } .rc-b.nav { font-size: 24px; } .rc-b:disabled { opacity: .35; }
-.rc-pn { flex: 1; text-align: center; font: 800 16px var(--body); }
+.rc-pn { flex: 1; text-align: center; font: 800 18px var(--body); color: #1d2b36; }
 .rc-pg { position: relative; background: #fff; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,.15); overflow: hidden; touch-action: pan-y pinch-zoom; }
 .rc-pg img { display: block; width: 100%; height: auto; user-select: none; -webkit-user-select: none; }
 .rc-spot { position: absolute; border: 0; padding: 0; background: rgba(179,38,30,0); border-radius: 4px; cursor: pointer; }
 .rc-spot:active, .rc-spot:focus-visible { background: rgba(179,38,30,.18); outline: 2px solid #b3261e; }
+.rc-miss { margin: 0; padding: 18px; font: 600 17px/1.45 var(--body); color: #1d2b36; line-height: 1.45; }
 .rc-tip { color: var(--muted); font-size: 14px; margin: 8px 4px; }
 .rc-full { position: fixed; inset: 0; z-index: 66; background: #111; display: flex; flex-direction: column; }
 .rc-full .rc-bar { position: static; margin: 6px; }
@@ -1012,7 +1013,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794560367";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794569243";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -4423,7 +4424,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   // ----- une page du classeur, avec ses zones cliquables -----
   function rcPageImg(host) {
     var url = rcImg(rcPage), fr = el("div", "rc-pg");
-    if (!url) { fr.appendChild(el("p", "empty", "Les pages du classeur ne sont pas encore installées. Dans le script Google, lance une fois « installerRecco »."));  host.appendChild(fr); return fr; }
+    if (!url) { fr.appendChild(el("p", "rc-miss", "Les pages du classeur ne sont pas encore arrivées. Dans le script Google : lance « installerRecco », puis Déployer → Nouvelle version. Ensuite recharge l'appli.")); host.appendChild(fr); return fr; }
     var im = document.createElement("img"); im.src = url; im.alt = "Classeur RECCO, page " + rcPage; im.draggable = false; fr.appendChild(im);
     (RC_SPOTS[rcPage] || []).forEach(function (sp) {
       var a = el("button", "rc-spot"); a.type = "button"; a.style.left = sp[0] * 100 + "%"; a.style.top = sp[1] * 100 + "%"; a.style.width = (sp[2] - sp[0]) * 100 + "%"; a.style.height = (sp[3] - sp[1]) * 100 + "%";
