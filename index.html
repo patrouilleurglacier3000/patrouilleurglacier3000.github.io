@@ -977,6 +977,31 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .rc-month.ok { background: #e3f4ea; color: #1d6b43; border-left-color: #2e9461; }
 .rc-st { color: var(--muted); font-size: 14px; margin: 6px 2px; }
 .rc-askb { display: grid; gap: 8px; margin-bottom: 4px; } .rc-askx { width: 100%; margin-top: 10px; min-height: 52px; }
+
+/* Panneau Scex Rouge */
+.pn-tools { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px; }
+.pn-b { border: 0; background: #e7efe9; color: #1d2b36; font: 800 16px var(--body); min-height: 48px; min-width: 48px; padding: 0 14px; border-radius: 12px; cursor: pointer; }
+.pn-b.on { background: #2f5d46; color: #fff; } .pn-b.dang { background: #fde2e1; color: #b3261e; }
+.pn-cols, .pn-stamps { display: flex; gap: 6px; }
+.pn-col { width: 44px; height: 44px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 2px #9aa8b4; cursor: pointer; }
+.pn-col.on { box-shadow: 0 0 0 4px #2f5d46; }
+.pn-stamps .pn-b { font-size: 22px; padding: 0 10px; }
+.pn-board { border-radius: 10px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,.3); line-height: 0; }
+.pn-board.drawing { outline: 4px solid #ffe066; }
+.pn-board.drawing .pn-cv { touch-action: none; cursor: crosshair; }
+.pn-cv { width: 100%; height: auto; display: block; }
+.pn-full { position: fixed; inset: 0; z-index: 66; background: #111; display: flex; align-items: center; justify-content: center; }
+.pn-full .pn-board { width: min(100vw, 160vh); border-radius: 0; box-shadow: none; }
+@media (orientation: portrait) { .pn-full .pn-board { width: min(100vh, 160vw); transform: rotate(90deg); } }
+.pn-x { position: fixed; top: 10px; right: 10px; z-index: 67; background: rgba(255,255,255,.85); }
+.pn-row3 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pn-pistes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pn-p { display: grid; grid-template-columns: 34px 1fr; grid-template-rows: auto auto; align-items: center; text-align: left; border: 2px solid var(--line); background: var(--paper); border-radius: 12px; padding: 8px 10px; min-height: 58px; cursor: pointer; color: var(--ink); font: inherit; }
+.pn-p b { grid-row: 1 / 3; font: 900 24px var(--body); } .pn-p span { font: 800 16px var(--body); } .pn-p i { font: 700 12px var(--body); font-style: normal; color: var(--muted); }
+.pn-p.ouvert { border-color: #2e9461; background: #e3f4ea; } .pn-p.ouvert b { color: #2e9461; }
+.pn-p.ferme b { color: #d63a3a; } .pn-p.prep { border-color: #e0a100; background: #fff4d6; } .pn-p.prep b { color: #b07d00; }
+.pn-p.cache { opacity: .5; border-style: dashed; } .pn-p.edit { border-color: #d63a3a; } .pn-p.edit i { color: #d63a3a; }
+.pn-small { margin-top: 8px; }
 </style>
 <script>window.__LOGO="data:image/jpeg;base64,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";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -987,7 +1012,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794558406";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794559565";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1003,6 +1028,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   var NS = "http://www.w3.org/2000/svg";
   var ICONS = {
     aval: "M2 20L9 7l3 5 3-3 7 11z M9 7l1.5 6 M15 9l-1 5",
+    board: "M3 4h18v12H3z M8 20l4-4 4 4 M7 8h5 M7 11h8",
     ext: "M14 4h6v6 M20 4l-9 9 M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5",
     r9: "M7 3h10v18H7z M10 7h4 M10 11h4 M12 15v2",
     prep: "M8 3l4 3 4-3 4 4-3 3v11H7V10L4 7z",
@@ -1124,6 +1150,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     ordonnerTaches: function (pairs) { (pairs || []).forEach(function (p) { var t = byId(data.taches, p.id); if (t) t.ord = p.ord; }); },
     enregistrerAvalanche: function (av, par) { var old = (data.avalanches || []).filter(function (x) { return x.id === av.id; })[0], o = JSON.parse(JSON.stringify(av)); o.photos = old ? old.photos : []; o.by = par || ""; data.avalanches = (data.avalanches || []).filter(function (x) { return x.id !== av.id; }); data.avalanches.unshift(o); },
     enregistrerRecco: function (r, par) { data.recco = (data.recco || []).filter(function (x) { return x.id !== r.id; }); data.recco.unshift({ id: r.id, type: r.type, at: r.at, by: par || "", d: JSON.parse(JSON.stringify(r.d)) }); },
+    enregistrerPanneau: function (jour, d) { data.panneau = (data.panneau || []).filter(function (p) { return p.jour !== jour; }); data.panneau.unshift({ jour: jour, d: JSON.parse(JSON.stringify(d)) }); },
     supprimerRecco: function (id) { data.recco = (data.recco || []).filter(function (x) { return x.id !== id; }); },
     supprimerAvalanche: function (id) { data.avalanches = (data.avalanches || []).filter(function (x) { return x.id !== id; }); },
     supprimerTache: function (id) { if (!byId(data.taches, id)) return false; data.taches = data.taches.filter(function (x) { return String(x.id) !== String(id); }); }
@@ -1248,7 +1275,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (up) { back.textContent = up[0]; back.addEventListener("click", up[1]); }
     else { back.appendChild(icon("home")); back.lastChild.style.cssText = "width:18px;height:18px"; back.appendChild(document.createTextNode("Accueil")); back.addEventListener("click", function () { goArea("home"); }); }
     b.appendChild(back);
-    b.appendChild(el("span", "where", area === "stock" ? "Stock matériel" : area === "plan" ? "Agenda" : area === "presence" ? "Planning" : area === "taches" ? "Tâches équipe" : area === "bilan" ? "Bilan victime" : area === "achat" ? "Achats & fabrication" : area === "aval" ? "Avalanches" : area === "recco" ? "RECCO R9" : formRub || "Formation"));
+    b.appendChild(el("span", "where", area === "stock" ? "Stock matériel" : area === "plan" ? "Agenda" : area === "presence" ? "Planning" : area === "taches" ? "Tâches équipe" : area === "bilan" ? "Bilan victime" : area === "achat" ? "Achats & fabrication" : area === "aval" ? "Avalanches" : area === "recco" ? "RECCO R9" : area === "panneau" ? "Panneau Scex Rouge" : formRub || "Formation"));
   }
   function bigTile(ic, color, title, sub, onClick, light) {
     var t = el("button", "tile" + (light ? " light" : "")); t.type = "button"; t.style.setProperty("--tc", color);
@@ -1275,6 +1302,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var avT = (data.avalanches || []).filter(function (a) { return a.at >= avDayStart(Date.now()); }).length, avS = (data.avalanches || []).filter(function (a) { return a.at >= avSeasonStart(); }).length;
     g.appendChild(bigTile("aval", AV_C, "Avalanches", avT ? avT + " notée" + (avT > 1 ? "s" : "") + " aujourd'hui · " + avS + " cette saison" : "Carte 3D · dessine la coulée" + (avS ? " · " + avS + " cette saison" : ""), function () { avEdit = null; avView = null; goArea("aval"); }));
     g.appendChild(bigTile("signal", RC_C, "RECCO", rcHomeSub(), function () { rcDrawer = false; rcFull = false; goArea("recco"); }));
+    g.appendChild(bigTile("board", PN_C, "Panneau d'information", pnHomeSub(), function () { pnDraw = false; pnFull = false; pnCur = null; goArea("panneau"); }));
     // Lien vers le logiciel WAC.3 de Wyssen (ouvert à part, chacun se connecte avec son propre compte)
     g.appendChild(bigTile("ext", "#1f4e79", "WAC.3 · Wyssen", "Ouvre le site Wyssen · connexion avec ton compte", function () { var a = document.createElement("a"); a.href = "https://control.wyssenavalanche.com"; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove(); }));
     g.appendChild(bigTile("box", "#d63a3a", "Stock matériel", subS, function () { goArea("stock"); }));
@@ -4450,6 +4478,219 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     }
     if (rcDrawer) v.appendChild(rcDrawerEl());
   }
+  /* ---------- Panneau d'information du Scex Rouge : tableau noir, météo de 7 h, pistes, dessin à la craie ---------- */
+  var PN_C = "#2f5d46", PN_W = 1600, PN_H = 1000;
+  var PN_LISTE = ["Scex Rouge", "Dôme", "Tsanfleuron", "Combe d'Audon", "Red Run", "Martisberg", "Black Wall", "Zone débutants", "Snowpark"];
+  var PN_ST = { ouvert: ["✓", "#9be37a", "ouverte"], ferme: ["✗", "#ff7b7b", "fermée"], prep: ["…", "#ffd166", "en préparation"], cache: ["", "#888", "pas affichée"] };
+  var PN_AV = [null, ["1", "faible", "#ccff66"], ["2", "limité", "#ffff00"], ["3", "marqué", "#ff9900"], ["4", "fort", "#ff0000"], ["5", "très fort", "#cc0000"]];
+  var PN_COLS = [["#f4f1e8", "Blanc"], ["#ffe066", "Jaune"], ["#ff9ecb", "Rose"], ["#8fd3ff", "Bleu"], ["#9be37a", "Vert"], ["#ff7b7b", "Rouge"]];
+  var pnDraw = false, pnCol = "#f4f1e8", pnW = 7, pnStamp = "", pnFull = false, pnEditList = false, pnSaveT = null, pnCur = null, pnFont = false;
+  function pnToday() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+  function pnGet() {
+    var j = pnToday(), L = data.panneau || [];
+    var t = L.filter(function (p) { return p.jour === j; })[0];
+    if (pnCur && pnCur.jour === j && (!t || pnSaveT)) return pnCur;
+    if (t) { pnCur = { jour: j, d: JSON.parse(JSON.stringify(t.d)) }; }
+    else { var y = L.filter(function (p) { return p.jour < j; })[0]; pnCur = { jour: j, d: { pistes: y ? JSON.parse(JSON.stringify(y.d.pistes || {})) : {}, liste: y && y.d.liste ? y.d.liste.slice() : null, msg: y ? y.d.msg || "" : "", draw: [], repris: !!y }, neu: true }; }
+    var d = pnCur.d; d.liste = d.liste || PN_LISTE.slice(); d.pistes = d.pistes || {}; d.draw = d.draw || []; d.manuel = d.manuel || {};
+    return pnCur;
+  }
+  function pnSave(now) {
+    var p = pnCur; if (!p) return; clearTimeout(pnSaveT);
+    pnSaveT = setTimeout(function () { pnSaveT = null; p.neu = false; act("enregistrerPanneau", [p.jour, p.d], null); }, now ? 0 : 1200);
+  }
+  function pnHomeSub() {
+    var j = pnToday(), t = (data.panneau || []).filter(function (p) { return p.jour === j; })[0];
+    if (!t) return "Tableau du jour à préparer";
+    var d = t.d, n = (d.liste || PN_LISTE).filter(function (x) { return (d.pistes || {})[x] === "ouvert"; }).length;
+    return (d.temp != null ? String(d.temp).replace(".", ",") + " °C à 3000 m · " : "") + n + " piste" + (n > 1 ? "s" : "") + " ouverte" + (n > 1 ? "s" : "");
+  }
+  // ----- dessin du tableau -----
+  function pnRand(seed) { var s = seed || 1; return function () { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; }
+  var pnBg = null;
+  function pnBackground() {
+    if (pnBg) return pnBg;
+    var c = document.createElement("canvas"); c.width = PN_W; c.height = PN_H; var g = c.getContext("2d"), r = pnRand(7);
+    var gr = g.createLinearGradient(0, 0, PN_W, PN_H); gr.addColorStop(0, "#2c3a33"); gr.addColorStop(1, "#1f2a25"); g.fillStyle = gr; g.fillRect(0, 0, PN_W, PN_H);
+    for (var i = 0; i < 60; i++) { var x = r() * PN_W, y = r() * PN_H, rad = 60 + r() * 220, rg = g.createRadialGradient(x, y, 0, x, y, rad); rg.addColorStop(0, "rgba(255,255,255," + (0.02 + r() * 0.035) + ")"); rg.addColorStop(1, "rgba(255,255,255,0)"); g.fillStyle = rg; g.fillRect(x - rad, y - rad, rad * 2, rad * 2); }
+    // cadre en bois
+    var fw = 26; g.lineWidth = fw; var wg = g.createLinearGradient(0, 0, 0, PN_H); wg.addColorStop(0, "#9b6b3d"); wg.addColorStop(.5, "#7a4f2a"); wg.addColorStop(1, "#5c3a1e"); g.strokeStyle = wg; g.strokeRect(fw / 2, fw / 2, PN_W - fw, PN_H - fw);
+    g.lineWidth = 2; g.strokeStyle = "rgba(0,0,0,.35)"; g.strokeRect(fw, fw, PN_W - 2 * fw, PN_H - 2 * fw);
+    pnBg = c; return c;
+  }
+  function pnChalk(c) { // texture craie : on gratte de petits points dans le calque
+    var g = c.getContext("2d"), r = pnRand(11); g.save(); g.globalCompositeOperation = "destination-out";
+    for (var i = 0; i < 14000; i++) { g.globalAlpha = 0.25 + r() * 0.5; g.fillRect(r() * PN_W, r() * PN_H, 1 + r() * 2.2, 1 + r() * 1.6); }
+    g.restore();
+  }
+  function pnFontName() { return pnFont ? "Kalam" : "'Comic Sans MS', 'Segoe Print', cursive"; }
+  function pnWrap(g, text, x, y, maxW, lh, maxLines) {
+    var words = String(text || "").split(/\s+/), line = "", n = 0;
+    String(text || "").split(/\n/).forEach(function (para) {
+      words = para.split(/\s+/); line = "";
+      words.forEach(function (w) { var t = line ? line + " " + w : w; if (g.measureText(t).width > maxW && line) { if (n < maxLines) g.fillText(line, x, y + n * lh); n++; line = w; } else line = t; });
+      if (n < maxLines) g.fillText(line, x, y + n * lh); n++;
+    });
+    return n;
+  }
+  function pnStrokes(g, list) {
+    (list || []).forEach(function (s) {
+      g.strokeStyle = s.c; g.lineWidth = s.w; g.lineCap = "round"; g.lineJoin = "round"; g.beginPath();
+      s.p.forEach(function (q, i) { if (i) g.lineTo(q[0], q[1]); else g.moveTo(q[0], q[1]); });
+      if (s.p.length === 1) g.lineTo(s.p[0][0] + 0.1, s.p[0][1]); g.stroke();
+    });
+  }
+  function pnRender(cv, extra) {
+    var P = pnGet(), d = P.d, g = cv.getContext("2d");
+    g.clearRect(0, 0, PN_W, PN_H); g.drawImage(pnBackground(), 0, 0);
+    var L = document.createElement("canvas"); L.width = PN_W; L.height = PN_H; var c = L.getContext("2d"), F = pnFontName();
+    c.textBaseline = "alphabetic";
+    // en-tête
+    c.fillStyle = "#f4f1e8"; c.font = "700 74px " + F; c.fillText("GLACIER 3000", 80, 128);
+    c.textAlign = "right"; c.font = "700 46px " + F; c.fillText("Scex Rouge · 2971 m", PN_W - 80, 112);
+    var dt = new Date(P.jour + "T12:00:00"); c.font = "400 40px " + F; c.fillStyle = "#cfe7ff";
+    var jn = JOURS[dt.getDay()]; c.fillText(jn.charAt(0).toUpperCase() + jn.slice(1) + " " + dt.getDate() + " " + MOIS[dt.getMonth()] + " " + dt.getFullYear(), PN_W - 80, 162); c.textAlign = "left";
+    c.strokeStyle = "rgba(244,241,232,.7)"; c.lineWidth = 4; c.beginPath(); c.moveTo(80, 190); c.lineTo(PN_W - 80, 196); c.stroke();
+    // colonne gauche : météo
+    c.fillStyle = "#f4f1e8"; c.font = "700 46px " + F; c.fillText("Température à 3000 m", 80, 268);
+    c.fillStyle = "rgba(244,241,232,.55)"; c.font = "400 26px " + F; c.fillText("Temperature · Temperatur", 80, 302);
+    c.fillStyle = "#ffe066"; c.font = "700 150px " + F; c.fillText(d.temp != null && d.temp !== "" ? (d.temp > 0 ? "+" : "") + String(d.temp).replace(".", ",").replace("-", "−") + " °C" : "… °C", 80, 450);
+    var y = 530;
+    if (d.vent != null && d.vent !== "") { c.fillStyle = "#f4f1e8"; c.font = "700 46px " + F; c.fillText("Vent : " + d.vent + " km/h", 80, y); c.fillStyle = "rgba(244,241,232,.55)"; c.font = "400 26px " + F; c.fillText("Wind", 80, y + 32); y += 96; }
+    if (d.aval) {
+      var a = PN_AV[d.aval]; c.fillStyle = "#f4f1e8"; c.font = "700 46px " + F; c.fillText("Danger d'avalanche", 80, y);
+      c.fillStyle = a[2]; c.fillRect(80, y + 20, 70, 70); c.fillStyle = d.aval >= 4 ? "#fff" : "#1d1d1d"; c.font = "700 56px " + F; c.textAlign = "center"; c.fillText(a[0], 115, y + 76); c.textAlign = "left";
+      c.fillStyle = "#f4f1e8"; c.font = "700 50px " + F; c.fillText(a[1], 170, y + 74); c.fillStyle = "rgba(244,241,232,.55)"; c.font = "400 26px " + F; c.fillText("Avalanche danger · Lawinengefahr", 80, y + 122); y += 170;
+    }
+    if (d.msg) { c.fillStyle = "#ff9ecb"; c.font = "700 44px " + F; pnWrap(c, d.msg, 80, y + 10, 700, 54, Math.max(1, Math.floor((PN_H - 70 - y) / 54))); }
+    // colonne droite : pistes
+    var x0 = 880; c.strokeStyle = "rgba(244,241,232,.35)"; c.lineWidth = 3; c.beginPath(); c.moveTo(x0 - 50, 230); c.lineTo(x0 - 46, PN_H - 80); c.stroke();
+    c.fillStyle = "#f4f1e8"; c.font = "700 50px " + F; c.fillText("Pistes du jour", x0, 268);
+    c.fillStyle = "rgba(244,241,232,.55)"; c.font = "400 26px " + F; c.fillText("Slopes · Pisten", x0, 302);
+    var rows = d.liste.filter(function (n) { return (d.pistes[n] || "ferme") !== "cache"; }), avail = PN_H - 80 - 350, lh = Math.min(70, Math.max(40, avail / Math.max(rows.length, 1))), fs = Math.round(lh * 0.66);
+    rows.forEach(function (n, i) {
+      var st = PN_ST[d.pistes[n] || "ferme"], yy = 370 + i * lh;
+      c.fillStyle = st[1]; c.font = "700 " + Math.round(fs * 1.15) + "px " + F; c.fillText(st[0], x0, yy);
+      c.fillStyle = (d.pistes[n] || "ferme") === "ferme" ? "rgba(244,241,232,.6)" : "#f4f1e8"; c.font = "700 " + fs + "px " + F; c.fillText(n, x0 + fs * 1.3, yy);
+      if ((d.pistes[n] || "ferme") === "prep") { var nw = c.measureText(n).width; c.fillStyle = "#ffd166"; c.font = "400 " + Math.round(fs * 0.6) + "px " + F; c.fillText("en préparation", x0 + fs * 1.3 + nw + 18, yy); }
+    });
+    if (!rows.length) { c.fillStyle = "rgba(244,241,232,.6)"; c.font = "400 40px " + F; c.fillText("—", x0, 380); }
+    pnStrokes(c, d.draw); if (extra) pnStrokes(c, [extra]);
+    pnChalk(L); g.drawImage(L, 0, 0);
+  }
+  // ----- tampons (soleil, nuage, flocon, vent, flèche) dessinés en traits de craie -----
+  function pnStampStrokes(kind, x, y, col) {
+    var S = [], R = 55, i, a;
+    function circ(cx, cy, r, from, to) { var p = []; for (a = from; a <= to + 0.001; a += Math.PI / 18) p.push([Math.round(cx + r * Math.cos(a)), Math.round(cy + r * Math.sin(a))]); return p; }
+    if (kind === "soleil") { S.push(circ(x, y, R * 0.55, 0, Math.PI * 2)); for (i = 0; i < 10; i++) { a = i * Math.PI / 5; S.push([[Math.round(x + R * 0.8 * Math.cos(a)), Math.round(y + R * 0.8 * Math.sin(a))], [Math.round(x + R * 1.25 * Math.cos(a)), Math.round(y + R * 1.25 * Math.sin(a))]]); } }
+    if (kind === "nuage") { S.push(circ(x - 40, y + 5, 32, Math.PI * 0.5, Math.PI * 1.5).concat(circ(x, y - 20, 42, Math.PI, Math.PI * 2)).concat(circ(x + 45, y + 5, 30, Math.PI * 1.5, Math.PI * 2.5))); S.push([[x - 40, y + 37], [x + 45, y + 35]]); }
+    if (kind === "flocon") { for (i = 0; i < 3; i++) { a = i * Math.PI / 3; S.push([[Math.round(x - R * Math.cos(a)), Math.round(y - R * Math.sin(a))], [Math.round(x + R * Math.cos(a)), Math.round(y + R * Math.sin(a))]]); } for (i = 0; i < 6; i++) { a = i * Math.PI / 3; var ex = x + R * 0.7 * Math.cos(a), ey = y + R * 0.7 * Math.sin(a); S.push([[Math.round(ex + 14 * Math.cos(a + 2.4)), Math.round(ey + 14 * Math.sin(a + 2.4))], [Math.round(ex), Math.round(ey)], [Math.round(ex + 14 * Math.cos(a - 2.4)), Math.round(ey + 14 * Math.sin(a - 2.4))]]); } }
+    if (kind === "vent") { [-25, 0, 25].forEach(function (dy, k) { var p = []; for (i = 0; i <= 12; i++) p.push([Math.round(x - 70 + i * 11), Math.round(y + dy + Math.sin(i / 2 + k) * 6)]); S.push(p); }); S.push(circ(x + 62, y - 35, 12, Math.PI, Math.PI * 2.6)); }
+    if (kind === "fleche") { S.push([[x - 80, y], [x + 70, y]]); S.push([[x + 35, y - 35], [x + 72, y], [x + 35, y + 35]]); }
+    return S.map(function (p) { return { c: col, w: 7, p: p }; });
+  }
+  function pnToolbar(v, cv) {
+    var bar = el("div", "pn-tools");
+    function B(t, cls, fn, lbl) { var b = el("button", "pn-b" + (cls ? " " + cls : ""), t); b.type = "button"; if (lbl) b.setAttribute("aria-label", lbl); b.addEventListener("click", fn); bar.appendChild(b); return b; }
+    B(pnDraw ? "✋ Fini de dessiner" : "✏ Dessiner à la craie", pnDraw ? "on" : "", function () { pnDraw = !pnDraw; pnStamp = ""; renderPanneau(); });
+    if (pnDraw) {
+      var cw = el("div", "pn-cols"); PN_COLS.forEach(function (k) { var b = el("button", "pn-col" + (pnCol === k[0] ? " on" : "")); b.type = "button"; b.style.background = k[0]; b.setAttribute("aria-label", k[1]); b.addEventListener("click", function () { pnCol = k[0]; renderPanneau(); }); cw.appendChild(b); }); bar.appendChild(cw);
+      B(pnW > 8 ? "Trait gros" : "Trait fin", "", function () { pnW = pnW > 8 ? 7 : 14; renderPanneau(); });
+      var st = el("div", "pn-stamps"); [["soleil", "☀"], ["nuage", "☁"], ["flocon", "❄"], ["vent", "≋"], ["fleche", "➜"]].forEach(function (k) { var b = el("button", "pn-b" + (pnStamp === k[0] ? " on" : ""), k[1]); b.type = "button"; b.setAttribute("aria-label", "Tampon " + k[0]); b.addEventListener("click", function () { pnStamp = pnStamp === k[0] ? "" : k[0]; renderPanneau(); }); st.appendChild(b); }); bar.appendChild(st);
+      B("↶ Annuler", "", function () { var d = pnGet().d; if (d.draw.length) { d.draw.pop(); pnSave(); renderPanneau(); } });
+      var ef = B("Effacer le dessin", "dang", function () { var d = pnGet().d; if (!d.draw.length) return; if (!confirmTwice(ef)) return; d.draw = []; pnSave(); renderPanneau(); });
+    }
+    v.appendChild(bar);
+  }
+  var pnArm = null;
+  function confirmTwice(b) { if (pnArm === b) { pnArm = null; return true; } pnArm = b; b.textContent = "Sûr ? Retouche"; setTimeout(function () { if (pnArm === b) { pnArm = null; b.textContent = "Effacer le dessin"; } }, 4000); return false; }
+  function pnBoard(host) {
+    var w = el("div", "pn-board" + (pnDraw ? " drawing" : "")), cv = document.createElement("canvas"); cv.width = PN_W; cv.height = PN_H; cv.className = "pn-cv"; w.appendChild(cv); host.appendChild(w);
+    pnRender(cv);
+    var cur = null;
+    function pt(ev) { var r = cv.getBoundingClientRect(); return [Math.round((ev.clientX - r.left) / r.width * PN_W), Math.round((ev.clientY - r.top) / r.height * PN_H)]; }
+    cv.addEventListener("pointerdown", function (ev) {
+      if (!pnDraw) return; ev.preventDefault(); var p = pt(ev), d = pnGet().d;
+      if (pnStamp) { d.draw = d.draw.concat(pnStampStrokes(pnStamp, p[0], p[1], pnCol)); pnSave(); pnRender(cv); return; }
+      cur = { c: pnCol, w: pnW, p: [p] }; try { cv.setPointerCapture(ev.pointerId); } catch (e) {} pnRender(cv, cur);
+    });
+    cv.addEventListener("pointermove", function (ev) { if (!cur) return; ev.preventDefault(); var p = pt(ev), q = cur.p[cur.p.length - 1]; if (Math.abs(p[0] - q[0]) + Math.abs(p[1] - q[1]) >= 5) { cur.p.push(p); pnRender(cv, cur); } });
+    function end() { if (!cur) return; pnGet().d.draw.push(cur); cur = null; pnSave(); pnRender(cv); }
+    cv.addEventListener("pointerup", end); cv.addEventListener("pointercancel", end);
+    return cv;
+  }
+  function pnForm(v) {
+    var P = pnGet(), d = P.d, box = el("div", "av-form pn-form");
+    if (P.neu && d.repris) box.appendChild(el("div", "rc-month", "Pistes et message repris d'hier : vérifie avant de mettre le panneau à jour."));
+    // météo
+    var mt = el("div", "pn-row3");
+    function num(key, label, unit) {
+      var f = el("div", "av-fld"); f.appendChild(el("div", "av-lbl", label)); var r = el("div", "rc-add"), i = document.createElement("input"); i.type = "number"; i.inputMode = "decimal"; i.step = "any"; i.className = "av-in"; i.value = d[key] != null ? d[key] : "";
+      i.addEventListener("input", function () { d[key] = i.value === "" ? null : +i.value; d.manuel[key] = true; pnSave(); pnRedraw(); }); r.appendChild(i); r.appendChild(el("span", "rc-u", unit)); f.appendChild(r); mt.appendChild(f);
+    }
+    num("temp", "Température 3000 m", "°C"); num("vent", "Vent", "km/h");
+    box.appendChild(mt);
+    var au = d.auto, info = el("p", "rc-st", au ? "Lu sur glacier3000.ch à " + blHM(au.at) + " : " + (au.temp != null ? String(au.temp).replace(".", ",") + " °C" : "?") + (au.vent != null ? " · vent " + au.vent + " km/h" : "") + (au.aval ? " · danger " + au.aval : "") : "Mise à jour automatique tous les matins à 7 h (glacier3000.ch).");
+    var rl = el("button", "pbtn", "↻ Relire la météo maintenant"); rl.type = "button";
+    rl.addEventListener("click", function () {
+      rl.disabled = true; rl.textContent = "Lecture…";
+      call("meteoPanneau", code).then(function (r) { var m = r.meteo; d.auto = m; d.manuel = {}; ["temp", "vent", "aval"].forEach(function (k) { if (m[k] != null) d[k] = m[k]; }); pnSave(true); renderPanneau(); showStatus("Météo mise à jour"); })
+        .catch(function (e) { showStatus(String(e && e.message || e).replace(/^Error:\s*/, ""), true); renderPanneau(); });
+    });
+    box.appendChild(info); box.appendChild(rl);
+    var av = avChoice([[0, "—"], [1, "1 faible"], [2, "2 limité"], [3, "3 marqué"], [4, "4 fort"], [5, "5 très fort"]], d.aval || 0, function (k) { d.aval = k || null; d.manuel.aval = true; pnSave(); renderPanneau(); });
+    avField(box, "Danger d'avalanche", av);
+    // pistes
+    var pl = el("div", "av-fld"); pl.appendChild(el("div", "av-lbl", pnEditList ? "Modifier la liste des pistes" : "Pistes · touche pour changer : ✗ fermée → ✓ ouverte → … en préparation → masquée"));
+    var g = el("div", "pn-pistes");
+    d.liste.forEach(function (n, i) {
+      var s = d.pistes[n] || "ferme", b = el("button", "pn-p " + s); b.type = "button";
+      b.appendChild(el("b", null, PN_ST[s][0] || "–")); b.appendChild(el("span", null, n)); b.appendChild(el("i", null, PN_ST[s][2]));
+      if (pnEditList) { b.classList.add("edit"); b.lastChild.textContent = "✕ retirer"; b.addEventListener("click", function () { d.liste.splice(i, 1); delete d.pistes[n]; pnSave(); renderPanneau(); }); }
+      else b.addEventListener("click", function () { var o = ["ferme", "ouvert", "prep", "cache"]; d.pistes[n] = o[(o.indexOf(s) + 1) % o.length]; pnSave(); renderPanneau(); });
+      g.appendChild(b);
+    });
+    pl.appendChild(g);
+    if (pnEditList) {
+      var r = el("div", "rc-add"), inp = document.createElement("input"); inp.className = "av-in"; inp.placeholder = "Nom de la piste à ajouter"; var ad = el("button", "pbtn", "+ Ajouter"); ad.type = "button";
+      ad.addEventListener("click", function () { var x = inp.value.trim(); if (!x || d.liste.indexOf(x) >= 0) return; d.liste.push(x); d.pistes[x] = "ouvert"; pnSave(); renderPanneau(); });
+      r.appendChild(inp); r.appendChild(ad); pl.appendChild(r);
+    }
+    var el2 = el("button", "pbtn pn-small", pnEditList ? "✓ Fini" : "✏ Modifier la liste"); el2.type = "button"; el2.addEventListener("click", function () { pnEditList = !pnEditList; renderPanneau(); }); pl.appendChild(el2);
+    box.appendChild(pl);
+    var ms = document.createElement("textarea"); ms.className = "av-in"; ms.rows = 3; ms.placeholder = "Ex. Visibilité réduite au sommet · Restez sur les pistes balisées"; ms.value = d.msg || "";
+    ms.addEventListener("input", function () { d.msg = ms.value; pnSave(); pnRedraw(); }); avField(box, "Message du jour", ms);
+    v.appendChild(box);
+  }
+  function pnRedraw() { var cv = document.querySelector(".pn-cv"); if (cv) pnRender(cv); }
+  function pnDownload() {
+    var cv = document.querySelector(".pn-cv"); if (!cv) return;
+    cv.toBlob(function (b) { var a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "panneau-scex-rouge-" + pnToday() + ".png"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000); }, "image/png");
+  }
+  function pnLoadFont() {
+    if (pnFont || pnLoadFont.go) return; pnLoadFont.go = true;
+    var l = document.createElement("link"); l.rel = "stylesheet"; l.href = "https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap"; document.head.appendChild(l);
+    if (document.fonts && document.fonts.load) Promise.all([document.fonts.load("700 40px Kalam"), document.fonts.load("400 40px Kalam")]).then(function (f) { if (f[0].length) { pnFont = true; pnRedraw(); } }).catch(function () {});
+  }
+  var pnTimer = null;
+  function renderPanneau() {
+    if (area !== "panneau") return;
+    pnLoadFont(); renderHomebar();
+    var v = clearView(); v.style.setProperty("--tc", PN_C);
+    if (pnFull) {
+      var fs = el("div", "pn-full"); pnBoard(fs);
+      var x = el("button", "pn-b pn-x", "✕"); x.type = "button"; x.setAttribute("aria-label", "Quitter le plein écran"); x.addEventListener("click", function () { pnFull = false; clearInterval(pnTimer); try { document.exitFullscreen && document.fullscreenElement && document.exitFullscreen(); } catch (e) {} renderPanneau(); });
+      fs.appendChild(x); v.appendChild(fs);
+      // écran au sommet : on recharge les données toutes les 5 minutes
+      clearInterval(pnTimer); pnTimer = setInterval(function () { if (area !== "panneau" || !pnFull) { clearInterval(pnTimer); return; } if (!busy && !document.hidden) load(true).then(function () { if (!pnSaveT) { pnCur = null; pnRedraw(); } }); }, 300000);
+      return;
+    }
+    pnToolbar(v); pnBoard(v);
+    var a = el("div", "av-acts"), b1 = el("button", "pbtn", "⤢ Plein écran"), b2 = el("button", "pbtn", "⬇ Télécharger l'image"); b1.type = b2.type = "button";
+    b1.addEventListener("click", function () { pnFull = true; pnDraw = false; try { var de = document.documentElement; de.requestFullscreen && de.requestFullscreen().then(function () { try { screen.orientation.lock("landscape"); } catch (e) {} }).catch(function () {}); } catch (e) {} renderPanneau(); });
+    b2.addEventListener("click", pnDownload); a.appendChild(b1); a.appendChild(b2); v.appendChild(a);
+    if (!pnDraw) pnForm(v);
+  }
   function renderAll() {
     if (area !== "aval" && avSens.on) { avSensStop(); avEdit = null; }
     if (location.hash === "#exemples" && area !== "taches") area = "taches";
@@ -4467,6 +4708,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (area === "presence") return renderPresence();
     if (area === "aval") return renderAval();
     if (area === "recco") return renderRecco();
+    if (area === "panneau") return renderPanneau();
     renderTabs();
     if (current === "prep") renderPrep(); else if (current === "cmd") renderCmd(); else if (current === "count") renderCount(); else if (current === "hist") renderHist(); else renderStock();
   }
