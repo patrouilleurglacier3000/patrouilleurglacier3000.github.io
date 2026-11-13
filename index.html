@@ -994,7 +994,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .pn-full .pn-board { width: min(100vw, 160vh); border-radius: 0; box-shadow: none; }
 @media (orientation: portrait) { .pn-full .pn-board { width: min(100vh, 160vw); transform: rotate(90deg); } }
 .pn-x { position: fixed; top: 10px; right: 10px; z-index: 67; background: rgba(255,255,255,.85); }
-.pn-row3 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pn-row3 { display: grid; grid-template-columns: 1fr; gap: 10px; }
 .pn-pistes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .pn-p { display: grid; grid-template-columns: 34px 1fr; grid-template-rows: auto auto; align-items: center; text-align: left; border: 2px solid var(--line); background: var(--paper); border-radius: 12px; padding: 8px 10px; min-height: 58px; cursor: pointer; color: var(--ink); font: inherit; }
 .pn-p b { grid-row: 1 / 3; font: 900 24px var(--body); } .pn-p span { font: 800 16px var(--body); } .pn-p i { font: 700 12px var(--body); font-style: normal; color: var(--muted); }
@@ -1012,7 +1012,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794559565";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794560367";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -4544,37 +4544,41 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var P = pnGet(), d = P.d, g = cv.getContext("2d");
     g.clearRect(0, 0, PN_W, PN_H); g.drawImage(pnBackground(), 0, 0);
     var L = document.createElement("canvas"); L.width = PN_W; L.height = PN_H; var c = L.getContext("2d"), F = pnFontName();
-    c.textBaseline = "alphabetic";
-    // en-tête
-    c.fillStyle = "#f4f1e8"; c.font = "700 74px " + F; c.fillText("GLACIER 3000", 80, 128);
-    c.textAlign = "right"; c.font = "700 46px " + F; c.fillText("Scex Rouge · 2971 m", PN_W - 80, 112);
-    var dt = new Date(P.jour + "T12:00:00"); c.font = "400 40px " + F; c.fillStyle = "#cfe7ff";
-    var jn = JOURS[dt.getDay()]; c.fillText(jn.charAt(0).toUpperCase() + jn.slice(1) + " " + dt.getDate() + " " + MOIS[dt.getMonth()] + " " + dt.getFullYear(), PN_W - 80, 162); c.textAlign = "left";
-    c.strokeStyle = "rgba(244,241,232,.7)"; c.lineWidth = 4; c.beginPath(); c.moveTo(80, 190); c.lineTo(PN_W - 80, 196); c.stroke();
-    // colonne gauche : météo
-    c.fillStyle = "#f4f1e8"; c.font = "700 46px " + F; c.fillText("Température à 3000 m", 80, 268);
-    c.fillStyle = "rgba(244,241,232,.55)"; c.font = "400 26px " + F; c.fillText("Temperature · Temperatur", 80, 302);
-    c.fillStyle = "#ffe066"; c.font = "700 150px " + F; c.fillText(d.temp != null && d.temp !== "" ? (d.temp > 0 ? "+" : "") + String(d.temp).replace(".", ",").replace("-", "−") + " °C" : "… °C", 80, 450);
-    var y = 530;
-    if (d.vent != null && d.vent !== "") { c.fillStyle = "#f4f1e8"; c.font = "700 46px " + F; c.fillText("Vent : " + d.vent + " km/h", 80, y); c.fillStyle = "rgba(244,241,232,.55)"; c.font = "400 26px " + F; c.fillText("Wind", 80, y + 32); y += 96; }
-    if (d.aval) {
-      var a = PN_AV[d.aval]; c.fillStyle = "#f4f1e8"; c.font = "700 46px " + F; c.fillText("Danger d'avalanche", 80, y);
-      c.fillStyle = a[2]; c.fillRect(80, y + 20, 70, 70); c.fillStyle = d.aval >= 4 ? "#fff" : "#1d1d1d"; c.font = "700 56px " + F; c.textAlign = "center"; c.fillText(a[0], 115, y + 76); c.textAlign = "left";
-      c.fillStyle = "#f4f1e8"; c.font = "700 50px " + F; c.fillText(a[1], 170, y + 74); c.fillStyle = "rgba(244,241,232,.55)"; c.font = "400 26px " + F; c.fillText("Avalanche danger · Lawinengefahr", 80, y + 122); y += 170;
-    }
-    if (d.msg) { c.fillStyle = "#ff9ecb"; c.font = "700 44px " + F; pnWrap(c, d.msg, 80, y + 10, 700, 54, Math.max(1, Math.floor((PN_H - 70 - y) / 54))); }
-    // colonne droite : pistes
-    var x0 = 880; c.strokeStyle = "rgba(244,241,232,.35)"; c.lineWidth = 3; c.beginPath(); c.moveTo(x0 - 50, 230); c.lineTo(x0 - 46, PN_H - 80); c.stroke();
-    c.fillStyle = "#f4f1e8"; c.font = "700 50px " + F; c.fillText("Pistes du jour", x0, 268);
-    c.fillStyle = "rgba(244,241,232,.55)"; c.font = "400 26px " + F; c.fillText("Slopes · Pisten", x0, 302);
-    var rows = d.liste.filter(function (n) { return (d.pistes[n] || "ferme") !== "cache"; }), avail = PN_H - 80 - 350, lh = Math.min(70, Math.max(40, avail / Math.max(rows.length, 1))), fs = Math.round(lh * 0.66);
-    rows.forEach(function (n, i) {
-      var st = PN_ST[d.pistes[n] || "ferme"], yy = 370 + i * lh;
-      c.fillStyle = st[1]; c.font = "700 " + Math.round(fs * 1.15) + "px " + F; c.fillText(st[0], x0, yy);
-      c.fillStyle = (d.pistes[n] || "ferme") === "ferme" ? "rgba(244,241,232,.6)" : "#f4f1e8"; c.font = "700 " + fs + "px " + F; c.fillText(n, x0 + fs * 1.3, yy);
-      if ((d.pistes[n] || "ferme") === "prep") { var nw = c.measureText(n).width; c.fillStyle = "#ffd166"; c.font = "400 " + Math.round(fs * 0.6) + "px " + F; c.fillText("en préparation", x0 + fs * 1.3 + nw + 18, yy); }
+    c.textBaseline = "alphabetic"; c.lineCap = "round"; c.lineJoin = "round";
+    // modèle simple à recopier à la craie : date, température, pistes ouvertes, « Bonne journée »
+    var dt = new Date(P.jour + "T12:00:00"), jn = JOURS[dt.getDay()];
+    c.textAlign = "center"; c.fillStyle = "#f4f1e8"; c.font = "700 64px " + F;
+    c.fillText(jn.charAt(0).toUpperCase() + jn.slice(1) + " " + dt.getDate() + " " + MOIS[dt.getMonth()], PN_W / 2, 120);
+    c.strokeStyle = "#8fd3ff"; c.lineWidth = 5; c.beginPath(); for (var k = 0; k <= 24; k++) { var xx = PN_W / 2 - 300 + k * 25, yy = 150 + (k % 2 ? 10 : -4); if (k) c.lineTo(xx, yy); else c.moveTo(xx, yy); } c.stroke();
+    // soleil + température
+    c.strokeStyle = "#ffe066"; c.lineWidth = 7; c.beginPath(); c.arc(190, 330, 52, 0, Math.PI * 2); c.stroke();
+    for (k = 0; k < 8; k++) { var a = k * Math.PI / 4; c.beginPath(); c.moveTo(190 + 72 * Math.cos(a), 330 + 72 * Math.sin(a)); c.lineTo(190 + 100 * Math.cos(a), 330 + 100 * Math.sin(a)); c.stroke(); }
+    c.textAlign = "left"; c.fillStyle = "#ffe066"; c.font = "700 160px " + F;
+    var tt = d.temp != null && d.temp !== "" ? Math.round(+d.temp) : null;
+    c.fillText(tt != null ? (tt > 0 ? "+" : tt < 0 ? "−" : "") + Math.abs(tt) + "°" : "…°", 320, 390);
+    c.fillStyle = "#f4f1e8"; c.font = "400 44px " + F; c.fillText("à 3000 m", 330, 450);
+    if (d.aval) { var A = PN_AV[d.aval]; c.font = "700 42px " + F; c.fillText("Avalanche :", 110, 560); c.fillStyle = A[2]; c.fillRect(350, 518, 56, 56); c.fillStyle = d.aval >= 4 ? "#fff" : "#1d1d1d"; c.textAlign = "center"; c.font = "700 46px " + F; c.fillText(A[0], 378, 563); c.textAlign = "left"; c.fillStyle = "#f4f1e8"; c.font = "400 42px " + F; c.fillText(A[1], 425, 560); }
+    // pistes ouvertes
+    var x0 = 880, open = d.liste.filter(function (n) { return d.pistes[n] === "ouvert" || d.pistes[n] === "prep"; });
+    c.fillStyle = "#ff9ecb"; c.font = "700 60px " + F; c.fillText("Pistes ouvertes", x0, 280);
+    c.strokeStyle = "#ff9ecb"; c.lineWidth = 4; c.beginPath(); c.moveTo(x0, 300); c.lineTo(x0 + c.measureText("Pistes ouvertes").width, 304); c.stroke();
+    var lh = Math.min(66, Math.max(38, 300 / Math.max(open.length, 1))), fs = Math.round(lh * 0.78);
+    if (!open.length) { c.fillStyle = "rgba(244,241,232,.75)"; c.font = "400 46px " + F; c.fillText("pas encore… patience !", x0, 380); }
+    open.forEach(function (n, i) {
+      var yy = 370 + i * lh, pr = d.pistes[n] === "prep";
+      c.fillStyle = pr ? "#ffd166" : "#9be37a"; c.font = "700 " + fs + "px " + F; c.fillText(pr ? "…" : "✓", x0, yy);
+      c.fillStyle = "#f4f1e8"; c.fillText(n, x0 + fs * 1.1, yy);
+      if (pr) { var nw = c.measureText(n).width; c.fillStyle = "#ffd166"; c.font = "400 " + Math.round(fs * 0.6) + "px " + F; c.fillText("bientôt", x0 + fs * 1.1 + nw + 16, yy); }
     });
-    if (!rows.length) { c.fillStyle = "rgba(244,241,232,.6)"; c.font = "400 40px " + F; c.fillText("—", x0, 380); }
+    // montagnes
+    c.strokeStyle = "rgba(244,241,232,.85)"; c.lineWidth = 6; c.beginPath();
+    [[60, 760], [260, 650], [360, 700], [520, 590], [640, 680], [760, 630], [900, 720], [1060, 610], [1200, 700], [1330, 640], [1540, 760]].forEach(function (q, i) { if (i) c.lineTo(q[0], q[1]); else c.moveTo(q[0], q[1]); }); c.stroke();
+    c.lineWidth = 4; [[[490, 620], [520, 590], [555, 625]], [[1030, 640], [1060, 610], [1095, 642]]].forEach(function (cap) { c.beginPath(); cap.forEach(function (q, i) { if (i) c.lineTo(q[0], q[1]); else c.moveTo(q[0], q[1]); }); c.stroke(); });
+    // message
+    var msg = (d.msg || "").trim() || "Bonne journée !";
+    c.textAlign = "center"; c.fillStyle = "#ff9ecb"; c.font = "700 " + (msg.length <= 26 ? 110 : msg.length <= 44 ? 72 : 54) + "px " + F;
+    if (msg.length <= 44) c.fillText(msg, PN_W / 2, 890); else { c.textAlign = "left"; pnWrap(c, msg, 120, 840, PN_W - 240, 62, 2); }
+    c.textAlign = "left";
     pnStrokes(c, d.draw); if (extra) pnStrokes(c, [extra]);
     pnChalk(L); g.drawImage(L, 0, 0);
   }
@@ -4628,7 +4632,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       var f = el("div", "av-fld"); f.appendChild(el("div", "av-lbl", label)); var r = el("div", "rc-add"), i = document.createElement("input"); i.type = "number"; i.inputMode = "decimal"; i.step = "any"; i.className = "av-in"; i.value = d[key] != null ? d[key] : "";
       i.addEventListener("input", function () { d[key] = i.value === "" ? null : +i.value; d.manuel[key] = true; pnSave(); pnRedraw(); }); r.appendChild(i); r.appendChild(el("span", "rc-u", unit)); f.appendChild(r); mt.appendChild(f);
     }
-    num("temp", "Température 3000 m", "°C"); num("vent", "Vent", "km/h");
+    num("temp", "Température 3000 m", "°C");
     box.appendChild(mt);
     var au = d.auto, info = el("p", "rc-st", au ? "Lu sur glacier3000.ch à " + blHM(au.at) + " : " + (au.temp != null ? String(au.temp).replace(".", ",") + " °C" : "?") + (au.vent != null ? " · vent " + au.vent + " km/h" : "") + (au.aval ? " · danger " + au.aval : "") : "Mise à jour automatique tous les matins à 7 h (glacier3000.ch).");
     var rl = el("button", "pbtn", "↻ Relire la météo maintenant"); rl.type = "button";
@@ -4658,8 +4662,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     }
     var el2 = el("button", "pbtn pn-small", pnEditList ? "✓ Fini" : "✏ Modifier la liste"); el2.type = "button"; el2.addEventListener("click", function () { pnEditList = !pnEditList; renderPanneau(); }); pl.appendChild(el2);
     box.appendChild(pl);
-    var ms = document.createElement("textarea"); ms.className = "av-in"; ms.rows = 3; ms.placeholder = "Ex. Visibilité réduite au sommet · Restez sur les pistes balisées"; ms.value = d.msg || "";
-    ms.addEventListener("input", function () { d.msg = ms.value; pnSave(); pnRedraw(); }); avField(box, "Message du jour", ms);
+    var ms = document.createElement("textarea"); ms.className = "av-in"; ms.rows = 3; ms.placeholder = "Bonne journée !  (laisse vide pour « Bonne journée ! »)"; ms.value = d.msg || "";
+    ms.addEventListener("input", function () { d.msg = ms.value; pnSave(); pnRedraw(); }); avField(box, "Message en bas (court = plus grand)", ms);
     v.appendChild(box);
   }
   function pnRedraw() { var cv = document.querySelector(".pn-cv"); if (cv) pnRender(cv); }
