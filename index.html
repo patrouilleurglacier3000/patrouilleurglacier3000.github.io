@@ -917,6 +917,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .vx-row { display: flex; gap: 10px; margin-top: 12px; }
 .vx-row .pbtn { flex: 1; min-height: 58px; font-size: 18px; }
 .vx-row .pbtn.main { background: #2e9461; border-color: #2e9461; }
+.vx-tg { width: 100%; margin-top: 10px; min-height: 52px; font-size: 17px; }
 .vx-list { margin: 6px 0 4px; padding-left: 0; list-style: none; display: grid; gap: 6px; max-height: 46vh; overflow: auto; }
 .vx-list li { font: 700 17px var(--body); background: rgba(122,95,176,.1); border-left: 4px solid #7a5fb0; border-radius: 8px; padding: 8px 10px; }
 
@@ -986,7 +987,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794549118";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794557151";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -4028,7 +4029,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var t = vxN(raw), it = [], prio = "normal";
     if (/urgen/.test(t)) prio = "urgent"; else if (/attention|danger|mefi|prudence|faire gaffe|gaffe/.test(t)) prio = "attention";
     var z = vxZone(t)[0] || "";
-    var txt = raw.replace(/^\s*(cr[ée]e?[sz]?(-| )?(moi|nous)?|ajoute(-moi)?|fais(-moi)?|mets?(-moi)?|nouvelle)?\s*(une |un )?(note|t[âa]che)\s*(urgente?|attention|normale?)?\s*[:,.]?\s*/i, "").trim();
+    var txt = raw.replace(/^\s*(cr[ée]+e?[sz]?|r?ajoute[sz]?|fais|mets?|[ée]cris|note)?(-| )?(moi|nous)?\s*(une |un )?(nouvelle )?(note|t[âa]che)?\s*(urgente?|importante?|attention|normale?)?\s*[:,.]?\s*/i, "").trim();
     txt = txt.replace(/^(pour|de|d’|d'|qui dit|qui dit de|disant)\s*/i, "").trim();
     txt = txt.charAt(0).toUpperCase() + txt.slice(1);
     it.push(TK_TYPES.filter(function (x) { return x[0] === prio; })[0][1]);
@@ -4189,17 +4190,27 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       ta.addEventListener("input", function () { text = ta.value; });
       var row = el("div", "vx-row"), ok = el("button", "pbtn main", "✓ Terminé"), no = el("button", "pbtn", "Annuler"); ok.type = no.type = "button";
       no.addEventListener("click", vxClose);
-      ok.addEventListener("click", function () { try { if (vxRec) vxRec.stop(); } catch (e) {} vxRec = null; text = ta.value.trim(); if (!text) { ta.focus(); return; } if (where === "taches") { vxClose(); vxTache(text).create(); return; } review(); });
+      ok.addEventListener("click", function () { var rr = vxRec; vxRec = null; try { if (rr) rr.abort(); } catch (e) {} text = ta.value.trim(); if (!text) { ta.focus(); return; } if (where === "taches") { vxClose(); vxTache(text).create(); return; } review(); });
       row.appendChild(no); row.appendChild(ok); card.appendChild(row);
       if (!SR) { setTimeout(function () { ta.focus(); }, 50); return; }
-      var base = text ? text + " " : "";
-      try {
-        var r = new SR(); vxRec = r; r.lang = "fr-FR"; r.continuous = true; r.interimResults = true;
-        r.onresult = function (e) { var s = ""; for (var i = 0; i < e.results.length; i++) s += e.results[i][0].transcript; ta.value = base + s; text = ta.value; };
-        r.onerror = function (e) { if (e.error === "not-allowed" || e.error === "service-not-allowed") { card.firstChild.textContent = "🎤 Micro refusé : dicte avec le micro du clavier"; ta.focus(); } };
-        r.onend = function () { if (vxRec === r) { vxRec = null; card.firstChild.textContent = "Relis, corrige si besoin, puis « ✓ Terminé »"; } };
-        r.start();
-      } catch (e) { ta.focus(); }
+      // Écoute phrase par phrase, relancée toute seule après chaque pause : on peut parler en plusieurs fois.
+      // (On ne garde que le dernier résultat : sur Android, le navigateur répète sinon le début de la phrase.)
+      var on = true, tg = el("button", "pbtn vx-tg", "⏸ Pause"); tg.type = "button"; card.insertBefore(tg, row);
+      function setOn(v) { on = v; tg.textContent = v ? "⏸ Pause" : "🎤 Reprendre"; card.firstChild.textContent = v ? "🎤 Je t'écoute… parle quand tu veux" : "Pause · relis, corrige, ou « 🎤 Reprendre »"; if (v) start(); else { try { if (vxRec) vxRec.stop(); } catch (e) {} } }
+      tg.addEventListener("click", function () { setOn(!on); });
+      ta.addEventListener("focus", function () { if (on) setOn(false); });
+      function start() {
+        if (vxRec || !vxBox) return;
+        var base = ta.value.trim(), heard = "";
+        try {
+          var r = new SR(); vxRec = r; r.lang = "fr-FR"; r.continuous = false; r.interimResults = true;
+          r.onresult = function (e) { heard = e.results[e.results.length - 1][0].transcript.trim(); ta.value = (base ? base + " " : "") + heard; text = ta.value; };
+          r.onerror = function (e) { if (e.error === "not-allowed" || e.error === "service-not-allowed") { on = false; tg.remove(); card.firstChild.textContent = "🎤 Micro refusé : dicte avec le micro du clavier"; } };
+          r.onend = function () { if (vxRec === r) vxRec = null; text = ta.value; if (on && vxBox) setTimeout(start, 120); };
+          r.start();
+        } catch (e) { vxRec = null; }
+      }
+      start();
     }
     function review() {
       var p = where === "taches" ? vxTache(text) : where === "bilan" ? vxBilan(text) : vxAval(text);
