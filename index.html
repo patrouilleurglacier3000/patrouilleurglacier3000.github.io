@@ -1050,7 +1050,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794598696";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794598974";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2691,7 +2691,7 @@ body:has(#view.bl) { background: #fff; }
     row.appendChild(el("span", "bl-side", side === "F" ? "G" : "D")); col.appendChild(row);
     col.appendChild(blZoomCtl(svg, side));
     host.appendChild(col);
-    if (!sel.length) { host.appendChild(el("div", "bl-zl", "Toucher l'endroit sur le bonhomme (D = droite de la victime)")); return; }
+    if (!sel.length) { host.appendChild(el("div", "bl-zl", "D = droite de la victime")); return; }
     // une ligne par lésion : type + douleur
     var TY = ["Douleur", "Suspicion de fracture", "Déformation", "Plaie", "Entorse", "Contusion", "Luxation"];
     sel.forEach(function (id) {
@@ -3143,20 +3143,19 @@ body:has(#view.bl) { background: #fff; }
     blSeg(b, s1, "meca", "Suite à", ["Chute à ski", "Chute à pied", "Collision avec un skieur", "Collision avec un obstacle", "Avalanche", "Malaise", "Autre"], true);
     var K = blKind(f), malOnly = K.mal && !K.tr;
     if (malOnly) {
-      var ab2 = el("button", "bl-add", "＋ Il y a aussi une blessure (chute pendant le malaise)"); ab2.type = "button";
+      var ab2 = el("button", "bl-add", "＋ Blessure aussi"); ab2.type = "button";
       ab2.addEventListener("click", function () { b.f.malBl = true; blSave(b); blRefresh(); }); s1.appendChild(ab2);
     } else {
-    var dh = el("div", "bf-sub", "Douleurs et lésions · toucher le bonhomme"); dh.style.setProperty("--s", "#455a64"); s1.appendChild(dh);
+    var dh = el("div", "bf-sub", "Douleurs et lésions"); dh.style.setProperty("--s", "#455a64"); s1.appendChild(dh);
     blBody(b, s1);
     var pr = el("div", "bf-r t"); pr.appendChild(el("span", "bf-q", "Précision")); var pc = el("div", "bf-c"), px = document.createElement("input"); px.type = "text"; px.className = "bf-x"; px.placeholder = "Autre blessure, détail…"; px.value = f.plus || ""; px.setAttribute("aria-label", "Précision sur la plainte");
     px.addEventListener("input", function () { b.f.plus = px.value; blSave(b); }); pc.appendChild(px); pr.appendChild(pc); s1.appendChild(pr);
     }
     // 2. xABCDE : vert d'office
-    var s2 = blSec(v, N(), "xABCDE · toucher ce qui ne va pas", "#C62828");
+    var s2 = blSec(v, N(), "xABCDE", "#C62828");
     blSeg(b, s2, "cons", "Conscience", ["Conscient", "Inconscient"]);
     if (f.cons === "Inconscient" && ((f.abc || {}).D !== "bad" || f.n_pc !== "bad")) { b.f.abc = Object.assign({}, f.abc || {}, { D: "bad" }); b.f.n_pc = "bad"; blSave(b); f = b.f; }
     if (f.cons === "Inconscient") {
-      s2.appendChild(el("div", "bl-alert", "Inconscient : libérer les voies aériennes, regarder s'il respire (10 s). Ne respire pas : RCP + DAE. Respire : PLS."));
       blSeg(b, s2, "resp0", "Respire ?", ["Respire", "Ne respire pas"]);
     }
     var abc = blAbc(b), line = el("div", "bl-abc");
@@ -3168,7 +3167,6 @@ body:has(#view.bl) { background: #fff; }
       line.appendChild(bt);
     });
     s2.appendChild(line);
-    var lg = el("div", "bl-abclg"); BL_ABC.forEach(function (it) { var r = el("div", abc[it.L] === "bad" ? "bad" : ""); r.appendChild(el("b", null, it.L)); r.appendChild(el("span", null, it.en + " · " + it.q.toLowerCase())); lg.appendChild(r); }); s2.appendChild(lg);
     var bads = BL_ABC.filter(function (x) { return abc[x.L] === "bad"; });
     if (bads.length) s2.appendChild(el("div", "bl-badl", bads.map(function (x) { return x.L + " : " + x.bad; }).join(" · ")));
     if (abc.x === "bad") blStamp(b, s2, "garrot", "Garrot");
@@ -3189,7 +3187,6 @@ body:has(#view.bl) { background: #fff; }
       blSeg(b, sm, "fa_b", "Bras tendus", ["Tiennent", "Un bras tombe"]);
       blSeg(b, sm, "fa_p", "Parole", ["Normale", "Troublée"]);
       if (f.fa_v === "De travers" || f.fa_b === "Un bras tombe" || f.fa_p === "Troublée") {
-        sm.appendChild(el("div", "bl-alert", "AVC possible : chaque minute compte. Noter l'heure où les signes ont commencé."));
         blTime(b, sm, "fa_t", "Début des signes");
       }
       if ([].concat(f.m_sig || []).indexOf("Douleur dans la poitrine") >= 0) {
@@ -3212,8 +3209,7 @@ body:has(#view.bl) { background: #fff; }
     }
     // Trauma : les points à vérifier
     if (K.tr) {
-      var st = blSec(v, N(), "Trauma · toucher ce qu'on trouve", "#d63a3a"); st.classList.add("stack");
-      st.appendChild(el("div", "bl-tip", "Rien de touché = rien d'anormal."));
+      var st = blSec(v, N(), "Trauma", "#d63a3a"); st.classList.add("stack");
       BL_TR.forEach(function (t) { blSeg(b, st, t.id, t.q, t.o, true); });
     }
     // Gestes faits
@@ -3242,7 +3238,7 @@ body:has(#view.bl) { background: #fff; }
     BL_NEURO.forEach(function (n) {
       var bad = f[n.id] === "bad", bt = el("button", "bl-chk" + (bad ? " bad" : ""), (bad ? "! " : "✓ ") + (bad ? n.bad : n.ok)); bt.type = "button";
       bt.addEventListener("click", function () { b.f[n.id] = bad ? null : "bad"; if (bad) b.f[n.id + "_m"] = []; blSave(b); blRefresh(); }); ng.appendChild(bt);
-      if (bad && n.limbs) { var lw = el("div", "bl-limbs"); lw.appendChild(el("div", "bf-q", (n.id === "n_mot" ? "Motricité" : "Sensibilité") + " : toucher le ou les membres atteints")); lw.appendChild(blLimbFig(b, n.id + "_m")); var lm = (b.f[n.id + "_m"] || []); lw.appendChild(el("div", "bl-zl" + (lm.length ? " on" : ""), lm.length ? lm.join(" · ") : "Aucun membre choisi")); ng.appendChild(lw); }
+      if (bad && n.limbs) { var lw = el("div", "bl-limbs"); lw.appendChild(el("div", "bf-q", (n.id === "n_mot" ? "Motricité" : "Sensibilité") + "")); lw.appendChild(blLimbFig(b, n.id + "_m")); var lm = (b.f[n.id + "_m"] || []); lw.appendChild(el("div", "bl-zl" + (lm.length ? " on" : ""), lm.length ? lm.join(" · ") : "Aucun membre choisi")); ng.appendChild(lw); }
     });
     s3.appendChild(ng);
     // 4. MHTA (déjà dans la fiche malaise)
