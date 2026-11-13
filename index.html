@@ -854,6 +854,9 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .av-pin.top { background: #b00000; } .av-pin.bot { background: #1d2b36; }
 .av-h { font: 800 20px var(--head, var(--body)); margin: 4px 0 0; }
 .av-h3 { font: 800 17px var(--body); margin: 6px 0 8px; }
+.av-save { margin: 18px 0 8px; padding: 14px; border: 2px dashed #b8c4d0; border-radius: 14px; }
+.av-save b { display: block; font-size: 17px; }
+.av-save span { display: block; font-size: 15px; color: #555; margin-top: 4px; }
 .av-new { width: 100%; font-size: 19px !important; padding: 16px !important; background: #7a5fb0 !important; border-color: #7a5fb0 !important; }
 .av-per { margin-top: 10px; }
 .av-ch button { font-size: 16px; padding: 11px 15px; min-height: 46px; }
@@ -1021,7 +1024,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794576159";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794577267";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1310,7 +1313,6 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     g.appendChild(bigTile("tasks", "#6b4fbb", "Tâches équipe", tkOpenN.length ? (tkAtt ? "⚠ " + tkAtt + " attention · " : "") + (tkOpenN.length - tkAtt) + " à faire" + (tkUrg ? " · dont " + tkUrg + " urgente" + (tkUrg > 1 ? "s" : "") : "") : "Rien à faire pour l'instant", function () { goArea("taches"); }));
     var avT = (data.avalanches || []).filter(function (a) { return a.at >= avDayStart(Date.now()); }).length, avS = (data.avalanches || []).filter(function (a) { return a.at >= avSeasonStart(); }).length;
     g.appendChild(bigTile("aval", AV_C, "Avalanches", avT ? avT + " notée" + (avT > 1 ? "s" : "") + " aujourd'hui · " + avS + " cette saison" : "Carte 3D · dessine la coulée" + (avS ? " · " + avS + " cette saison" : ""), function () { avEdit = null; avView = null; goArea("aval"); }));
-    g.appendChild(bigTile("signal", RC_C, "RECCO", rcHomeSub(), function () { rcDrawer = false; rcFull = false; goArea("recco"); }));
     g.appendChild(bigTile("board", PN_C, "Panneau d'information", pnHomeSub(), function () { pnDraw = false; pnFull = false; pnCur = null; goArea("panneau"); }));
     // Lien vers le logiciel WAC.3 de Wyssen (ouvert à part, chacun se connecte avec son propre compte)
     g.appendChild(bigTile("ext", "#1f4e79", "WAC.3 · Wyssen", "Ouvre le site Wyssen · connexion avec ton compte", function () { var a = document.createElement("a"); a.href = "https://control.wyssenavalanche.com"; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove(); }));
@@ -3952,6 +3954,63 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (f.rem) L.push(f.rem);
     return L.join("\n");
   }
+  // Texte dans l'ordre du manuel d'observation SLF (§ 2.6), à coller dans leur formulaire
+  function avSlf(a) {
+    var m = a.m || {}, f = a.f || {}, d = new Date(a.at), L = [];
+    function z(n) { return (n < 10 ? "0" : "") + n; }
+    L.push("Lieu : Les Diablerets, Glacier 3000" + (f.piste && f.piste.length ? ", " + f.piste.join(", ") : ""));
+    L.push("Date / heure : " + z(d.getDate()) + "." + z(d.getMonth() + 1) + "." + d.getFullYear() + " " + blHM(a.at) + " (heure de l'observation)");
+    if (m.zTop) L.push("Altitude zone de départ : " + m.zTop + " m");
+    if (m.aspect != null && m.zTop) L.push("Exposition : " + avExpo(m.aspect));
+    if (f.size) L.push("Taille : " + f.size + " (échelle 1 à 5)");
+    var ty = { plaque: "avalanche de plaque (rupture linéaire)", meuble: "avalanche de neige sans cohésion (départ ponctuel)", glisse: "avalanche de glissement" }[f.type];
+    if (ty) L.push("Type : " + ty);
+    var hu = { seche: "sèche", humide: "mouillée" }[f.hum]; if (hu) L.push("Humidité de la neige : " + hu);
+    var tr = { naturel: "spontané", minage: "artificiel (minage)", personne: "par des personnes" }[f.trig]; if (tr) L.push("Déclenchement : " + tr);
+    if (m.e) L.push("Coordonnées (haut de la zone de départ) : " + m.e + " / " + m.n + " (LV95) · " + avWgs(m.top[1], m.top[0]));
+    if (m.slope) L.push("Inclinaison : " + (m.slopeMax || m.slope) + "° au plus raide, " + m.slope + "° en moyenne");
+    if (m.wid) L.push("Largeur moyenne : env. " + m.wid + " m (mesurée sur le dessin)");
+    if (m.len) L.push("Longueur : " + m.len + " m (de " + m.zTop + " à " + m.zBot + " m)");
+    if (f.pers) L.push("Personnes touchées : " + avLbl(AV_PERS, f.pers).toLowerCase());
+    if (a.photos && a.photos.length) L.push("Photos : " + a.photos.length + " (à joindre)");
+    if (f.rem) L.push("Remarques : " + f.rem);
+    return L.join("\n");
+  }
+  function avCopy(t, ok) { (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { showStatus(ok); }, function () { showStatus("Copie impossible sur ce téléphone.", true); }); }
+  // Sauvegarde de tout l'historique dans des formats standards (lisibles par d'autres logiciels)
+  function avFile(name, text, type) {
+    var bl = new Blob([text], { type: type }), fl = null;
+    try { fl = new File([bl], name, { type: type }); } catch (e) {}
+    if (fl && navigator.canShare && navigator.canShare({ files: [fl] })) return navigator.share({ files: [fl], title: name }).catch(function () {});
+    var u = URL.createObjectURL(bl), ln = document.createElement("a"); ln.href = u; ln.download = name; document.body.appendChild(ln); ln.click(); ln.remove();
+    setTimeout(function () { URL.revokeObjectURL(u); }, 5000);
+    showStatus("Fichier " + name + " enregistré dans Téléchargements");
+  }
+  function avStamp() { var t = new Date(); return t.getFullYear() + (t.getMonth() < 9 ? "-0" : "-") + (t.getMonth() + 1) + (t.getDate() < 10 ? "-0" : "-") + t.getDate(); }
+  function avRow(a) {
+    var m = a.m || {}, f = a.f || {};
+    return {
+      id: a.id, date: (function (d) { return (d.getDate() < 10 ? "0" : "") + d.getDate() + "." + (d.getMonth() < 9 ? "0" : "") + (d.getMonth() + 1) + "." + d.getFullYear(); })(new Date(a.at)), heure: blHM(a.at), date_iso: new Date(a.at).toISOString(), lieu: "Glacier 3000", secteurs: (f.piste || []).join(" / "),
+      type: avLbl(AV_TYPES, f.type), humidite: avLbl(AV_HUM, f.hum), declenchement: avLbl(AV_TRIG, f.trig), taille: f.size || "",
+      personnes_prises: avLbl(AV_PERS, f.pers), altitude_depart_m: m.zTop || "", altitude_arret_m: m.zBot || "", denivele_m: m.dz || "",
+      exposition: m.zTop ? avExpo(m.aspect) : "", exposition_deg: m.aspect != null ? m.aspect : "", pente_moy_deg: m.slope || "", pente_max_deg: m.slopeMax || "",
+      longueur_m: m.len || "", largeur_moy_m: m.wid || "", surface_reelle_m2: m.area3d || "", surface_plan_m2: m.area2d || "",
+      depart_lv95_e: m.e || "", depart_lv95_n: m.n || "", depart_lat: m.top ? m.top[1] : "", depart_lon: m.top ? m.top[0] : "",
+      arret_lat: m.bot ? m.bot[1] : "", arret_lon: m.bot ? m.bot[0] : "", nb_photos: (a.photos || []).length, observateur: f.obs || "", remarques: f.rem || ""
+    };
+  }
+  function avGeoJson() {
+    var F = avList().filter(function (a) { return a.poly && a.poly.length >= 3; }).map(function (a) {
+      return { type: "Feature", properties: avRow(a), geometry: { type: "Polygon", coordinates: [a.poly.concat([a.poly[0]])] } };
+    });
+    avFile("avalanches-glacier3000-" + avStamp() + ".geojson", JSON.stringify({ type: "FeatureCollection", name: "Avalanches Glacier 3000", features: F }, null, 1), "application/geo+json");
+  }
+  function avCsv() {
+    var R = avList().map(avRow); if (!R.length) return;
+    var K = Object.keys(R[0]); function q(v) { v = String(v); return /[;"\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+    var t = "\ufeff" + [K.join(";")].concat(R.map(function (r) { return K.map(function (k) { return q(r[k]); }).join(";"); })).join("\r\n");
+    avFile("avalanches-glacier3000-" + avStamp() + ".csv", t, "text/csv");
+  }
   function avSave() {
     var a = avEdit; if (!a.poly || !a.m) return;
     try { localStorage.setItem("stock-pistes-avobs", a.f.obs || ""); } catch (e) {}
@@ -4029,7 +4088,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       }
       var r2 = el("div", "av-acts");
       function ab(t, cls, fn) { var b = el("button", "pbtn " + (cls || ""), t); b.type = "button"; b.addEventListener("click", fn); r2.appendChild(b); return b; }
-      ab("📋 Copier le texte", "", function () { var t = avText(x); (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { showStatus("Texte copié : colle-le dans un message"); }, function () { showStatus("Copie impossible sur ce téléphone.", true); }); });
+      ab("❄ Copier pour SLF", "", function () { avCopy(avSlf(x), "Copié dans l'ordre du formulaire SLF : colle-le chez eux"); });
+      ab("📋 Copier le texte", "", function () { avCopy(avText(x), "Texte copié : colle-le dans un message"); });
       ab("✏ Modifier", "", function () { avEdit = JSON.parse(JSON.stringify(x)); avEdit.f.piste = avEdit.f.piste || []; avEdit.step = "map"; avDraw = false; avSel = null; renderAval(); goTop(); });
       if ((x.photos || []).length < 4) ab("📷 Photo", "", function () { tkPickPhoto(function (fl) { avPhoto(x.id, fl); }); });
       if ((x.photos || []).length) ab(avPhDel ? "Touche la photo à retirer" : "Retirer une photo", "", function () { avPhDel = avPhDel ? null : "arm"; renderAval(); });
@@ -4057,6 +4117,15 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       b.addEventListener("click", function () { avView = a.id; avDel = null; renderAval(); goTop(); });
       v.appendChild(b);
     });
+    if ((data.avalanches || []).length) {
+      var nT = data.avalanches.length, sv = el("div", "av-save");
+      sv.appendChild(el("b", null, "💾 Sauvegarder tout l'historique (" + nT + " avalanche" + (nT > 1 ? "s" : "") + ")"));
+      sv.appendChild(el("span", null, "Fichiers standards pour garder tes données, même si un jour vous changez d'application."));
+      var r3 = el("div", "av-acts");
+      var b1 = el("button", "pbtn", "🗺 Carte · GeoJSON"); b1.type = "button"; b1.addEventListener("click", avGeoJson); r3.appendChild(b1);
+      var b2 = el("button", "pbtn", "📊 Tableau · Excel (CSV)"); b2.type = "button"; b2.addEventListener("click", avCsv); r3.appendChild(b2);
+      sv.appendChild(r3); v.appendChild(sv);
+    }
     var all = []; L.forEach(function (a) { all = all.concat(a.poly); });
     var fk = "l" + avChip + avSect;
     if (avChip && all.length) avFitOnce(fk, all); else avFitKey = avFitKey || fk;
