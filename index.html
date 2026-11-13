@@ -332,6 +332,16 @@ textarea.copy { width: 100%; min-height: 120px; font: 15px var(--body); border: 
 .tk-add textarea:focus { outline: none; }
 .tk-add .pbtn.main { background: #6b4fbb; border-color: #6b4fbb; }
 .tk-list { gap: 12px; }
+.tk.att { box-shadow: 0 0 0 2px #e08a00, 0 2px 8px rgba(224, 138, 0, .25); background: #fff7e8; }
+.tag2.at { background: #e08a00; color: #fff; }
+.tk-phs { grid-column: 1 / -1; display: flex; gap: 8px; padding: 0 14px 12px 55px; flex-wrap: wrap; }
+.tk-phs.del { padding: 10px 0 0; }
+.tk-ph { position: relative; width: 84px; height: 84px; border: 0; padding: 0; border-radius: 10px; overflow: hidden; background: var(--bg); cursor: pointer; }
+.tk-ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tk-ph .x { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(214, 58, 58, .55); color: #fff; font: 800 26px var(--body); }
+.tk-types { display: flex; gap: 6px; flex-wrap: wrap; }
+.tk-types button { border: 2px solid var(--tc); background: var(--paper); color: var(--tc); font: 800 15px var(--body); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
+.tk-types button[aria-pressed="true"] { background: var(--tc); color: #fff; }
 .tk { background: var(--paper); border: 0; border-radius: 14px; box-shadow: 0 0 0 1px var(--line), 0 2px 6px rgba(20, 40, 60, .07); grid-template-columns: 5px 48px minmax(0, 1fr); }
 .tk .bd { padding: 14px 14px 14px 2px; }
 .tk .tx { font-size: 16.5px; font-weight: 600; }
@@ -533,6 +543,9 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 #view.chalk .tk.done .tx { text-decoration: line-through; color: var(--muted); }
 #view.chalk .tag2 { font: 700 11px var(--body); padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); background: none; color: var(--muted); }
 #view.chalk .tag2.p { background: var(--red); border-color: var(--red); color: #fff; }
+#view.chalk .tk.att { border: 2px solid #e08a00; border-left: 8px solid #e08a00; background: linear-gradient(90deg, #fff1d6, var(--paper) 70%); }
+#view.chalk .tag2.at { background: #e08a00; border-color: #e08a00; color: #fff; }
+#view.chalk .tk-phs { padding: 0 12px 12px 44px; }
 #view.chalk .tk-add { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; }
 #view.chalk .tk-add .pbtn.main { background: var(--accent); border-color: var(--accent); color: #fff; }
 #view.chalk .tk-sel { background: var(--paper); color: var(--ink); }
@@ -830,7 +843,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794513738";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794532256";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -948,7 +961,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       if (!t.id) t.id = "t" + Date.now().toString(36);
       var o = byId(data.taches, t.id);
       if (o) { o.text = String(t.text).trim(); o.zone = t.zone || "Tableau"; o.prio = t.prio || "normal"; }
-      else (data.taches = data.taches || []).push({ id: t.id, text: String(t.text).trim(), zone: t.zone || "Tableau", prio: t.prio || "normal", state: "afaire", by: "", doneBy: "", doneAt: 0, createdBy: "", created: Date.now(), mat: null });
+      else (data.taches = data.taches || []).push({ id: t.id, text: String(t.text).trim(), zone: t.zone || "Tableau", prio: t.prio || "normal", state: "afaire", by: "", doneBy: "", doneAt: 0, createdBy: "", created: Date.now(), mat: null, photos: [] });
     },
     terminerTache: function (id, p, sortir) { var t = byId(data.taches, id); if (!t || (sortir && t.mat)) return false; t.state = "fait"; t.doneBy = p || ""; t.doneAt = Date.now(); },
     rouvrirTache: function (id) { var t = byId(data.taches, id); if (!t) return false; t.state = "afaire"; t.by = ""; t.doneBy = ""; t.doneAt = 0; },
@@ -1094,10 +1107,10 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var openCmd = (data.orders || []).filter(function (o) { return o.status !== "livree"; }).length;
     var subS = openCmd ? openCmd + " transfert" + (openCmd > 1 ? "s" : "") + " à monter" : data.stock.length + " articles · " + data.lieux.length + " locaux";
     var nx = nextEvents(1)[0], pj = data.planjour;
-    var tkOpenN = (data.taches || []).filter(function (t) { return t.state !== "fait"; }), tkUrg = tkOpenN.filter(function (t) { return t.prio === "urgent"; }).length;
+    var tkOpenN = (data.taches || []).filter(function (t) { return t.state !== "fait"; }), tkUrg = tkOpenN.filter(function (t) { return t.prio === "urgent"; }).length, tkAtt = tkOpenN.filter(function (t) { return t.prio === "attention"; }).length;
     var blMine = blLoad(), blAll = blList().filter(function (x) { return (!blMine || x.id !== blMine.id) && x.b && x.b.v === 3; }), blN = blAll.filter(function (x) { return !x.b.done; }).length;
     g.appendChild(bigTile("cross", "#C62828", "Bilan victime", blMine ? "En cours depuis " + blHM(blMine.start) : blN ? blN + " bilan" + (blN > 1 ? "s" : "") + " en cours" : blAll.length ? blAll.length + " fiche" + (blAll.length > 1 ? "s" : "") + " · dernière à " + blHM(blAll[0].start) : "Fiche bilan · message radio", function () { blViewId = null; blEdit = false; blRev = null; goArea("bilan"); }));
-    g.appendChild(bigTile("tasks", "#6b4fbb", "Tâches équipe", tkOpenN.length ? tkOpenN.length + " à faire" + (tkUrg ? " · dont " + tkUrg + " urgente" + (tkUrg > 1 ? "s" : "") : "") : "Rien à faire pour l'instant", function () { goArea("taches"); }));
+    g.appendChild(bigTile("tasks", "#6b4fbb", "Tâches équipe", tkOpenN.length ? (tkAtt ? "⚠ " + tkAtt + " attention · " : "") + (tkOpenN.length - tkAtt) + " à faire" + (tkUrg ? " · dont " + tkUrg + " urgente" + (tkUrg > 1 ? "s" : "") : "") : "Rien à faire pour l'instant", function () { goArea("taches"); }));
     g.appendChild(bigTile("box", "#d63a3a", "Stock matériel", subS, function () { goArea("stock"); }));
     g.appendChild(bigTile("cal", "#0e8a9a", "Agenda", nx ? "Prochain : " + nx.title + " · " + dayShort(nx.date) + (nx.start ? " " + nx.start : "") : "Rien de prévu pour l'instant", function () { goArea("plan"); }));
     g.appendChild(bigTile("team", "#2e9461", "Planning", pj && pj.pages && pj.pages.length ? "Qui travaille · mis à jour le " + shortDate(pj.updated) : "Qui travaille · pas encore de planning", function () { goArea("presence"); }));
@@ -1235,7 +1248,17 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   /* ---------- Tâches équipe : un tableau blanc partagé ---------- */
   // Une ligne = une tâche. Une case pour « fait », un bouton « Urgent ». Rien d'autre.
   var TK_KEEP = 3 * 864e5; // une tâche faite reste visible (barrée) 3 jours, puis disparaît
-  var tkEdit = null, tkOpen = null, tkConfirm = null, tkDel = null, tkTimer = null, tkDraft = "", tkUrgent = false, tkSect = "", tkNewSect = "";
+  var tkEdit = null, tkOpen = null, tkConfirm = null, tkDel = null, tkTimer = null, tkDraft = "", tkUrgent = false, tkPrio = "normal", tkFile = null, tkSect = "", tkNewSect = "", tkPhDel = null;
+  // Trois sortes de notes : ⚠ Attention (à savoir en passant quelque part), Urgent, Normal
+  var TK_TYPES = [["attention", "⚠ Attention", "#e08a00"], ["urgent", "Urgent", "#d63a3a"], ["normal", "Normal", "#9aa8b4"]];
+  function tkType(t) { return t.prio === "attention" ? TK_TYPES[0] : t.prio === "urgent" ? TK_TYPES[1] : TK_TYPES[2]; }
+  function tkRank(t) { return t.prio === "attention" ? 0 : t.prio === "urgent" ? 1 : 2; }
+  function tkPhoto(id, file) { // photo réduite sur le téléphone avant l'envoi (environ 200 Ko)
+    showStatus("Envoi de la photo…", false, true);
+    return syncChain.then(function () { return shrink(file); }).then(function (u) { return act("ajouterPhotoTache", [id, u], "Photo ajoutée"); })
+      .catch(function (er) { if (er && /Format/.test(er.message)) showStatus(er.message.replace(/^Error:\s*/, ""), true); });
+  }
+  function tkPickPhoto(cb) { var inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; inp.addEventListener("change", function () { if (inp.files && inp.files[0]) cb(inp.files[0]); }); inp.click(); }
   var TK_NONE = "Général";
   // Secteurs des tâches (on les change ici, dans l'appli)
   var TK_ZONES = ["Glacier", "Audon", "Red Run", "Martisberg", "Black Wall", "Autres"];
@@ -1250,8 +1273,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   function tkDisarm() { clearTimeout(tkTimer); tkConfirm = null; tkDel = null; }
   function tkSave(t, msg) { return act("enregistrerTache", [{ id: t.id, text: t.text, zone: t.zone || "Tableau", prio: t.prio, mat: null }], msg); }
   function tkRow(t) {
-    var done = t.state === "fait", urg = t.prio === "urgent";
-    var row = el("div", "tk" + (done ? " done" : urg ? " urg" : "")); row.style.setProperty("--pc", urg ? "#d63a3a" : "#9aa8b4");
+    var done = t.state === "fait", urg = t.prio === "urgent", att = t.prio === "attention", ph = t.photos || [];
+    var row = el("div", "tk" + (done ? " done" : urg ? " urg" : att ? " att" : "")); row.style.setProperty("--pc", tkType(t)[2]);
     row.appendChild(el("span", "bar"));
     var ck = el("button", "ck"); ck.type = "button"; ck.setAttribute("aria-label", done ? "Tâche faite" : "Marquer comme fait");
     var mark = tkDel === t.id ? "✕" : (done || tkConfirm === t.id) ? "✓" : "";
@@ -1266,6 +1289,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     bd.appendChild(el("div", "tx", t.text));
     var tg = el("div", "tags");
     if (urg && !done) tg.appendChild(el("span", "tag2 p", "Urgent"));
+    if (att && !done) tg.appendChild(el("span", "tag2 at", "⚠ Attention"));
+    if (ph.length) tg.appendChild(el("span", "tag2", "📷 " + ph.length));
     if (done) tg.appendChild(el("span", "tag2 ok", "Fait le " + tkDate(t.doneAt)));
     if (!tkSect && tkZoneOf(t) !== TK_NONE) tg.appendChild(el("span", "tag2", tkZoneOf(t)));
     if (!done && t.created) {
@@ -1273,13 +1298,23 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       tg.appendChild(el("span", "tag2" + (days >= 7 ? " old" : ""), days <= 0 ? "aujourd'hui" : days === 1 ? "hier" : "il y a " + days + " j"));
     }
     if (tg.childNodes.length) bd.appendChild(tg);
-    bd.addEventListener("click", function () { tkDisarm(); tkOpen = tkOpen === t.id ? null : t.id; tkEdit = null; renderTaches(); });
+    bd.addEventListener("click", function () { tkDisarm(); tkOpen = tkOpen === t.id ? null : t.id; tkEdit = null; tkPhDel = null; renderTaches(); });
     row.appendChild(bd);
+    if (ph.length && !done) { // les photos se voient tout de suite, sans ouvrir la note
+      var pr = el("div", "tk-phs");
+      ph.forEach(function (pid, i) {
+        var pb = el("button", "tk-ph"); pb.type = "button"; pb.setAttribute("aria-label", "Agrandir la photo");
+        var im = document.createElement("img"); im.src = photoUrl(pid); im.alt = ""; im.loading = "lazy"; pb.appendChild(im);
+        pb.addEventListener("click", function (e) { e.stopPropagation(); photoIdx[t.id] = i; lightbox({ id: t.id, title: t.text, photos: ph }); });
+        pr.appendChild(pb);
+      });
+      row.appendChild(pr);
+    }
     if (tkConfirm === t.id) {
       var cf = el("div", "conf"), r = el("div", "row");
-      cf.appendChild(el("b", null, "Cette tâche est terminée ?"));
-      var yes = el("button", "pbtn main", "✓ Oui, c'est fait"); yes.type = "button"; yes.style.cssText = "background:#2e9461;border-color:#2e9461";
-      yes.addEventListener("click", function () { tkDisarm(); act("terminerTache", [t.id, "", false], "Bien joué !"); });
+      cf.appendChild(el("b", null, att ? "Ce n'est plus d'actualité ?" : "Cette tâche est terminée ?"));
+      var yes = el("button", "pbtn main", att ? "✓ Oui, retirer" : "✓ Oui, c'est fait"); yes.type = "button"; yes.style.cssText = "background:#2e9461;border-color:#2e9461";
+      yes.addEventListener("click", function () { tkDisarm(); act("terminerTache", [t.id, "", false], att ? "Retirée" : "Bien joué !"); });
       var no = el("button", "pbtn", "Non, annuler"); no.type = "button"; no.addEventListener("click", function () { tkDisarm(); renderTaches(); });
       r.appendChild(yes); r.appendChild(no); cf.appendChild(r); row.appendChild(cf);
     } else if (tkOpen === t.id && tkEdit && tkEdit.id === t.id) {
@@ -1294,10 +1329,16 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       var op = el("div", "opts"), r3 = el("div", "row");
       if (done) { var re = el("button", "pbtn", "Remettre à faire"); re.type = "button"; re.addEventListener("click", function () { tkOpen = null; act("rouvrirTache", [t.id], "Remise à faire"); }); r3.appendChild(re); }
       else {
-        var ub = el("button", "pbtn", urg ? "Retirer « urgent »" : "Rendre urgent"); ub.type = "button";
-        ub.addEventListener("click", function () { tkSave({ id: t.id, text: t.text, zone: t.zone, prio: urg ? "normal" : "urgent" }, urg ? "Plus urgent" : "Marquée urgente"); });
+        var ts = document.createElement("select"); ts.className = "tk-sel"; ts.setAttribute("aria-label", "Sorte de note");
+        TK_TYPES.forEach(function (ty) { var o = el("option", null, ty[1]); o.value = ty[0]; if (ty[0] === tkType(t)[0]) o.selected = true; ts.appendChild(o); });
+        ts.addEventListener("change", function () { tkSave({ id: t.id, text: t.text, zone: t.zone, prio: ts.value }, ts.value === "attention" ? "Mise en ⚠ Attention" : ts.value === "urgent" ? "Marquée urgente" : "Normale"); });
         var ed = el("button", "pbtn", "Modifier"); ed.type = "button"; ed.addEventListener("click", function () { tkEdit = { id: t.id, text: t.text, zone: t.zone, prio: t.prio }; renderTaches(); });
-        r3.appendChild(ub); r3.appendChild(ed);
+        r3.appendChild(ts); r3.appendChild(ed);
+        if (ph.length < 3) { var pa = el("button", "pbtn", "📷 Ajouter une photo"); pa.type = "button"; pa.addEventListener("click", function () { tkPickPhoto(function (f) { tkPhoto(t.id, f); }); }); r3.appendChild(pa); }
+        if (ph.length) {
+          var pdl = el("button", "pbtn", tkPhDel === t.id ? "Choisis la photo à retirer ↓" : "Retirer une photo"); pdl.type = "button";
+          pdl.addEventListener("click", function () { tkPhDel = tkPhDel === t.id ? null : t.id; renderTaches(); }); r3.appendChild(pdl);
+        }
         var zs = document.createElement("select"); zs.className = "tk-sel"; zs.setAttribute("aria-label", "Secteur");
         ((TK_ZONES).indexOf("Autres") >= 0 ? TK_ZONES : [TK_NONE].concat(TK_ZONES)).forEach(function (z) { var o = el("option", null, z === TK_NONE ? "Sans secteur" : "📍 " + z); o.value = z; if (z === tkZoneOf(t)) o.selected = true; zs.appendChild(o); });
         zs.addEventListener("change", function () { tkSave({ id: t.id, text: t.text, zone: zs.value, prio: t.prio }, "Secteur changé"); });
@@ -1314,7 +1355,18 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       }
       var del = el("button", "pbtn dang", "Supprimer"); del.type = "button";
       del.addEventListener("click", function () { tkArm("del", t.id); renderTaches(); });
-      r3.appendChild(del); op.appendChild(r3); row.appendChild(op);
+      r3.appendChild(del); op.appendChild(r3);
+      if (tkPhDel === t.id && ph.length) {
+        var pw = el("div", "tk-phs del");
+        ph.forEach(function (pid) {
+          var pb = el("button", "tk-ph"); pb.type = "button"; pb.setAttribute("aria-label", "Retirer cette photo");
+          var im = document.createElement("img"); im.src = photoUrl(pid); im.alt = ""; pb.appendChild(im); pb.appendChild(el("span", "x", "✕"));
+          pb.addEventListener("click", function () { if (twoStep(pb, "Retirer ?")) { tkPhDel = null; act("retirerPhotoTache", [t.id, pid], "Photo retirée").catch(function () {}); } });
+          pw.appendChild(pb);
+        });
+        op.appendChild(pw);
+      }
+      row.appendChild(op);
     }
     return row;
   }
@@ -1412,9 +1464,9 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var done = t.state === "fait", node = tkRow(t);
     if (!done) { var gp = el("span", "grip"); gp.innerHTML = GRIP; gp.setAttribute("aria-hidden", "true"); var bd = node.querySelector(".bd"); node.insertBefore(gp, bd.nextSibling); node.classList.add("hasgrip"); }
     return swipeable(node, {
-      right: done ? null : function () { tkOpen = null; tkDisarm(); act("terminerTache", [t.id, "", false], "Bien joué !"); }, rightLabel: "✓ C'est fait",
+      right: done ? null : function () { tkOpen = null; tkDisarm(); act("terminerTache", [t.id, "", false], t.prio === "attention" ? "Retirée" : "Bien joué !"); }, rightLabel: t.prio === "attention" ? "✓ Plus d'actualité" : "✓ C'est fait",
       left: function () { tkOpen = null; tkDisarm(); act("supprimerTache", [t.id], "Supprimée"); }, leftLabel: "Supprimer",
-      move: !done, id: t.id, prio: t.prio === "urgent" ? "urgent" : "normal", key: tkKey(t), drop: function (w) { tkSaveOrder(w.parentNode, w.dataset.prio); } });
+      move: !done, id: t.id, prio: tkType(t)[0], key: tkKey(t), drop: function (w) { tkSaveOrder(w.parentNode, w.dataset.prio); } });
   }
   function tkZoneOf(t) {
     var z = TK_ZONES;
@@ -1430,19 +1482,19 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     // onglets : Tout + un par secteur
     var tabs = el("div", "tk-tabs");
     [""].concat(zones).forEach(function (z) {
-      var open = every.filter(function (t) { return t.state !== "fait" && (!z || tkZoneOf(t) === z); }), u = open.filter(function (t) { return t.prio === "urgent"; }).length;
+      var open = every.filter(function (t) { return t.state !== "fait" && (!z || tkZoneOf(t) === z); }), u = open.filter(function (t) { return t.prio === "urgent" || t.prio === "attention"; }).length;
       var b = el("button", null, z || "Tout"); b.type = "button"; b.setAttribute("aria-pressed", tkSect === z ? "true" : "false");
       if (open.length) { var c = el("span", "c" + (u ? " u" : ""), String(open.length)); b.appendChild(c); }
       b.addEventListener("click", function () { tkSect = z; tkOpen = null; tkEdit = null; tkDisarm(); try { localStorage.setItem("stock-pistes-tksect", z); } catch (e) {} renderTaches(); });
       tabs.appendChild(b);
     });
-    v.appendChild(tabs); keepStrip(tabs, "tk");
+    v.appendChild(tabs); keepStrip(tabs, "tk"); tkExBanner(v);
     var all = every.filter(function (t) { return !tkSect || tkZoneOf(t) === tkSect; });
-    var todo = all.filter(function (t) { return t.state !== "fait"; }).sort(function (a, b) { return (a.prio !== "urgent") - (b.prio !== "urgent") || tkKey(a) - tkKey(b); });
+    var todo = all.filter(function (t) { return t.state !== "fait"; }).sort(function (a, b) { return tkRank(a) - tkRank(b) || tkKey(a) - tkKey(b); });
     var done = all.filter(function (t) { return t.state === "fait" && Date.now() - t.doneAt < TK_KEEP; }).sort(function (a, b) { return b.doneAt - a.doneAt; });
     // ajouter : un bouton qui s'ouvre en petite fiche (Entrée = retour à la ligne)
     if (!tkAddOpen && !tkDraft) {
-      var ob = el("button", "tk-openadd", "+ Ajouter une tâche" + (tkSect ? " sur " + tkSect : "")); ob.type = "button";
+      var ob = el("button", "tk-openadd", "+ Ajouter une note" + (tkSect ? " sur " + tkSect : "")); ob.type = "button";
       ob.addEventListener("click", function () { tkAddOpen = true; renderTaches(); var x = $("tk-new"); if (x) x.focus(); });
       v.appendChild(ob);
     } else {
@@ -1451,25 +1503,30 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var grow = function () { ta.style.height = "auto"; ta.style.height = ta.scrollHeight + "px"; };
     ta.addEventListener("input", function () { tkDraft = ta.value; grow(); }); setTimeout(grow, 0);
     var bar = el("div", "row");
-    var ub = el("button", "tk-switch"); ub.type = "button"; ub.setAttribute("role", "switch");
-    var lbl = el("span", "lbl"); ub.appendChild(el("span", "track")); ub.appendChild(lbl);
-    var paint = function () { ub.setAttribute("aria-checked", tkUrgent ? "true" : "false"); lbl.textContent = tkUrgent ? "Urgent" : "Pas urgent"; };
-    paint(); ub.addEventListener("click", function () { tkUrgent = !tkUrgent; paint(); });
+    var tyRow = el("div", "tk-types");
+    TK_TYPES.forEach(function (ty) {
+      var b = el("button", null, ty[1]); b.type = "button"; b.style.setProperty("--tc", ty[2]); b.setAttribute("aria-pressed", tkPrio === ty[0] ? "true" : "false");
+      b.addEventListener("click", function () { tkPrio = ty[0]; [].forEach.call(tyRow.children, function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); }); ta.placeholder = tkPrio === "attention" ? "Ex. : attention, trou au bas du Glacier, piquet arraché…" : (tkSect ? "Ajouter une tâche sur " + tkSect + "…" : "Ajouter une tâche…"); });
+      tyRow.appendChild(b);
+    });
+    var pb = el("button", "pbtn", tkFile ? "📷 1 photo ✓" : "📷 Photo"); pb.type = "button";
+    pb.addEventListener("click", function () { tkPickPhoto(function (fl) { tkFile = fl; pb.textContent = "📷 1 photo ✓"; }); });
     var go = el("button", "pbtn main", "Ajouter"); go.type = "submit"; go.style.marginLeft = "auto";
-    bar.appendChild(ub);
+    bar.appendChild(pb);
     if (!tkSect) {
       var ns = document.createElement("select"); ns.id = "tk-sect"; ns.className = "tk-sel"; ns.setAttribute("aria-label", "Secteur de la nouvelle tâche");
       [TK_NONE].concat(zones).forEach(function (z) { var o = el("option", null, z === TK_NONE ? "Secteur ?" : "📍 " + z); o.value = z; if (z === tkNewSect) o.selected = true; ns.appendChild(o); });
       ns.addEventListener("change", function () { tkNewSect = ns.value; }); bar.appendChild(ns);
     }
     var cl = el("button", "tk-close", "Fermer"); cl.type = "button";
-    cl.addEventListener("click", function () { tkAddOpen = false; tkDraft = ""; tkUrgent = false; tkNewSect = ""; renderTaches(); });
+    cl.addEventListener("click", function () { tkAddOpen = false; tkDraft = ""; tkPrio = "normal"; tkFile = null; tkNewSect = ""; renderTaches(); });
     bar.appendChild(cl); bar.appendChild(go); go.style.marginLeft = "0";
-    f.appendChild(ta); f.appendChild(bar);
+    f.appendChild(tyRow); f.appendChild(ta); f.appendChild(bar);
     f.addEventListener("submit", function (e) {
       e.preventDefault(); var txt = tkDraft.trim(); if (!txt) { ta.focus(); return; }
-      var t = { id: "t" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), text: txt, zone: tkSect || tkNewSect || TK_NONE, prio: tkUrgent ? "urgent" : "normal" };
-      tkDraft = ""; tkUrgent = false; tkNewSect = ""; tkAddOpen = false; tkSave(t, "Ajoutée" + (t.zone !== TK_NONE ? " sur " + t.zone : ""));
+      var t = { id: "t" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), text: txt, zone: tkSect || tkNewSect || TK_NONE, prio: tkPrio }, fl = tkFile;
+      tkDraft = ""; tkPrio = "normal"; tkFile = null; tkNewSect = ""; tkAddOpen = false; tkSave(t, "Ajoutée" + (t.zone !== TK_NONE ? " sur " + t.zone : ""));
+      if (fl) tkPhoto(t.id, fl);
     });
     v.appendChild(f);
     }
@@ -3000,7 +3057,34 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     body.appendChild(del);
   }
 
+  // Notes d'exemple (temporaire) : ouvrir l'appli avec #exemples à la fin du lien
+  var TK_EX = [
+    ["attention", "Glacier", "Attention : crevasse qui s'ouvre au bord droit de la piste, sous le Dôme. Corde posée, la vérifier à chaque passage."],
+    ["attention", "Black Wall", "Attention : plaque de glace dans le mur, côté gauche après le virage. Prévenir les clients au départ."],
+    ["attention", "Audon", "Attention : dameuse au treuil ce soir sur l'Audon dès 17 h. Triopan avec feu en haut, et contrôle final fait avant."],
+    ["attention", "Red Run", "Attention : rocher qui ressort au milieu de la piste après le replat (manque de neige). Piquets jaune-noir posés, à surveiller."],
+    ["urgent", "Glacier", "Corde arrachée sur 5 m au bord de la zone de crevasses : à refermer avant l'ouverture."],
+    ["urgent", "Martisberg", "Matelas déchiré sur le pylône n° 4 du téléski : à remplacer aujourd'hui."],
+    ["urgent", "Autres", "Feu clignotant avalanche 8a de la station du haut en panne (degré 3 annoncé) : à réparer ce matin."],
+    ["urgent", "Autres", "Plus que 2 bouteilles d'oxygène au poste de secours : à commander."],
+    ["normal", "Audon", "Remettre les flèches de direction au virage de l'Audon."],
+    ["normal", "Autres", "Ranger le local quad."],
+    ["normal", "Autres", "Contrôle mensuel des détecteurs RECCO."]];
+  function tkExBanner(v) {
+    if (location.hash !== "#exemples") return;
+    var bx = el("div", "conf"); bx.style.cssText = "background:#eef4ff;border:2px solid #2f7fb8;border-radius:14px;padding:14px;margin-bottom:14px";
+    bx.appendChild(el("b", null, "Créer " + TK_EX.length + " notes d'exemple ?"));
+    bx.appendChild(el("div", "sub2", "4 « Attention », 4 « Urgent », 3 « Normal ». Tu pourras les supprimer ensuite."));
+    var r = el("div", "row"), y = el("button", "pbtn main", "Oui, créer les exemples"); y.type = "button";
+    y.addEventListener("click", function () {
+      history.replaceState(null, "", location.pathname + location.search);
+      TK_EX.forEach(function (x, i) { tkSave({ id: "tex" + Date.now().toString(36) + i, text: x[2], zone: x[1], prio: x[0] }, "Exemples créés"); });
+    });
+    var n = el("button", "pbtn", "Non"); n.type = "button"; n.addEventListener("click", function () { history.replaceState(null, "", location.pathname + location.search); renderTaches(); });
+    r.appendChild(y); r.appendChild(n); bx.appendChild(r); v.appendChild(bx);
+  }
   function renderAll() {
+    if (location.hash === "#exemples" && area !== "taches") area = "taches";
     if (area !== "taches") $("view").classList.remove("chalk");
     if (area !== "bilan") $("view").classList.remove("bl");
     if (!data) return;
