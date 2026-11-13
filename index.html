@@ -919,6 +919,43 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .vx-row .pbtn.main { background: #2e9461; border-color: #2e9461; }
 .vx-list { margin: 6px 0 4px; padding-left: 0; list-style: none; display: grid; gap: 6px; max-height: 46vh; overflow: auto; }
 .vx-list li { font: 700 17px var(--body); background: rgba(122,95,176,.1); border-left: 4px solid #7a5fb0; border-radius: 8px; padding: 8px 10px; }
+
+/* RECCO */
+.rc-banner { background: #e0a100; color: #1d2b36; font: 900 20px var(--body); padding: 14px 16px; border-radius: 14px; margin-bottom: 10px; letter-spacing: .02em; }
+.rc-tabs button { font-size: 16px; padding: 12px 14px; min-height: 48px; position: relative; }
+.rc-dot { position: absolute; top: -6px; right: -6px; background: #d63a3a; color: #fff; border-radius: 50%; width: 22px; height: 22px; font: 900 14px/22px var(--body); text-align: center; }
+.rc-sec { font: 800 15px var(--body); text-transform: uppercase; letter-spacing: .05em; color: var(--b); border-left: 5px solid var(--b); padding-left: 8px; margin: 18px 0 8px; }
+.rc-cards { display: grid; gap: 10px; }
+.rc-ex { display: flex; gap: 14px; align-items: center; text-align: left; width: 100%; background: var(--paper); border: 1px solid var(--line); border-left: 6px solid var(--b); border-radius: 14px; padding: 14px; cursor: pointer; color: var(--ink); font: inherit; }
+.rc-ex b { display: block; font: 800 17px var(--body); } .rc-ex span { display: block; font-size: 14px; color: var(--muted); } .rc-ex i { display: block; font: 700 13px var(--body); color: #2e9461; font-style: normal; margin-top: 3px; }
+.rc-ic { flex: none; width: 56px; height: 56px; border-radius: 14px; background: #fff4d6; color: #8a6500; display: flex; align-items: center; justify-content: center; }
+.rc-ic svg { width: 34px; height: 34px; }
+.rc-head { display: flex; gap: 14px; align-items: center; margin: 4px 0 12px; } .rc-head .rc-ic { width: 72px; height: 72px; } .rc-head .rc-ic svg { width: 44px; height: 44px; }
+.rc-badge { display: inline-block; background: var(--b); color: #fff; font: 800 12px var(--body); text-transform: uppercase; letter-spacing: .05em; padding: 3px 9px; border-radius: 999px; }
+.rc-st { color: var(--muted); font-size: 15px; margin: 4px 0 8px; }
+.rc-card { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; font-size: 16px; line-height: 1.45; }
+.rc-card h3 { font: 800 17px var(--body); margin: 0 0 6px; }
+.rc-card.inst { border-left: 5px solid #2f7fb8; } .rc-card.keep { border-left: 5px solid #e0a100; background: #fffaf0; } .rc-card.val { border: 2px solid #2e9461; }
+.rc-l { margin: 4px 0; padding-left: 22px; } .rc-l li { margin: 4px 0; }
+.rc-tab { width: 100%; border-collapse: collapse; margin: 6px 0; font-size: 15px; }
+.rc-tab th, .rc-tab td { border-bottom: 1px solid var(--line); padding: 7px 6px; text-align: left; vertical-align: top; }
+.rc-tab th { font-weight: 700; width: 45%; } .rc-tab td.nok { color: #d63a3a; font-weight: 800; }
+.rc-warn { background: #fff1e6; border-left: 5px solid #e8622c; border-radius: 8px; padding: 8px 10px; margin-top: 8px; font-weight: 700; }
+.rc-add { display: flex; gap: 8px; align-items: center; margin-top: 8px; } .rc-add .av-in { flex: 1; } .rc-u { font: 800 17px var(--body); color: var(--muted); }
+.rc-row { display: flex; gap: 10px; align-items: center; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 6px; }
+.rc-row b { font: 800 17px var(--body); } .rc-row span { flex: 1; font-weight: 700; }
+.rc-grid-w { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+.rc-grid { border-collapse: collapse; font-size: 14px; min-width: 100%; }
+.rc-grid th, .rc-grid td { border: 1px solid var(--line); padding: 8px 6px; text-align: center; min-width: 46px; }
+.rc-grid tr:first-child th { border-top: 4px solid var(--b, #9aa8b4); }
+.rc-grid th.op { position: sticky; left: 0; background: var(--paper); font: 800 15px var(--body); min-width: 56px; z-index: 1; }
+.rc-grid td.ok { background: #e3f4ea; color: #1d6b43; font-weight: 800; } .rc-grid td.tot { font-weight: 800; }
+.rc-legend { display: grid; gap: 4px; font-size: 14px; margin-top: 10px; color: var(--muted); }
+.rc-new { background: #8a6500 !important; border-color: #8a6500 !important; margin-top: 4px; }
+.rc-month { margin: 12px 0; padding: 12px 14px; border-radius: 12px; font: 800 16px var(--body); background: #fff1e6; color: #a5450f; border-left: 6px solid #e8622c; }
+.rc-month.ok { background: #e3f4ea; color: #1d6b43; border-left-color: #2e9461; }
+.rc-ctl { display: flex; gap: 12px; align-items: center; width: 100%; text-align: left; background: var(--paper); border: 1px solid var(--line); border-left: 6px solid #2e9461; border-radius: 12px; padding: 12px; margin-bottom: 6px; cursor: pointer; color: var(--ink); font: inherit; }
+.rc-ctl.bad { border-left-color: #d63a3a; } .rc-ctl b { font: 800 17px var(--body); } .rc-ctl span { font-size: 14px; font-weight: 700; }
 </style>
 <script>window.__LOGO="data:image/jpeg;base64,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";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -929,7 +966,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794546855";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794547348";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -945,6 +982,16 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   var NS = "http://www.w3.org/2000/svg";
   var ICONS = {
     aval: "M2 20L9 7l3 5 3-3 7 11z M9 7l1.5 6 M15 9l-1 5",
+    r9: "M7 3h10v18H7z M10 7h4 M10 11h4 M12 15v2",
+    prep: "M8 3l4 3 4-3 4 4-3 3v11H7V10L4 7z",
+    scan: "M4 20l8-8 M12 12a4 4 0 0 1 4 4 M12 8a8 8 0 0 1 8 8 M12 4a12 12 0 0 1 8 4",
+    target: "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18 M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8 M12 11.5v1",
+    r360: "M12 4a8 8 0 1 0 8 8 M20 4v4h-4 M12 9v6 M9 12h6",
+    blind: "M2 12s4-6 10-6 10 6 10 6-4 6-10 6S2 12 2 12z M3 3l18 18",
+    multi: "M7 7a3 3 0 1 0 0 6a3 3 0 1 0 0-6 M17 11a3 3 0 1 0 0 6a3 3 0 1 0 0-6 M3 20h18",
+    dva: "M6 4h8v16H6z M17 8a4 4 0 0 1 0 8 M19 5a8 8 0 0 1 0 14",
+    base: "M12 13a5 5 0 1 0 0 10a5 5 0 1 0 0-10 M8 3h8l-2 6h-4z M12 16v4",
+    adv: "M12 2l3 6 6 .9-4.5 4.4 1 6.2L12 16.6 6.5 19.5l1-6.2L3 8.9 9 8z",
     book: "M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14zM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5M8 7h8M8 11h6",
     box: "M3 7l9-4 9 4v10l-9 4-9-4z M3 7l9 4 9-4 M12 11v10",
     flag: "M5 21V4 M5 4h12l-2 4 2 4H5",
@@ -1054,6 +1101,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     rouvrirTache: function (id) { var t = byId(data.taches, id); if (!t) return false; t.state = "afaire"; t.by = ""; t.doneBy = ""; t.doneAt = 0; },
     ordonnerTaches: function (pairs) { (pairs || []).forEach(function (p) { var t = byId(data.taches, p.id); if (t) t.ord = p.ord; }); },
     enregistrerAvalanche: function (av, par) { var old = (data.avalanches || []).filter(function (x) { return x.id === av.id; })[0], o = JSON.parse(JSON.stringify(av)); o.photos = old ? old.photos : []; o.by = par || ""; data.avalanches = (data.avalanches || []).filter(function (x) { return x.id !== av.id; }); data.avalanches.unshift(o); },
+    enregistrerRecco: function (r, par) { data.recco = (data.recco || []).filter(function (x) { return x.id !== r.id; }); data.recco.unshift({ id: r.id, type: r.type, at: r.at, by: par || "", d: JSON.parse(JSON.stringify(r.d)) }); },
+    supprimerRecco: function (id) { data.recco = (data.recco || []).filter(function (x) { return x.id !== id; }); },
     supprimerAvalanche: function (id) { data.avalanches = (data.avalanches || []).filter(function (x) { return x.id !== id; }); },
     supprimerTache: function (id) { if (!byId(data.taches, id)) return false; data.taches = data.taches.filter(function (x) { return String(x.id) !== String(id); }); }
   };
@@ -1172,12 +1221,13 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     else if (area === "stock" && current === "cmd" && cmdOpen) up = ["‹ Transferts", function () { cmdOpen = false; renderAll(); }];
     else if (area === "achat" && dmEdit && dmEdit.created) up = ["‹ Retour", function () { dmEdit = null; dmFile = null; renderAchat(); }];
     else if (area === "bilan" && (blViewId || blEdit || blRev)) up = ["‹ Fiches", function () { blViewId = null; blEdit = false; blRev = null; renderBilan(); goTop(); }];
+    else if (area === "recco" && (rcOpen || rcCtl)) up = ["‹ RECCO", function () { rcOpen = null; rcCtl = null; rcDate = null; renderRecco(); goTop(); }];
     else if (area === "aval" && (avEdit || avView)) up = ["‹ Avalanches", function () { avEdit = null; avView = null; avDraw = false; avFull = false; avSensStop(); renderAval(); goTop(); }];
     else if (area === "achat" && (dmEdit || dmOpen)) up = ["‹ Achats", function () { dmEdit = null; dmFile = null; dmOpen = null; lowOpen = false; renderAchat(); }];
     if (up) { back.textContent = up[0]; back.addEventListener("click", up[1]); }
     else { back.appendChild(icon("home")); back.lastChild.style.cssText = "width:18px;height:18px"; back.appendChild(document.createTextNode("Accueil")); back.addEventListener("click", function () { goArea("home"); }); }
     b.appendChild(back);
-    b.appendChild(el("span", "where", area === "stock" ? "Stock matériel" : area === "plan" ? "Agenda" : area === "presence" ? "Planning" : area === "taches" ? "Tâches équipe" : area === "bilan" ? "Bilan victime" : area === "achat" ? "Achats & fabrication" : area === "aval" ? "Avalanches" : formRub || "Formation"));
+    b.appendChild(el("span", "where", area === "stock" ? "Stock matériel" : area === "plan" ? "Agenda" : area === "presence" ? "Planning" : area === "taches" ? "Tâches équipe" : area === "bilan" ? "Bilan victime" : area === "achat" ? "Achats & fabrication" : area === "aval" ? "Avalanches" : area === "recco" ? "RECCO R9" : formRub || "Formation"));
   }
   function bigTile(ic, color, title, sub, onClick, light) {
     var t = el("button", "tile" + (light ? " light" : "")); t.type = "button"; t.style.setProperty("--tc", color);
@@ -1203,6 +1253,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     g.appendChild(bigTile("tasks", "#6b4fbb", "Tâches équipe", tkOpenN.length ? (tkAtt ? "⚠ " + tkAtt + " attention · " : "") + (tkOpenN.length - tkAtt) + " à faire" + (tkUrg ? " · dont " + tkUrg + " urgente" + (tkUrg > 1 ? "s" : "") : "") : "Rien à faire pour l'instant", function () { goArea("taches"); }));
     var avT = (data.avalanches || []).filter(function (a) { return a.at >= avDayStart(Date.now()); }).length, avS = (data.avalanches || []).filter(function (a) { return a.at >= avSeasonStart(); }).length;
     g.appendChild(bigTile("aval", AV_C, "Avalanches", avT ? avT + " notée" + (avT > 1 ? "s" : "") + " aujourd'hui · " + avS + " cette saison" : "Carte 3D · dessine la coulée" + (avS ? " · " + avS + " cette saison" : ""), function () { avEdit = null; avView = null; goArea("aval"); }));
+    g.appendChild(bigTile("signal", RC_C, "RECCO", rcHomeSub(), function () { rcOpen = null; rcCtl = null; goArea("recco"); }));
     g.appendChild(bigTile("box", "#d63a3a", "Stock matériel", subS, function () { goArea("stock"); }));
     g.appendChild(bigTile("cal", "#0e8a9a", "Agenda", nx ? "Prochain : " + nx.title + " · " + dayShort(nx.date) + (nx.start ? " " + nx.start : "") : "Rien de prévu pour l'instant", function () { goArea("plan"); }));
     g.appendChild(bigTile("team", "#2e9461", "Planning", pj && pj.pages && pj.pages.length ? "Qui travaille · mis à jour le " + shortDate(pj.updated) : "Qui travaille · pas encore de planning", function () { goArea("presence"); }));
@@ -4125,6 +4176,215 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     }
     listen();
   }
+  /* ---------- RECCO : exercices du classeur R9, suivi de l'équipe, contrôle mensuel des détecteurs ---------- */
+  var RC_C = "#e0a100", rcTab = "ex", rcOpen = null, rcDel = null, rcCtl = null, rcCtlView = null, rcOps = [], rcDate = null;
+  var RC_LIEU = { salle: ["En salle", "#2f7fb8"], terrain: ["Terrain", "#2e9461"], test: ["Test de compétence", "#d63a3a"] };
+  function rcSeason() { var d = new Date(), y = d.getMonth() >= 8 ? d.getFullYear() : d.getFullYear() - 1; return new Date(y, 8, 1).getTime(); }
+  function rcAll() { return (data.recco || []).filter(function (r) { return r.at >= rcSeason(); }); }
+  function rcContent() { return data.reccoC || null; }
+  function rcDM(t) { var d = new Date(t); return ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2); }
+  function rcOpsKnown() { var o = []; rcAll().forEach(function (r) { (r.type === "ex" ? r.d.ops || [] : [r.d.resp || ""]).forEach(function (x) { x = String(x).trim(); if (x && o.indexOf(x) < 0) o.push(x); }); }); return o.sort(); }
+  function rcDets() { var o = []; (data.recco || []).forEach(function (r) { if (r.type === "ctl" && r.d.det && o.indexOf(r.d.det) < 0) o.push(r.d.det); }); return o.sort(); }
+  function rcMonthDone() { var m = new Date(); m.setDate(1); m.setHours(0, 0, 0, 0); return rcAll().filter(function (r) { return r.type === "ctl" && r.at >= m.getTime(); }); }
+  function rcWinter() { var m = new Date().getMonth(); return m >= 10 || m <= 4; }
+  function rcHomeSub() {
+    var md = rcMonthDone(), mo = MOIS[new Date().getMonth()];
+    if (rcWinter()) return md.length ? "✓ Contrôle de " + mo + " fait le " + rcDM(md[0].at) : "⚠ Contrôle de " + mo + " : à faire";
+    return "Formation R9 · 11 exercices · suivi de l'équipe";
+  }
+  function rcId() { return "r" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); }
+  function rcList(items, ordered) { var l = el(ordered ? "ol" : "ul", "rc-l"); items.forEach(function (x) { l.appendChild(el("li", null, x)); }); return l; }
+  function rcBadge(lieu) { var b = el("span", "rc-badge", RC_LIEU[lieu][0]); b.style.setProperty("--b", RC_LIEU[lieu][1]); return b; }
+  function rcIcon(ic) { var w = el("div", "rc-ic"); w.appendChild(icon(ICONS[ic] ? ic : "signal")); return w; }
+  function rcTabs(v) {
+    var t = el("div", "tk-types rc-tabs"); t.style.setProperty("--tc", "#8a6500");
+    [["ex", "Exercices"], ["suivi", "Suivi équipe"], ["ctl", "Contrôle détecteurs"]].forEach(function (x) {
+      var b = el("button", null, x[1]); b.type = "button"; b.setAttribute("aria-pressed", String(rcTab === x[0]));
+      if (x[0] === "ctl" && rcWinter() && !rcMonthDone().length) b.appendChild(el("span", "rc-dot", "!"));
+      b.addEventListener("click", function () { rcTab = x[0]; rcOpen = null; rcCtl = null; rcCtlView = null; rcDel = null; renderRecco(); goTop(); });
+      t.appendChild(b);
+    });
+    v.appendChild(t);
+  }
+  function rcOpsPicker(box, sel, label) {
+    box.appendChild(el("div", "av-lbl", label));
+    var w = el("div", "tk-types av-ch"); w.style.setProperty("--tc", "#8a6500");
+    var known = rcOpsKnown(); sel.forEach(function (x) { if (known.indexOf(x) < 0) known.push(x); });
+    known.forEach(function (o) {
+      var b = el("button", null, o); b.type = "button"; b.setAttribute("aria-pressed", String(sel.indexOf(o) >= 0));
+      b.addEventListener("click", function () { var i = sel.indexOf(o); if (i >= 0) sel.splice(i, 1); else sel.push(o); renderRecco(); });
+      w.appendChild(b);
+    });
+    box.appendChild(w);
+    var r = el("div", "rc-add"), inp = document.createElement("input"); inp.className = "av-in"; inp.placeholder = "Ajouter des initiales (ex. JF)"; inp.maxLength = 12;
+    var ad = el("button", "pbtn", "+ Ajouter"); ad.type = "button";
+    function add() { var x = inp.value.trim().toUpperCase(); if (!x) return; if (sel.indexOf(x) < 0) sel.push(x); renderRecco(); }
+    ad.addEventListener("click", add); inp.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); add(); } });
+    r.appendChild(inp); r.appendChild(ad); box.appendChild(r);
+  }
+  function rcDateInput(box, label) {
+    var d = document.createElement("input"); d.type = "date"; d.className = "av-in";
+    var t = new Date(rcDate || Date.now()); d.value = t.getFullYear() + "-" + ("0" + (t.getMonth() + 1)).slice(-2) + "-" + ("0" + t.getDate()).slice(-2);
+    d.addEventListener("change", function () { var p = d.value.split("-"); if (p.length === 3) { var x = new Date(+p[0], p[1] - 1, +p[2], 12); rcDate = x.getTime(); } });
+    var f = el("div", "av-fld"); f.appendChild(el("div", "av-lbl", label)); f.appendChild(d); box.appendChild(f);
+  }
+  function rcExDone(n) { return rcAll().filter(function (r) { return r.type === "ex" && +r.d.ex === n; }); }
+  function rcExercise(v, C, x) {
+    var head = el("div", "rc-head"); head.appendChild(rcIcon(x.ic)); var ht = el("div"); ht.appendChild(rcBadge(x.lieu)); ht.appendChild(el("h2", "av-h", x.n + ". " + x.t)); ht.appendChild(el("p", "rc-st", x.st)); head.appendChild(ht); v.appendChild(head);
+    function card(title, node, cls) { var c = el("div", "rc-card" + (cls ? " " + cls : "")); c.appendChild(el("h3", null, title)); c.appendChild(node); v.appendChild(c); return c; }
+    card("🎯 Objectifs", rcList(x.obj));
+    if (x.inst && x.inst.length) card("🧰 Installation", rcList(x.inst), "inst");
+    (x.sec || []).forEach(function (s) {
+      var w = el("div");
+      if (s.p) w.appendChild(el("p", null, s.p));
+      if (s.ol) w.appendChild(rcList(s.ol, true));
+      if (s.li) w.appendChild(rcList(s.li));
+      if (s.tab) { var t = el("table", "rc-tab"); s.tab.forEach(function (r) { var tr = el("tr"); tr.appendChild(el("th", null, r[0])); tr.appendChild(el("td", null, r[1])); t.appendChild(tr); }); w.appendChild(t); }
+      if (s.warn) w.appendChild(el("div", "rc-warn", "⚠ " + s.warn));
+      card(s.h, w, /retenir/i.test(s.h) ? "keep" : "");
+    });
+    // validation
+    var vb = el("div", "rc-card val"); vb.appendChild(el("h3", null, "✓ Exercice fait"));
+    rcDateInput(vb, "Date");
+    rcOpsPicker(vb, rcOps, "Par qui ? (touche les initiales)");
+    var go = el("button", "pbtn main av-go", rcOps.length ? "✓ Enregistrer pour " + rcOps.join(", ") : "Choisis au moins une personne"); go.type = "button"; go.disabled = !rcOps.length;
+    go.addEventListener("click", function () { var rec = { id: rcId(), type: "ex", at: rcDate || Date.now(), d: { ex: x.n, ops: rcOps.slice() } }; rcOps = []; rcDate = null; act("enregistrerRecco", [rec, ""], "Exercice " + x.n + " enregistré"); });
+    vb.appendChild(go); v.appendChild(vb);
+    var done = rcExDone(x.n);
+    if (done.length) {
+      v.appendChild(el("h3", "av-h3", "Déjà fait cette saison"));
+      done.forEach(function (r) {
+        var row = el("div", "rc-row"); row.appendChild(el("b", null, rcDM(r.at))); row.appendChild(el("span", null, (r.d.ops || []).join(", ")));
+        var del = el("button", "pbtn" + (rcDel === r.id ? " dang" : ""), rcDel === r.id ? "Confirmer" : "Retirer"); del.type = "button";
+        del.addEventListener("click", function () { if (rcDel !== r.id) { rcDel = r.id; renderRecco(); setTimeout(function () { if (rcDel === r.id) { rcDel = null; renderRecco(); } }, 5000); return; } rcDel = null; act("supprimerRecco", [r.id], "Retiré"); });
+        row.appendChild(del); v.appendChild(row);
+      });
+    }
+  }
+  function rcSuivi(v, C) {
+    var ops = rcOpsKnown().filter(function (o) { return rcAll().some(function (r) { return r.type === "ex" && (r.d.ops || []).indexOf(o) >= 0; }); });
+    v.appendChild(el("p", "rc-st", "Saison " + new Date(rcSeason()).getFullYear() + "–" + (new Date(rcSeason()).getFullYear() + 1) + " · dans chaque case, la date où l'exercice a été fait."));
+    if (!ops.length) { v.appendChild(el("p", "empty", "Personne n'a encore validé d'exercice cette saison. Ouvre un exercice et touche « ✓ Exercice fait ».")); return; }
+    var wrap = el("div", "rc-grid-w"), t = el("table", "rc-grid"), hr = el("tr");
+    hr.appendChild(el("th", "op", ""));
+    C.ex.forEach(function (x) { var th = el("th", null, String(x.n)); th.style.setProperty("--b", RC_LIEU[x.lieu][1]); th.title = x.t; hr.appendChild(th); });
+    hr.appendChild(el("th", null, "Total")); t.appendChild(hr);
+    ops.forEach(function (o) {
+      var tr = el("tr"); tr.appendChild(el("th", "op", o)); var n = 0;
+      C.ex.forEach(function (x) {
+        var r = rcAll().filter(function (r) { return r.type === "ex" && +r.d.ex === x.n && (r.d.ops || []).indexOf(o) >= 0; })[0];
+        var td = el("td", r ? "ok" : "", r ? rcDM(r.at) : ""); if (r) n++;
+        td.addEventListener("click", function () { rcTab = "ex"; rcOpen = x.n; renderRecco(); goTop(); });
+        tr.appendChild(td);
+      });
+      tr.appendChild(el("td", "tot", n + "/" + C.ex.length)); t.appendChild(tr);
+    });
+    wrap.appendChild(t); v.appendChild(wrap);
+    var lg = el("div", "rc-legend"); C.ex.forEach(function (x) { var d = el("div"); d.appendChild(el("b", null, x.n + ".")); d.appendChild(document.createTextNode(" " + x.t)); lg.appendChild(d); }); v.appendChild(lg);
+  }
+  function rcCtlForm(v, C) {
+    var c = rcCtl;
+    v.appendChild(el("h2", "av-h", c.isNew ? "Nouveau contrôle de détecteur" : "Modifier le contrôle"));
+    var box = el("div", "av-form");
+    rcDateInput(box, "Date du contrôle");
+    var dl = el("div", "av-fld"); dl.appendChild(el("div", "av-lbl", "N° du détecteur"));
+    var dets = rcDets();
+    if (dets.length) { var w = el("div", "tk-types av-ch"); w.style.setProperty("--tc", "#8a6500"); dets.forEach(function (d) { var b = el("button", null, d); b.type = "button"; b.setAttribute("aria-pressed", String(c.d.det === d)); b.addEventListener("click", function () { c.d.det = d; renderRecco(); }); w.appendChild(b); }); dl.appendChild(w); }
+    var di = document.createElement("input"); di.className = "av-in"; di.placeholder = dets.length ? "Ou un autre numéro…" : "Numéro de série"; di.value = dets.indexOf(c.d.det) >= 0 ? "" : c.d.det || "";
+    di.addEventListener("input", function () { c.d.det = di.value.trim(); }); dl.appendChild(di); box.appendChild(dl);
+    var rs = document.createElement("input"); rs.className = "av-in"; rs.placeholder = "Initiales"; rs.maxLength = 12; rs.value = c.d.resp || "";
+    rs.addEventListener("input", function () { c.d.resp = rs.value.trim().toUpperCase(); }); var rf = el("div", "av-fld"); rf.appendChild(el("div", "av-lbl", "Responsable")); rf.appendChild(rs); box.appendChild(rf);
+    box.appendChild(el("div", "av-lbl", "Points de contrôle · tout est OK d'office, touche ce qui ne va pas"));
+    var chk = el("div", "bl-chks");
+    C.ctl.forEach(function (k) {
+      var bad = c.d.items[k[0]] === "nok", b = el("button", "bl-chk" + (bad ? " bad" : ""), (bad ? "! Défaut : " : "✓ ") + k[1]); b.type = "button";
+      b.addEventListener("click", function () { c.d.items[k[0]] = bad ? "ok" : "nok"; renderRecco(); }); chk.appendChild(b);
+    });
+    box.appendChild(chk);
+    function num(key, label, unit, ph) {
+      var f = el("div", "av-fld rc-num"); f.appendChild(el("div", "av-lbl", label)); var r = el("div", "rc-add"), i = document.createElement("input"); i.type = "number"; i.inputMode = "decimal"; i.className = "av-in"; i.placeholder = ph; i.value = c.d[key] != null ? c.d[key] : "";
+      i.addEventListener("input", function () { c.d[key] = i.value === "" ? null : +i.value; }); r.appendChild(i); r.appendChild(el("span", "rc-u", unit)); f.appendChild(r); box.appendChild(f);
+    }
+    num("pSol", "Portée, réflecteur au sol (min. 10 m)", "m", "ex. 14");
+    num("pHaut", "Portée, réflecteur à 1,5 m (min. 60 m)", "m", "ex. 72");
+    num("auto", "Autonomie, puissance max. par temps froid (min. 2 h)", "h", "ex. 2.5");
+    num("volt", "Tension pleine charge (> 7,9 V)", "V", "ex. 8.1");
+    var rm = document.createElement("textarea"); rm.className = "av-in"; rm.rows = 3; rm.placeholder = "Remarque, panne, envoi en réparation…"; rm.value = c.d.rem || "";
+    rm.addEventListener("input", function () { c.d.rem = rm.value; }); var rmf = el("div", "av-fld"); rmf.appendChild(el("div", "av-lbl", "Remarques")); rmf.appendChild(rm); box.appendChild(rmf);
+    box.appendChild(el("p", "rc-st", "En cas de panne, contacter rapidement les correspondants techniques RECCO."));
+    v.appendChild(box);
+    var r = el("div", "row av-row"), sv = el("button", "pbtn main av-go", "✓ Enregistrer le contrôle"); sv.type = "button";
+    sv.addEventListener("click", function () {
+      if (!c.d.det) { showStatus("Indique le numéro du détecteur.", true); return; }
+      var rec = { id: c.id, type: "ctl", at: rcDate || c.at || Date.now(), d: c.d }; rcCtl = null; rcDate = null; rcCtlView = rec.id;
+      act("enregistrerRecco", [rec, c.d.resp || ""], "Contrôle enregistré"); goTop();
+    });
+    var cn = el("button", "pbtn", "Annuler"); cn.type = "button"; cn.addEventListener("click", function () { rcCtl = null; rcDate = null; renderRecco(); goTop(); });
+    r.appendChild(sv); r.appendChild(cn); v.appendChild(r);
+  }
+  function rcCtlWarn(d) {
+    var w = [];
+    Object.keys(d.items || {}).forEach(function (k) { if (d.items[k] === "nok") w.push(k); });
+    if (d.pSol != null && d.pSol < 10) w.push("pSol"); if (d.pHaut != null && d.pHaut < 60) w.push("pHaut"); if (d.auto != null && d.auto < 2) w.push("auto"); if (d.volt != null && d.volt < 7.9) w.push("volt");
+    return w;
+  }
+  function rcCtlTab(v, C) {
+    if (rcCtl) return rcCtlForm(v, C);
+    var nb = el("button", "pbtn main av-new rc-new", "＋ Nouveau contrôle"); nb.type = "button";
+    nb.addEventListener("click", function () { var items = {}; C.ctl.forEach(function (k) { items[k[0]] = "ok"; }); var last = rcAll().filter(function (r) { return r.type === "ctl"; })[0]; rcCtl = { id: rcId(), isNew: true, d: { det: last ? last.d.det : "", resp: last ? last.d.resp : "", items: items } }; rcDate = null; renderRecco(); goTop(); });
+    v.appendChild(nb);
+    var md = rcMonthDone(), mo = MOIS[new Date().getMonth()];
+    v.appendChild(el("div", "rc-month" + (md.length ? " ok" : ""), md.length ? "✓ " + mo.charAt(0).toUpperCase() + mo.slice(1) + " : contrôlé le " + rcDM(md[0].at) + " (" + md.map(function (r) { return r.d.det; }).filter(function (x, i, a) { return a.indexOf(x) === i; }).join(", ") + ")" : (rcWinter() ? "⚠ " : "") + mo.charAt(0).toUpperCase() + mo.slice(1) + " : pas encore de contrôle"));
+    var L = (data.recco || []).filter(function (r) { return r.type === "ctl"; });
+    if (!L.length) { v.appendChild(el("p", "empty", "Aucun contrôle enregistré. Avant l'hiver et au moins une fois par mois pendant l'hiver.")); return; }
+    var byDet = {}; L.forEach(function (r) { (byDet[r.d.det] = byDet[r.d.det] || []).push(r); });
+    Object.keys(byDet).sort().forEach(function (det) {
+      v.appendChild(el("h3", "av-h3", "Détecteur " + det));
+      byDet[det].forEach(function (r) {
+        var w = rcCtlWarn(r.d), open = rcCtlView === r.id;
+        var b = el("button", "rc-ctl" + (w.length ? " bad" : "")); b.type = "button";
+        b.appendChild(el("b", null, rcDM(r.at) + "/" + String(new Date(r.at).getFullYear()).slice(2)));
+        b.appendChild(el("span", null, (w.length ? "⚠ " + w.length + " point" + (w.length > 1 ? "s" : "") + " à revoir" : "✓ Tout OK") + (r.d.resp ? " · " + r.d.resp : "") + (r.d.pHaut != null ? " · portée " + r.d.pHaut + " m" : "") + (r.d.auto != null ? " · " + String(r.d.auto).replace(".", ",") + " h" : "")));
+        b.addEventListener("click", function () { rcCtlView = open ? null : r.id; rcDel = null; renderRecco(); });
+        v.appendChild(b);
+        if (open) {
+          var d = el("div", "rc-card");
+          var t = el("table", "rc-tab"); C.ctl.forEach(function (k) { var tr = el("tr"); tr.appendChild(el("th", null, k[1])); tr.appendChild(el("td", r.d.items[k[0]] === "nok" ? "nok" : "", r.d.items[k[0]] === "nok" ? "Défaut" : "OK")); t.appendChild(tr); });
+          [["pSol", "Portée au sol", " m", 10], ["pHaut", "Portée à 1,5 m", " m", 60], ["auto", "Autonomie", " h", 2], ["volt", "Tension", " V", 7.9]].forEach(function (q) { if (r.d[q[0]] == null) return; var tr = el("tr"); tr.appendChild(el("th", null, q[1])); tr.appendChild(el("td", r.d[q[0]] < q[3] ? "nok" : "", String(r.d[q[0]]).replace(".", ",") + q[2])); t.appendChild(tr); });
+          d.appendChild(t); if (r.d.rem) d.appendChild(el("p", "av-rem", r.d.rem));
+          var a = el("div", "av-acts"), ed = el("button", "pbtn", "✏ Modifier"), dl = el("button", "pbtn dang", rcDel === r.id ? "Oui, supprimer" : "Supprimer"); ed.type = dl.type = "button";
+          ed.addEventListener("click", function () { rcCtl = JSON.parse(JSON.stringify({ id: r.id, at: r.at, d: r.d })); rcDate = r.at; renderRecco(); goTop(); });
+          dl.addEventListener("click", function () { if (rcDel !== r.id) { rcDel = r.id; renderRecco(); return; } rcDel = null; rcCtlView = null; act("supprimerRecco", [r.id], "Contrôle supprimé"); });
+          a.appendChild(ed); a.appendChild(dl); d.appendChild(a); v.appendChild(d);
+        }
+      });
+    });
+  }
+  function renderRecco() {
+    if (area !== "recco") return;
+    renderHomebar(); var v = clearView(); v.style.setProperty("--tc", RC_C);
+    var C = rcContent();
+    if (!C) { v.appendChild(el("p", "empty", "Le contenu RECCO n'est pas encore arrivé. Il faut mettre à jour le script Google (nouvelle version), puis recharger l'appli.")); return; }
+    if (rcOpen) { var x = C.ex.filter(function (e) { return e.n === rcOpen; })[0]; if (x) return rcExercise(v, C, x); rcOpen = null; }
+    v.appendChild(el("div", "rc-banner", "RECCO · Détecteur portatif R9"));
+    rcTabs(v);
+    if (rcTab === "suivi") return rcSuivi(v, C);
+    if (rcTab === "ctl") return rcCtlTab(v, C);
+    ["salle", "terrain", "test"].forEach(function (lieu) {
+      var L = C.ex.filter(function (x) { return x.lieu === lieu; }); if (!L.length) return;
+      var h = el("h3", "rc-sec", RC_LIEU[lieu][0] + (lieu === "test" ? "s" : "")); h.style.setProperty("--b", RC_LIEU[lieu][1]); v.appendChild(h);
+      var g = el("div", "rc-cards");
+      L.forEach(function (x) {
+        var b = el("button", "rc-ex"); b.type = "button"; b.style.setProperty("--b", RC_LIEU[lieu][1]);
+        b.appendChild(rcIcon(x.ic)); var t = el("div"); t.appendChild(el("b", null, x.n + ". " + x.t)); t.appendChild(el("span", null, x.st));
+        var n = []; rcExDone(x.n).forEach(function (r) { (r.d.ops || []).forEach(function (o) { if (n.indexOf(o) < 0) n.push(o); }); });
+        if (n.length) t.appendChild(el("i", null, "✓ " + n.length + " personne" + (n.length > 1 ? "s" : "") + " cette saison"));
+        b.appendChild(t); b.addEventListener("click", function () { rcOpen = x.n; rcOps = []; rcDate = null; rcDel = null; renderRecco(); goTop(); });
+        g.appendChild(b);
+      });
+      v.appendChild(g);
+    });
+  }
   function renderAll() {
     if (area !== "aval" && avSens.on) { avSensStop(); avEdit = null; }
     if (location.hash === "#exemples" && area !== "taches") area = "taches";
@@ -4141,6 +4401,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     if (area === "bilan") return renderBilan();
     if (area === "presence") return renderPresence();
     if (area === "aval") return renderAval();
+    if (area === "recco") return renderRecco();
     renderTabs();
     if (current === "prep") renderPrep(); else if (current === "cmd") renderCmd(); else if (current === "count") renderCount(); else if (current === "hist") renderHist(); else renderStock();
   }
