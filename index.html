@@ -1021,7 +1021,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794570187";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794576159";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -3293,8 +3293,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   var AV_C = "#7a5fb0";
   var avEdit = null, avView = null, avDraw = false, avFull = false, avDel = null, avBusy = false, avPhDel = null;
   var avBase = "hiver", avSlope = false;
-  try { avBase = localStorage.getItem("stock-pistes-avbase") || "hiver"; } catch (e) {}
-  var AV_BASES = [["hiver", "Hiver", "ch.swisstopo.pixelkarte-farbe-winter", "jpeg", 17], ["carte", "Carte", "ch.swisstopo.pixelkarte-farbe", "jpeg", 18], ["photo", "Photo", "ch.swisstopo.swissimage", "jpeg", 18]];
+  try { avBase = localStorage.getItem("stock-pistes-avbase2") || "neige"; } catch (e) {}
+  var AV_BASES = [["neige", "Neige", "ch.swisstopo.pixelkarte-farbe-winter", "jpeg", 17], ["hiver", "Carte hiver", "ch.swisstopo.pixelkarte-farbe-winter", "jpeg", 17], ["carte", "Carte", "ch.swisstopo.pixelkarte-farbe", "jpeg", 18], ["photo", "Photo", "ch.swisstopo.swissimage", "jpeg", 18]];
   function avTiles(b) { if (window.__AV_BASE) return window.__AV_BASE(b[2]); return "https://wmts.geo.admin.ch/1.0.0/" + b[2] + "/default/current/3857/{z}/{x}/{y}." + b[3]; }
   var AV_DEM = "https://tiles.mapterhorn.com/tilejson.json";
   // Sommets (position recalée sur le point le plus haut du relief autour)
@@ -3451,12 +3451,15 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
         base: { type: "raster", tiles: [avTiles(b)], tileSize: 256, maxzoom: b[4], attribution: "© swisstopo" },
         slope: { type: "raster", tiles: [window.__AV_BASE ? window.__AV_BASE("slope") : "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.hangneigung-ueber_30/default/current/3857/{z}/{x}/{y}.png"], tileSize: 256, maxzoom: 17 },
         dem: typeof dem === "object" ? { type: "raster-dem", tiles: dem.tiles, tileSize: dem.tileSize || 512, maxzoom: dem.maxzoom || 14, encoding: "terrarium" } : { type: "raster-dem", url: dem || AV_DEM, encoding: "terrarium", attribution: "Relief © Mapterhorn / swisstopo" },
+        demh: typeof dem === "object" ? { type: "raster-dem", tiles: dem.tiles, tileSize: dem.tileSize || 512, maxzoom: dem.maxzoom || 14, encoding: "terrarium" } : { type: "raster-dem", url: dem || AV_DEM, encoding: "terrarium" },
         pistes: { type: "geojson", data: { type: "FeatureCollection", features: [] } },
         avs: { type: "geojson", data: { type: "FeatureCollection", features: [] } },
         cur: { type: "geojson", data: { type: "FeatureCollection", features: [] } }
       },
       layers: [
-        { id: "base", type: "raster", source: "base" },
+        { id: "fond-neige", type: "background", paint: { "background-color": "#f3f6f9" }, layout: { visibility: avBase === "neige" ? "visible" : "none" } },
+        { id: "base", type: "raster", source: "base", paint: { "raster-opacity": avBase === "neige" ? 0.3 : 1 } },
+        { id: "relief", type: "hillshade", source: "demh", layout: { visibility: avBase === "neige" ? "visible" : "none" }, paint: { "hillshade-exaggeration": 0.65, "hillshade-shadow-color": "#5d7086", "hillshade-highlight-color": "#ffffff", "hillshade-accent-color": "#8a9bb0", "hillshade-illumination-direction": 315 } },
         { id: "slope", type: "raster", source: "slope", layout: { visibility: avSlope ? "visible" : "none" }, paint: { "raster-opacity": 0.5 } },
         { id: "lifts", type: "line", source: "pistes", filter: ["==", ["get", "k"], "lift"], paint: { "line-color": "#33363b", "line-width": 2, "line-dasharray": [3, 2] } },
         { id: "pistes", type: "line", source: "pistes", filter: ["!=", ["get", "k"], "lift"], paint: { "line-color": ["get", "c"], "line-width": ["interpolate", ["linear"], ["zoom"], 12, 2, 16, 5], "line-opacity": 0.85 } },
@@ -3533,10 +3536,16 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   }
   var avFitKey = null;
   function avFitOnce(k, poly, asp) { if (avFitKey === k) return; avFitKey = k; setTimeout(function () { avFit(poly, asp); }, 60); }
+  // fond « Neige » : relief ombré blanc (montagne enneigée) + carte d'hiver en transparence pour les repères
+  function avSnow() {
+    if (!avMap || !avMap.getLayer("relief")) return; var on = avBase === "neige";
+    avMap.setLayoutProperty("relief", "visibility", on ? "visible" : "none"); avMap.setLayoutProperty("fond-neige", "visibility", on ? "visible" : "none");
+    avMap.setPaintProperty("base", "raster-opacity", on ? 0.3 : 1);
+  }
   function avSetBase(k) {
-    avBase = k; try { localStorage.setItem("stock-pistes-avbase", k); } catch (e) {}
+    avBase = k; try { localStorage.setItem("stock-pistes-avbase2", k); } catch (e) {}
     var b = AV_BASES.filter(function (x) { return x[0] === k; })[0];
-    if (avMap && avMap.getSource("base")) avMap.getSource("base").setTiles([avTiles(b)]);
+    if (avMap && avMap.getSource("base")) { avMap.getSource("base").setTiles([avTiles(b)]); avSnow(); }
     renderAval();
   }
   // point du relief sous le doigt : on suit le rayon de la caméra jusqu'à toucher le terrain
@@ -3716,14 +3725,14 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
       }
       return line.filter(function (p, i) { return keep[i]; });
     }
-    var tol = Math.max(1, diag / 120), out = dp(tol);
+    var tol = Math.max(2, diag / 45), out = dp(tol);
     while (out.length > maxN) { tol *= 1.4; out = dp(tol); }
     return out;
   }
   function avFinish() {
     var S = [].concat.apply([], avEdit.strokes || []);
     if (S.length < 3) { showStatus("Trace d'abord le contour de l'avalanche.", true); return; }
-    var poly = avSimplify(S, 40);
+    var poly = avSimplify(S, 10);
     // fin du tracé revenue près du début : on ne garde qu'un point à cet endroit
     var kx = 111320 * Math.cos(poly[0][1] * Math.PI / 180), dd = function (u, w) { return Math.hypot((u[0] - w[0]) * kx, (u[1] - w[1]) * 110574); }, big = 0;
     poly.forEach(function (q) { big = Math.max(big, dd(q, poly[0])); });
@@ -3754,18 +3763,12 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     P.forEach(function (p, i) {
       var e = el("div", "av-v" + (avSel === i ? " sel" : ""));
       var mk = new maplibregl.Marker({ element: e, draggable: true }).setLngLat(p).addTo(avMap);
-      mk.on("drag", function () { var l = mk.getLngLat(); P[i] = [+l.lng.toFixed(6), +l.lat.toFixed(6)]; changed(false); });
-      mk.on("dragend", function () { avSel = null; changed(true); });
+      // la mesure repart à la fin du glisser (et, au cas où le téléphone ne signale pas la fin, 1,5 s après le dernier mouvement)
+      var fin = null; function done() { clearTimeout(fin); fin = null; avSel = null; changed(true); }
+      mk.on("drag", function () { var l = mk.getLngLat(); P[i] = [+l.lng.toFixed(6), +l.lat.toFixed(6)]; changed(false); clearTimeout(fin); fin = setTimeout(done, 1500); });
+      mk.on("dragend", done);
       e.addEventListener("click", function (ev) { ev.stopPropagation(); avSel = avSel === i ? null : i; renderAval(); });
       avHandles.push(mk);
-    });
-    P.forEach(function (p, i) {
-      var e = el("div", "av-mid", "+"), j = i + 1, mk = new maplibregl.Marker({ element: e, draggable: true }).setLngLat(avMid(p, P[(i + 1) % P.length])).addTo(avMap), made = false;
-      mk.on("dragstart", function () { var l = mk.getLngLat(); P.splice(j, 0, [l.lng, l.lat]); made = true; });
-      mk.on("drag", function () { if (!made) return; var l = mk.getLngLat(); P[j] = [+l.lng.toFixed(6), +l.lat.toFixed(6)]; avCurSet(P); });
-      mk.on("dragend", function () { avSel = null; avRemeasure(); renderAval(); });
-      e.addEventListener("click", function (ev) { ev.stopPropagation(); if (made) return; var l = mk.getLngLat(); P.splice(j, 0, [+l.lng.toFixed(6), +l.lat.toFixed(6)]); avSel = j; avRemeasure(); renderAval(); });
-      mids.push(mk); avHandles.push(mk);
     });
   }
   function avNew() {
@@ -3774,7 +3777,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     avView = null; avDraw = false; avSel = null; avSensStart(); renderAval(); goTop();
   }
   function avToMap(view) {
-    var a = avEdit; a.step = "map"; a.view = view || null; a.strokes = []; avDraw = true; renderAval(); goTop();
+    var a = avEdit; a.step = "map"; a.view = view || null; a.strokes = []; avDraw = false; avFull = true; renderAval(); goTop();
     setTimeout(function () { avLookFrom(a.view); }, 80);
   }
   function avTakePhoto(camera) {
@@ -3808,6 +3811,10 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     } else if (a && a.poly) {
       B("✏ Redessiner", "", function () { a.poly = null; a.m = null; a.strokes = []; avSel = null; avDraw = true; avCurSet([]); renderAval(); });
       if (avSel != null && a.poly.length > 3) B("🗑 Supprimer ce point", "dang", function () { a.poly.splice(avSel, 1); avSel = null; avRemeasure(); renderAval(); });
+      if (a.poly.length < 16) B("＋ Point", "", function () { // ajoute un point au milieu du plus long côté
+        var P = a.poly, best = 0, bi = 0; P.forEach(function (p, i) { var q = P[(i + 1) % P.length], d = Math.hypot(p[0] - q[0], (p[1] - q[1]) * 1.45); if (d > best) { best = d; bi = i; } });
+        var q = P[(bi + 1) % P.length]; P.splice(bi + 1, 0, [+((P[bi][0] + q[0]) / 2).toFixed(6), +((P[bi][1] + q[1]) / 2).toFixed(6)]); avSel = bi + 1; avRemeasure(); renderAval();
+      });
     }
     B("📍", "", avLocate).setAttribute("aria-label", "Ma position");
     B("Fond : " + (AV_BASES.filter(function (x) { return x[0] === avBase; })[0] || AV_BASES[0])[1], "", function () { var i = AV_BASES.map(function (x) { return x[0]; }).indexOf(avBase); avSetBase(AV_BASES[(i + 1) % AV_BASES.length][0]); });
@@ -3828,7 +3835,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var hint = null;
     if (a && a.strokes && avDraw) { hint = a.strokes.length ? "Continue le contour, même en plusieurs traits. Puis « ✓ Terminer »." : "Dessine le tour de l'avalanche avec le doigt, comme sur une feuille. Tu peux lever le doigt et reprendre."; avDrawLayer(wrap); }
     else if (a && a.strokes && !avDraw) hint = "Bouge la carte (2 doigts pour tourner), puis « ✏ Dessiner » pour continuer.";
-    else if (a && a.poly && !avBusy) hint = avSel != null ? "Point choisi : fais-le glisser, ou supprime-le." : "Fais glisser les points pour corriger. Touche un « + » pour ajouter un point.";
+    else if (a && a.poly && !avBusy) hint = avSel != null ? "Point choisi : fais-le glisser, ou supprime-le." : "Fais glisser un point pour corriger le contour.";
     if (avBusy) hint = "Mesure sur le relief…";
     if (hint) wrap.appendChild(el("div", "av-hint", hint));
     v.appendChild(wrap);
