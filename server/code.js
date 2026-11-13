@@ -1141,6 +1141,7 @@ function meteoG3000_() {
 }
 // Tous les matins à 7 h : crée la fiche du jour (pistes et message repris de la veille) avec la météo du moment
 function panneauMatin() {
+  return; // panneau d'information retiré de l'appli (13.11.2026) : le déclencheur de 7 h ne fait plus rien
   var jour = jourCH_(), L = panneauLignes_(), auj = L.filter(function (p) { return p.jour === jour; })[0], veille = L.filter(function (p) { return p.jour < jour; })[0];
   var d = auj ? auj.d : { pistes: veille ? veille.d.pistes || {} : {}, liste: veille ? veille.d.liste : null, msg: veille ? veille.d.msg || '' : '', draw: [], repris: !!veille };
   var m = null; try { m = meteoG3000_(); } catch (e) {}
