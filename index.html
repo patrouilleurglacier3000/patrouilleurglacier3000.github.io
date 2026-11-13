@@ -1031,7 +1031,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794593199";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794594138";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -2413,8 +2413,14 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   }
   var BIBLE = "La bible du patrouilleur";
   var BIBLE_DOCS = [
-    { t: "L'essentiel des directives", s: "Les règles SKUS et RMS en couleurs, 12 réflexes, 16 situations de terrain, quiz", u: "L-essentiel-des-directives-Patrouilleurs.pdf", c: "#d72933" },
+    { t: "L'essentiel des directives", s: "Les règles SKUS et RMS en couleurs, les signaux en images, 12 réflexes, les jugements à connaître, quiz", u: "L-essentiel-des-directives-Patrouilleurs.pdf", c: "#d72933" },
     { t: "Le saviez-vous ?", s: "Près de 80 accidents jugés en Suisse (2008 à 2024) et la leçon pour le patrouilleur", u: "Le-saviez-vous-Jurisprudence-Patrouilleurs.pdf", c: "#17324a" }];
+  var RECCO_DOCS = [
+    { t: "Classeur de formation RECCO R9", s: "Le classeur complet, à imprimer pour la station", u: "RECCO-Classeur-formation-R9.pdf", c: "#e4a600" },
+    { t: "Fiche de contrôle des détecteurs", s: "Le contrôle mensuel des R9, à imprimer", u: "RECCO-Fiche-controle-detecteurs.pdf", c: "#d63a3a" },
+    { t: "Fiche de suivi de l'équipe", s: "Qui a fait quel exercice, à imprimer", u: "RECCO-Fiche-suivi-equipe.pdf", c: "#2e9461" }];
+  var RECCO_RUB = "RECCO";
+  function isRecco(r) { return String(r || "").toLowerCase().indexOf("recco") >= 0; }
   function renderBible(v) {
     header(v, "book", "#b3261e", BIBLE, "");
     var hn = el("p", null, "Les règles du métier et ce qu'en disent les tribunaux. Touche un document pour l'ouvrir."); hn.style.cssText = "margin:0 4px 12px;color:var(--muted,#5b6c78);font-size:1rem"; v.appendChild(hn);
@@ -2424,16 +2430,26 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     })); });
     v.appendChild(g);
   }
+  // RECCO : seulement les 3 PDF (on imprime le classeur et les fiches dans chaque station)
+  function renderReccoDocs(v) {
+    header(v, "signal", "#e4a600", formRub, "");
+    var hn = el("p", null, "Les documents RECCO à imprimer pour la station. Touche un document pour l'ouvrir."); hn.style.cssText = "margin:0 4px 12px;color:var(--muted,#5b6c78);font-size:1rem"; v.appendChild(hn);
+    var g = el("div", "tiles");
+    RECCO_DOCS.forEach(function (d) { g.appendChild(bigTile("book", d.c, d.t, d.s, function () { bbOpen(d); })); });
+    v.appendChild(g);
+  }
   function renderForm() {
     var v = clearView();
     if (formRub === BIBLE) { renderBible(v); return; }
+    if (isRecco(formRub)) { renderReccoDocs(v); return; }
     if (!formRub) {
       header(v, "grad", "#2f7fb8", "Formation", "");
       var g = el("div", "tiles");
       g.appendChild(bigTile("book", "#b3261e", BIBLE, "Directives et jurisprudence · 2 documents", function () { goArea("form", BIBLE); }));
+      if (!rubriques().some(isRecco)) g.appendChild(bigTile("signal", "#e4a600", RECCO_RUB, "Classeur, fiche de contrôle, fiche de suivi · 3 PDF", function () { goArea("form", RECCO_RUB); }));
       rubriques().forEach(function (r, i) {
         var n2 = videosOf(r).length;
-        g.appendChild(bigTile(RUB_ICON(r), RUB_COL[i % RUB_COL.length], r, n2 ? n2 + " vidéo" + (n2 > 1 ? "s" : "") : "Pas encore de vidéo", function () { goArea("form", r); }, true));
+        g.appendChild(bigTile(RUB_ICON(r), RUB_COL[i % RUB_COL.length], r, isRecco(r) ? "Classeur, fiche de contrôle, fiche de suivi · 3 PDF" : n2 ? n2 + " vidéo" + (n2 > 1 ? "s" : "") : "Pas encore de vidéo", function () { goArea("form", r); }, true));
       });
       v.appendChild(g);
       var det = el("details", "more"); det.appendChild(el("summary", null, "Ajouter une rubrique"));
@@ -4793,7 +4809,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   var bbMem = {}, bbZoom = 1;
   function bbBytes(f) {
     if (bbMem[f]) return Promise.resolve(bbMem[f]);
-    var k = "stock-pistes-bible-" + f, c = null; try { c = localStorage.getItem(k); } catch (e) {}
+    var x = ((data && data.bible) || []).filter(function (b) { return b.f === f; })[0], k = "stock-pistes-bible-" + f + "-" + (x && x.id || ""), c = null;
+    try { for (var i = localStorage.length - 1; i >= 0; i--) { var kk = localStorage.key(i); if (kk && kk.indexOf("stock-pistes-bible-" + f) === 0 && kk !== k) localStorage.removeItem(kk); } c = localStorage.getItem(k); } catch (e) {}
     var p = c ? Promise.resolve(c) : call("bibleFichier", code, f).then(function (r) { try { localStorage.setItem(k, r.b64); } catch (e) {} return r.b64; });
     return p.then(function (b64) { var bin = atob(b64), u = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); bbMem[f] = u; return u; });
   }

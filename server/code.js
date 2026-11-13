@@ -1047,10 +1047,24 @@ function supprimerRecco(code, id) {
 // ---------- La bible du patrouilleur : les 2 PDF rangés dans le Drive (dossier des photos), ouverts seulement avec le code de l'équipe ----------
 // À la 1re ouverture, le script les copie une fois depuis l'ancienne version de l'appli, puis garde leurs identifiants.
 var BIBLE_SRC = 'https://raw.githubusercontent.com/patrouilleurglacier3000/patrouilleurglacier3000.github.io/tmp-recco/';
-var BIBLE_FICHIERS = ['L-essentiel-des-directives-Patrouilleurs.pdf', 'Le-saviez-vous-Jurisprudence-Patrouilleurs.pdf'];
+var BIBLE_FICHIERS = ['L-essentiel-des-directives-Patrouilleurs.pdf', 'Le-saviez-vous-Jurisprudence-Patrouilleurs.pdf',
+  'RECCO-Classeur-formation-R9.pdf', 'RECCO-Fiche-controle-detecteurs.pdf', 'RECCO-Fiche-suivi-equipe.pdf'];
+// Changer ce numéro quand un PDF est mis à jour : les anciens partent à la corbeille et les nouveaux arrivent tout seuls
+var BIBLE_VERSION = 'v2-2026-11-13';
 function bible_() {
   var pr = PropertiesService.getScriptProperties(), ids = {};
   try { ids = JSON.parse(pr.getProperty('bible_ids') || '{}'); } catch (e) {}
+  if (pr.getProperty('bible_version') !== BIBLE_VERSION) {
+    try {
+      verrou_(function () {
+        if (pr.getProperty('bible_version') === BIBLE_VERSION) return;
+        var old = {}; try { old = JSON.parse(pr.getProperty('bible_ids') || '{}'); } catch (e) {}
+        Object.keys(old).forEach(function (f) { try { DriveApp.getFileById(old[f]).setTrashed(true); } catch (e) {} });
+        pr.setProperty('bible_ids', '{}'); pr.setProperty('bible_version', BIBLE_VERSION);
+      });
+    } catch (e) {}
+    ids = {}; try { ids = JSON.parse(pr.getProperty('bible_ids') || '{}'); } catch (e) {}
+  }
   var manque = BIBLE_FICHIERS.filter(function (f) { return !ids[f]; });
   if (manque.length) {
     try {
@@ -1061,7 +1075,6 @@ function bible_() {
           var r = UrlFetchApp.fetch(BIBLE_SRC + f, { muteHttpExceptions: true });
           if (r.getResponseCode() !== 200) return;
           var fi = DriveApp.getFolderById(reglage_('dossier_photos')).createFile(r.getBlob().setName(f));
-          fi.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
           ids[f] = fi.getId();
         });
         pr.setProperty('bible_ids', JSON.stringify(ids));
@@ -1071,7 +1084,7 @@ function bible_() {
   return BIBLE_FICHIERS.map(function (f) { return { f: f, id: ids[f] || '' }; });
 }
 // À lancer une fois depuis l'éditeur Apps Script (menu en haut : choisir « installerBible », puis ▶ Exécuter) : autorise et range les 2 PDF dans le Drive.
-function installerBible() { var r = bible_(); Logger.log('Bible : ' + r.filter(function (x) { return x.id; }).length + ' PDF sur 2'); return r; }
+function installerBible() { var r = bible_(); Logger.log('Bible : ' + r.filter(function (x) { return x.id; }).length + ' PDF sur ' + BIBLE_FICHIERS.length); return r; }
 // Tout installer d'un coup : la bible (2 PDF), les pages RECCO, et la mise à jour du panneau à 7 h
 function installerTout() {
   installerBible();
