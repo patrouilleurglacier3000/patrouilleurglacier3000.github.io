@@ -987,7 +987,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794557151";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794558406";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1003,6 +1003,7 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
   var NS = "http://www.w3.org/2000/svg";
   var ICONS = {
     aval: "M2 20L9 7l3 5 3-3 7 11z M9 7l1.5 6 M15 9l-1 5",
+    ext: "M14 4h6v6 M20 4l-9 9 M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5",
     r9: "M7 3h10v18H7z M10 7h4 M10 11h4 M12 15v2",
     prep: "M8 3l4 3 4-3 4 4-3 3v11H7V10L4 7z",
     scan: "M4 20l8-8 M12 12a4 4 0 0 1 4 4 M12 8a8 8 0 0 1 8 8 M12 4a12 12 0 0 1 8 4",
@@ -1274,6 +1275,8 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
     var avT = (data.avalanches || []).filter(function (a) { return a.at >= avDayStart(Date.now()); }).length, avS = (data.avalanches || []).filter(function (a) { return a.at >= avSeasonStart(); }).length;
     g.appendChild(bigTile("aval", AV_C, "Avalanches", avT ? avT + " notée" + (avT > 1 ? "s" : "") + " aujourd'hui · " + avS + " cette saison" : "Carte 3D · dessine la coulée" + (avS ? " · " + avS + " cette saison" : ""), function () { avEdit = null; avView = null; goArea("aval"); }));
     g.appendChild(bigTile("signal", RC_C, "RECCO", rcHomeSub(), function () { rcDrawer = false; rcFull = false; goArea("recco"); }));
+    // Lien vers le logiciel WAC.3 de Wyssen (ouvert à part, chacun se connecte avec son propre compte)
+    g.appendChild(bigTile("ext", "#1f4e79", "WAC.3 · Wyssen", "Ouvre le site Wyssen · connexion avec ton compte", function () { var a = document.createElement("a"); a.href = "https://control.wyssenavalanche.com"; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove(); }));
     g.appendChild(bigTile("box", "#d63a3a", "Stock matériel", subS, function () { goArea("stock"); }));
     g.appendChild(bigTile("cal", "#0e8a9a", "Agenda", nx ? "Prochain : " + nx.title + " · " + dayShort(nx.date) + (nx.start ? " " + nx.start : "") : "Rien de prévu pour l'instant", function () { goArea("plan"); }));
     g.appendChild(bigTile("team", "#2e9461", "Planning", pj && pj.pages && pj.pages.length ? "Qui travaille · mis à jour le " + shortDate(pj.updated) : "Qui travaille · pas encore de planning", function () { goArea("presence"); }));
