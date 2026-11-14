@@ -1050,7 +1050,7 @@ var BIBLE_SRC = 'https://raw.githubusercontent.com/patrouilleurglacier3000/patro
 var BIBLE_FICHIERS = ['L-essentiel-des-directives-Patrouilleurs.pdf', 'Le-saviez-vous-Jurisprudence-Patrouilleurs.pdf',
   'RECCO-Classeur-formation-R9.pdf', 'RECCO-Fiche-controle-detecteurs.pdf', 'RECCO-Fiche-suivi-equipe.pdf', 'Bible-texte.json'];
 // Changer ce numéro quand un PDF est mis à jour : les anciens partent à la corbeille et les nouveaux arrivent tout seuls
-var BIBLE_VERSION = 'v2.3-2026-11-14';
+var BIBLE_VERSION = 'v2.4-2026-11-14';
 function bible_() {
   var pr = PropertiesService.getScriptProperties(), ids = {};
   try { ids = JSON.parse(pr.getProperty('bible_ids') || '{}'); } catch (e) {}
