@@ -1386,10 +1386,10 @@ function coord_(x) { var n = Number(x); return isFinite(n) && n !== 0 ? Math.rou
 function horo_(t) { return Utilities.formatDate(new Date(t), 'Europe/Zurich', 'yyyyMMdd-HHmmss'); }
 
 // ----- Suivi des pentes : des points de vue fixes, une photo par jour, tout l'historique -----
-var ONGLET_PENTES = 'Pentes', COL_PENTES = ['id', 'nom', 'lat', 'lng', 'cree_le', 'par', 'secteur'];
+var ONGLET_PENTES = 'Pentes', COL_PENTES = ['id', 'nom', 'lat', 'lng', 'cree_le', 'par', 'secteur', 'alt', 'cap', 'precision_m'];
 function ongletPentes_() {
   var s = ongletCree_(ONGLET_PENTES, COL_PENTES);
-  if (String(s.getRange(1, 7).getValue()) !== 'secteur') s.getRange(1, 7).setValue('secteur');
+  if (String(s.getRange(1, 10).getValue()) !== 'precision_m') s.getRange(1, 7, 1, 4).setValues([['secteur', 'alt', 'cap', 'precision_m']]);
   return s;
 }
 var ONGLET_PPH = 'Pentes photos', COL_PPH = ['id', 'spot', 'date', 'par', 'note', 'fichier', 'lat', 'lng', 'sha256', 'heure_tel', 'vignette', 'traits'];
@@ -1418,7 +1418,7 @@ function pentes_() {
   });
   return lire_(ONGLET_PENTES).map(function (o) {
     var x = par[String(o.id)] || { n: 0, last: null };
-    return { id: String(o.id), name: String(o.nom), sect: String(o.secteur || ''), lat: Number(o.lat) || null, lng: Number(o.lng) || null, at: Number(o.cree_le) || 0, n: x.n, last: x.last };
+    return { id: String(o.id), name: String(o.nom), sect: String(o.secteur || ''), lat: Number(o.lat) || null, lng: Number(o.lng) || null, alt: o.alt === '' || o.alt == null ? null : Number(o.alt), cap: o.cap === '' || o.cap == null ? null : Number(o.cap), acc: Number(o.precision_m) || null, at: Number(o.cree_le) || 0, n: x.n, last: x.last };
   });
 }
 function enregistrerPente(code, sp, par) {
@@ -1432,8 +1432,11 @@ function enregistrerPente(code, sp, par) {
     if (o) {
       s.getRange(o._ligne, 2).setValue(nom);
       if (sp.sect != null) s.getRange(o._ligne, 7).setValue(sect);
-      if (sp.lat && sp.lng) s.getRange(o._ligne, 3, 1, 2).setValues([[coord_(sp.lat), coord_(sp.lng)]]);
-    } else s.appendRow([id, nom, coord_(sp.lat), coord_(sp.lng), Date.now(), String(par || '').slice(0, 60), sect]);
+      if (sp.lat && sp.lng) {
+        s.getRange(o._ligne, 3, 1, 2).setValues([[coord_(sp.lat), coord_(sp.lng)]]);
+        s.getRange(o._ligne, 8, 1, 3).setValues([[isFinite(Number(sp.alt)) && sp.alt !== null ? Math.round(Number(sp.alt)) : '', isFinite(Number(sp.cap)) && sp.cap !== null ? Math.round(Number(sp.cap)) % 360 : '', Math.round(Number(sp.acc)) || '']]);
+      }
+    } else s.appendRow([id, nom, coord_(sp.lat), coord_(sp.lng), Date.now(), String(par || '').slice(0, 60), sect, '', '', '']);
     ongletPph_();
     return { pentes: pentes_() };
   });

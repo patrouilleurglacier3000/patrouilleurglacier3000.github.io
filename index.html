@@ -1107,7 +1107,20 @@ body:has(#view.bl) { background: #fff; }
 .pe-sect::before { content: "▾"; margin-right: 4px; } .pe-sect.shut::before { content: "▸"; }
 .pe-sect b { flex: 1; } .pe-sect span { font-size: 14px; font-weight: 700; opacity: .85; } .pe-sect span.ok { color: #7be0a6; opacity: 1; }
 .pe-sk { display: block; color: var(--muted); font: 800 13px var(--body); text-transform: uppercase; letter-spacing: .5px; }
-.pe-more { margin-top: 22px; } .pe-more summary { font: 700 15px var(--body); color: var(--muted); cursor: pointer; padding: 10px 0; }
+.pe-more { margin-top: 22px; }
+.pg { position: fixed; inset: 0; z-index: 90; background: #0b1520; color: #fff; display: flex; flex-direction: column; transition: background .3s; }
+.pg.ok { background: #0f5132; }
+.pg-mid { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 12px; text-align: center; }
+.pg-ar { width: min(62vw, 300px); height: min(62vw, 300px); }
+.pg-rot { transition: transform .25s; }
+.pg-dist { font: 900 54px var(--body); line-height: 1.05; }
+.pg-dir { font: 800 24px var(--body); color: #ffd600; } .pg.ok .pg-dir { color: #fff; }
+.pg-alt { font: 800 21px var(--body); color: #8fd3ff; min-height: 1.2em; }
+.pg-acc { font: 600 15px var(--body); opacity: .75; }
+.pg-bot { display: grid; gap: 8px; padding: 12px 16px calc(14px + env(safe-area-inset-bottom)); }
+.pg-bot .pbtn { min-height: 52px; background: transparent; color: #fff; border-color: #555; }
+.cam-aim { font: 900 22px var(--body); color: #ffd600; background: rgba(0,0,0,.5); border-radius: 12px; padding: 4px 12px; min-width: 70px; text-align: center; }
+.cam-aim:empty { display: none; } .cam-aim.ok { color: #7be0a6; } .pe-more summary { font: 700 15px var(--body); color: var(--muted); cursor: pointer; padding: 10px 0; }
 .pe-more .pbtn { display: block; width: 100%; min-height: 52px; margin: 8px 0; }
 .pbtn.danger { color: #b3261e; border-color: #e6b3ae; }
 .cam, .pv, .pp-sheet { position: fixed; inset: 0; z-index: 90; background: #000; color: #fff; display: flex; flex-direction: column; }
@@ -1199,7 +1212,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794649579";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794655800";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -5263,7 +5276,7 @@ body:has(#view.bl) { background: #fff; }
     return new Promise(function (res) {
       if (!navigator.geolocation) return res(null);
       var done = false, t = setTimeout(function () { if (!done) { done = true; res(null); } }, timeout || 8000);
-      navigator.geolocation.getCurrentPosition(function (p) { if (done) return; done = true; clearTimeout(t); res({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy }); },
+      navigator.geolocation.getCurrentPosition(function (p) { if (done) return; done = true; clearTimeout(t); res({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy, alt: p.coords.altitude, aa: p.coords.altitudeAccuracy }); },
         function () { if (done) return; done = true; clearTimeout(t); res(null); }, { enableHighAccuracy: true, timeout: timeout || 8000, maximumAge: maxAge == null ? 20000 : maxAge });
     });
   }
@@ -5316,6 +5329,7 @@ body:has(#view.bl) { background: #fff; }
       var gh = null; if (o.ghost) { gh = document.createElement("img"); gh.className = "cam-ghost"; gh.src = o.ghost; gh.alt = ""; stage.appendChild(gh); }
       var top = el("div", "cam-top"), x = el("button", "cam-x", "✕"); x.type = "button"; x.setAttribute("aria-label", "Fermer");
       top.appendChild(el("b", null, o.title || "Photo")); top.appendChild(x);
+      if (o.aim != null) camAim(top, o.aim);
       var bot = el("div", "cam-bot");
       if (gh) {
         var gw = el("div", "cam-gw"), lb = el("span", null, "Photo précédente"), rg = document.createElement("input");
@@ -5362,6 +5376,91 @@ body:has(#view.bl) { background: #fff; }
         setZoom(z0);
       }, function () { if (closed) return; closed = true; ov.remove(); camNative(res); });
     });
+  }
+
+  // ----- Boussole + guidage jusqu'au point de prise de vue -----
+  var ppHead = null, ppCompOn = false;
+  function ppCompass() {
+    // iOS demande l'autorisation (à appeler pendant une touche) ; Android répond directement
+    var D = window.DeviceOrientationEvent;
+    var ask = D && typeof D.requestPermission === "function" ? D.requestPermission().catch(function () { return "denied"; }) : Promise.resolve("granted");
+    return ask.then(function (st) {
+      if (st !== "granted" || ppCompOn) return;
+      ppCompOn = true;
+      function on(e) {
+        var h = null;
+        if (typeof e.webkitCompassHeading === "number") h = e.webkitCompassHeading;
+        else if (e.absolute && typeof e.alpha === "number") h = 360 - e.alpha;
+        if (h == null || !isFinite(h)) return;
+        var so = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
+        ppHead = (h + so + 360) % 360;
+      }
+      window.addEventListener("deviceorientationabsolute", on, true);
+      window.addEventListener("deviceorientation", on, true);
+    });
+  }
+  function ppBearing(a, b) {
+    var r = Math.PI / 180, y = Math.sin((b.lng - a.lng) * r) * Math.cos(b.lat * r), x = Math.cos(a.lat * r) * Math.sin(b.lat * r) - Math.sin(a.lat * r) * Math.cos(b.lat * r) * Math.cos((b.lng - a.lng) * r);
+    return (Math.atan2(y, x) / r + 360) % 360;
+  }
+  function ppCard(d) { return ["au nord", "au nord-est", "à l'est", "au sud-est", "au sud", "au sud-ouest", "à l'ouest", "au nord-ouest"][Math.round(d / 45) % 8]; }
+  function ppDiff(a, b) { return ((a - b + 540) % 360) - 180; }
+  // Écran « Aller au point » : flèche, distance, altitude ; au bon endroit l'appareil s'ouvre tout seul
+  function peGuide(s) {
+    return new Promise(function (res) {
+      var ov = el("div", "pg"), top = el("div", "pv-top"), x = el("button", "cam-x", "✕"); x.type = "button"; x.setAttribute("aria-label", "Fermer");
+      top.appendChild(el("b", null, "Aller au point · " + s.name)); top.appendChild(x);
+      var mid = el("div", "pg-mid"), ar = document.createElementNS(NS, "svg");
+      ar.setAttribute("viewBox", "-50 -50 100 100"); ar.setAttribute("class", "pg-ar");
+      ar.innerHTML = '<circle r="46" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="3"/><g class="pg-rot"><path d="M0 -40 L22 18 L0 6 L-22 18 Z" fill="#ffd600" stroke="#000" stroke-width="2" stroke-linejoin="round"/></g><text class="pg-n" x="0" y="-36" text-anchor="middle" font-size="12" font-weight="800" fill="#ff5252">N</text>';
+      var dist = el("div", "pg-dist", "…"), dir = el("div", "pg-dir", "Recherche du GPS…"), alt = el("div", "pg-alt"), acc = el("div", "pg-acc");
+      mid.appendChild(ar); mid.appendChild(dist); mid.appendChild(dir); mid.appendChild(alt); mid.appendChild(acc);
+      var bot = el("div", "pg-bot"), go = el("button", "pp-big", "Ouvrir l'appareil maintenant"), mp = el("button", "pbtn", "Itinéraire (Google Maps)"); go.type = mp.type = "button"; go.style.background = PE_C;
+      bot.appendChild(go); bot.appendChild(mp);
+      ov.appendChild(top); ov.appendChild(mid); ov.appendChild(bot); document.body.appendChild(ov);
+      var rot = ar.querySelector(".pg-rot"), nn = ar.querySelector(".pg-n"), wid = null, pos = null, okN = 0, done = false, raf = null;
+      function close(v) { if (done) return; done = true; if (wid != null) navigator.geolocation.clearWatch(wid); cancelAnimationFrame(raf); ov.remove(); res(v); }
+      x.addEventListener("click", function () { close(false); });
+      go.addEventListener("click", function () { close(true); });
+      mp.addEventListener("click", function () { window.open("https://www.google.com/maps/dir/?api=1&travelmode=walking&destination=" + s.lat + "," + s.lng, "_blank", "noopener"); });
+      function draw() {
+        raf = requestAnimationFrame(draw);
+        if (!pos) return;
+        var b = ppBearing(pos, s), h = ppHead, a = h == null ? b : ppDiff(b, h);
+        rot.setAttribute("transform", "rotate(" + a + ")");
+        nn.setAttribute("transform", h == null ? "" : "rotate(" + (-h) + ")");
+      }
+      draw();
+      function upd(p) {
+        pos = { lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy, alt: p.coords.altitude, aa: p.coords.altitudeAccuracy };
+        var d = ppDist(pos, s), b = ppBearing(pos, s), lim = Math.max(6, Math.min(pos.acc, 12));
+        dist.textContent = d < 1000 ? d + " m" : (d / 1000).toFixed(1) + " km";
+        if (ppHead != null) { var t = ppDiff(b, ppHead); dir.textContent = Math.abs(t) < 20 ? "Tout droit" : t < 0 ? "◀ Plus à gauche" : "Plus à droite ▶"; }
+        else dir.textContent = "Va " + ppCard(b) + " (la flèche montre le nord en haut)";
+        alt.textContent = "";
+        if (s.alt != null && pos.alt != null && (pos.aa == null || pos.aa < 25)) { var da = Math.round(s.alt - pos.alt); if (Math.abs(da) >= 6) alt.textContent = (da > 0 ? "▲ Monte d'environ " : "▼ Descends d'environ ") + Math.abs(da) + " m"; }
+        acc.textContent = "Précision GPS ± " + Math.round(pos.acc) + " m" + (pos.acc > 20 ? " : attends un peu, ça s'affine" : "");
+        if (d <= lim) okN++; else okN = 0;
+        ov.classList.toggle("ok", okN > 0);
+        if (okN >= 2) {
+          dist.textContent = "✓ Bon endroit"; dir.textContent = "L'appareil s'ouvre…";
+          if (navigator.vibrate) navigator.vibrate([120, 60, 120]);
+          setTimeout(function () { close(true); }, 900); okN = -99;
+        }
+      }
+      if (!navigator.geolocation) { dir.textContent = "GPS indisponible sur ce téléphone"; return; }
+      wid = navigator.geolocation.watchPosition(upd, function () { dir.textContent = "GPS refusé : active la localisation pour l'appli"; }, { enableHighAccuracy: true, maximumAge: 0, timeout: 30000 });
+    });
+  }
+  // Viseur dans l'appareil photo : tourner à gauche / à droite pour retrouver la même direction
+  function camAim(top, cap) {
+    var ind = el("div", "cam-aim"); top.insertBefore(ind, top.lastChild);
+    var t = setInterval(function () {
+      if (!ind.isConnected) return clearInterval(t);
+      if (ppHead == null) { ind.textContent = ""; return; }
+      var d = Math.round(ppDiff(cap, ppHead));
+      ind.textContent = Math.abs(d) <= 4 ? "✓ Direction" : d < 0 ? "◀ " + -d + "°" : d + "° ▶"; ind.classList.toggle("ok", Math.abs(d) <= 4);
+    }, 200);
   }
 
   /* ----- Suivi des pentes ----- */
@@ -5485,6 +5584,9 @@ body:has(#view.bl) { background: #fff; }
     });
     // Réglages du point de vue
     var more = el("details", "pe-more"); more.appendChild(el("summary", null, "Réglages du point de vue"));
+    var rp = el("button", "pbtn", peRedef[s.id] ? "📍 Le point sera redéfini à la prochaine photo ✓" : s.lat ? "📍 Redéfinir le point de prise (à la prochaine photo)" : "📍 Point de prise : enregistré à la prochaine photo");
+    rp.type = "button"; rp.addEventListener("click", function () { if (!s.lat) return; peRedef[s.id] = !peRedef[s.id]; renderPentes(); });
+    more.appendChild(rp);
     var mv = el("button", "pbtn", "Changer de secteur (" + (s.sect || "aucun") + ")"), rn = el("button", "pbtn", "Renommer"), del = el("button", "pbtn danger", "Supprimer ce point et ses photos");
     [rn, mv, del].forEach(function (b) { b.type = "button"; more.appendChild(b); });
     rn.addEventListener("click", function () {
@@ -5502,20 +5604,26 @@ body:has(#view.bl) { background: #fff; }
     });
     v.appendChild(more);
   }
+  var peRedef = {};
   function peShoot(s) {
     if (ppLock) return; ppLock = true;
+    ppCompass();
     var ghostP = s.last && s.last.f ? ppPhoto(s.last.f).catch(function () { return null; }) : Promise.resolve(null);
-    showStatus("Ouverture de l'appareil…", false, true);
-    var posP = null;
-    ghostP.then(function (gu) { return camOpen({ ghost: gu, title: s.name, zoomKey: s.id }); }).then(function (f) {
-      if (!f) { ppLock = false; return; }
-      var tel = Date.now();
-      return Promise.all([ppShrink(f, 1600, .85), ppShrink(f, 320, .6)]).then(function (u) { return peNoteSheet(s, u, posP, tel); });
+    // Point de prise connu : on guide d'abord jusqu'au bon endroit
+    (s.lat && !peRedef[s.id] ? peGuide(s) : Promise.resolve(true)).then(function (go) {
+      if (!go) { ppLock = false; return; }
+      showStatus("Ouverture de l'appareil…", false, true);
+      var posP = ppPos(20000, 3000), cap = null;
+      return ghostP.then(function (gu) { return camOpen({ ghost: gu, title: s.name, zoomKey: s.id, aim: s.lat && s.cap != null && !peRedef[s.id] ? s.cap : null }); }).then(function (f) {
+        if (!f) { ppLock = false; return; }
+        var tel = Date.now(); cap = ppHead;
+        return Promise.all([ppShrink(f, 1600, .85), ppShrink(f, 320, .6)]).then(function (u) { return peNoteSheet(s, u, posP, tel, cap); });
+      });
     }).catch(function (e) { ppLock = false; showStatus(String(e && e.message || e), true); });
   }
   function ppDrawPrev(im, src, S) { ppBurn(src, [], S, []).then(function (b) { var o = im.dataset.u; if (o) URL.revokeObjectURL(o); im.dataset.u = URL.createObjectURL(b); im.src = im.dataset.u; }, function () {}); }
   // Après la photo : une note rapide (ou rien), puis envoi
-  function peNoteSheet(s, u, posP, tel) {
+  function peNoteSheet(s, u, posP, tel, cap) {
     var ov = el("div", "pp-sheet"), box = el("div", "pp-sbox"), im = document.createElement("img"); im.src = u[0]; im.alt = ""; im.className = "pp-prev";
     box.appendChild(im); box.appendChild(el("b", "pp-st", s.name));
     var sel = [], chips = el("div", "pp-chips");
@@ -5541,8 +5649,17 @@ body:has(#view.bl) { background: #fff; }
     ok.addEventListener("click", function () {
       var note = sel.concat(tx.value.trim() ? [tx.value.trim()] : []).join(" · ");
       ok.disabled = no.disabled = true; ok.textContent = "Envoi…";
-      ppCall("photoPente", [s.id, u[0], u[1], { note: note, tel: tel, traits: S }, myName()], "Envoi de la photo…").then(function (d) {
+      var P0 = null;
+      Promise.race([posP, new Promise(function (r) { setTimeout(function () { r(null); }, 1500); })]).then(function (p) {
+        P0 = p;
+        return ppCall("photoPente", [s.id, u[0], u[1], { note: note, tel: tel, traits: S, lat: p && p.lat, lng: p && p.lng }, myName()], "Envoi de la photo…");
+      }).then(function (d) {
         data.pentes = d.pentes; saveCache(data);
+        // Première photo (ou point à redéfinir) : cet endroit devient le point de prise de vue
+        if ((!s.lat || peRedef[s.id]) && P0 && P0.acc <= 30) {
+          delete peRedef[s.id];
+          call("enregistrerPente", code, { id: s.id, name: s.name, lat: P0.lat, lng: P0.lng, alt: P0.alt, cap: cap, acc: P0.acc }, myName()).then(function (r) { data.pentes = r.pentes; saveCache(data); showStatus("📍 Point de prise de vue enregistré (± " + Math.round(P0.acc) + " m)"); if (area === "pentes") renderPentes(); }, function () {});
+        }
         if (peHist[s.id]) peHist[s.id].unshift(d.photo);
         if (peThumbs && d.photo.thumb) peThumbs[s.id] = d.photo.thumb;
         end(); showStatus("Photo enregistrée · " + zHeure(d.photo.at, true)); if (area === "pentes") renderPentes();
