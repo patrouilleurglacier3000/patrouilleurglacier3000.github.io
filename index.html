@@ -1127,6 +1127,13 @@ body:has(#view.bl) { background: #fff; }
 .pe-sect { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 10px; min-height: 58px; margin: 14px 0 8px; padding: 8px 14px; border: 0; border-radius: 12px; background: #17324a; color: #fff; font: 800 19px var(--body); cursor: pointer; text-align: left; }
 .pe-sect::before { content: "▾"; margin-right: 4px; } .pe-sect.shut::before { content: "▸"; }
 .pe-sect b { flex: 1; } .pe-sect span { font-size: 14px; font-weight: 700; opacity: .85; } .pe-sect span.ok { color: #7be0a6; opacity: 1; }
+.pe-sub { display: flex; width: calc(100% - 14px); margin: 6px 0 6px 14px; align-items: center; justify-content: space-between; min-height: 52px; padding: 6px 14px; border: 2px solid #17324a; border-radius: 12px; background: var(--paper); color: var(--ink); font: 800 17px var(--body); cursor: pointer; }
+.pe-sub::before { content: "▾"; margin-right: 6px; } .pe-sub.shut::before { content: "▸"; } .pe-sub b { flex: 1; text-align: left; } .pe-sub span { font-size: 14px; color: var(--muted); } .pe-sub span.ok { color: var(--ok); }
+.pe-sbox2 { margin-left: 14px; }
+.pe-near:empty { display: none; }
+.pe-near { display: grid; gap: 8px; background: #0f5132; color: #fff; border-radius: 14px; padding: 12px; margin-bottom: 14px; font-size: 17px; }
+.pe-nb { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 60px; border: 0; border-radius: 12px; background: #fff; color: #0f5132; font: 700 16px var(--body); padding: 8px 14px; cursor: pointer; text-align: left; }
+.pe-nb b { font-size: 18px; white-space: nowrap; } .pe-nb.done b { color: #555; }
 .pe-sk { display: block; color: var(--muted); font: 800 13px var(--body); text-transform: uppercase; letter-spacing: .5px; }
 .pe-pt { font: 700 15px var(--body); color: #b26a00; margin: 2px 0 8px; } .pe-pt.ok { color: var(--ok); }
 .pe-more { margin-top: 22px; }
@@ -1246,7 +1253,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794664067";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794665134";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1490,7 +1497,7 @@ body:has(#view.bl) { background: #fff; }
   var area = "home", formRub = null;
   try { area = localStorage.getItem("stock-pistes-area") || "home"; } catch (e) {}
   function goArea(a, rub) {
-    if (a !== area) { peSel = null; peNew = null; peOpenS = null; prOpen = null; } // on revient toujours sur la page principale de l'onglet
+    if (a !== area) { peSel = null; peNew = null; peOpenS = null; peOpenSub = null; prOpen = null; } // on revient toujours sur la page principale de l'onglet
     area = a; formRub = rub || null; panel = null; evView = null; lowOpen = false; try { localStorage.setItem("stock-pistes-area", a); } catch (e) {}
     renderAll(); goTop();
   }
@@ -5653,7 +5660,7 @@ body:has(#view.bl) { background: #fff; }
     "Martizberg": ["Sous arrivée TS2", "RG", "RD", "Oldenegg arrivée TS1"],
     "Reusch": ["RD cabane à chiotte", "RD secteur cascade chalet Budemli", "RG Lawinen-Hang"]
   };
-  var peOpenS = null; // un seul secteur ouvert à la fois ; en revenant de l'accueil, tout est refermé
+  var peOpenS = null, peOpenSub = null; // un seul secteur ouvert à la fois ; en revenant de l'accueil, tout est refermé
   function peList() {
     var L = (data.pentes || []).slice(), first = {};
     L.forEach(function (x) { var k = x.sect || ""; if (first[k] == null || x.at < first[k]) first[k] = x.at; });
@@ -5694,16 +5701,43 @@ body:has(#view.bl) { background: #fff; }
       v.appendChild(sd);
       v.appendChild(el("p", "pp-hint", Object.keys(PE_SEED).join(" · ")));
     }
-    var box = v, cur = null;
-    L.forEach(function (s) {
-      var k = s.sect || "Sans secteur";
-      if (k !== cur) {
-        cur = k; var inK = L.filter(function (x) { return (x.sect || "Sans secteur") === k; }), okK = inK.filter(peToday).length;
-        var hb = el("button", "pe-sect" + (peOpenS !== k ? " shut" : "")); hb.type = "button";
-        hb.appendChild(el("b", null, k)); hb.appendChild(el("span", okK === inK.length ? "ok" : null, okK + "/" + inK.length + " aujourd'hui"));
-        hb.addEventListener("click", (function (k) { return function () { peOpenS = peOpenS === k ? null : k; renderPentes(); }; })(k));
-        v.appendChild(hb); box = el("div", "pe-sbox"); if (peOpenS !== k) box.hidden = true; v.appendChild(box);
-      }
+    // Tu es à un point de prise ? il s'affiche tout en haut, prêt pour la photo
+    var nearBox = el("div", "pe-near"); v.insertBefore(nearBox, v.firstChild);
+    if (L.some(function (x) { return x.lat && x.n; })) ppPos(10000, 15000).then(function (p) {
+      if (!p || !nearBox.isConnected) return;
+      var lim = Math.min(60, Math.max(35, p.acc + 10));
+      var N = L.filter(function (x) { return x.lat && x.n; }).map(function (x) { return { s: x, d: ppDist(p, x) }; }).filter(function (o) { return o.d <= lim; }).sort(function (a, b) { return a.d - b.d; });
+      if (!N.length) return;
+      nearBox.appendChild(el("b", null, "📍 Tu es à un point de photo"));
+      N.forEach(function (o) {
+        var b = el("button", "pe-nb" + (peToday(o.s) ? " done" : "")); b.type = "button";
+        b.appendChild(el("span", null, o.s.name + " · " + o.d + " m")); b.appendChild(el("b", null, peToday(o.s) ? "✓ Fait · refaire" : "📷 Photo"));
+        b.addEventListener("click", function () { peShoot(o.s); }); nearBox.appendChild(b);
+      });
+    });
+    // Secteurs (un seul ouvert) ; un gros secteur est découpé en rive gauche / rive droite / autres
+    var groups = [];
+    L.forEach(function (x) { var k = x.sect || "Sans secteur", g = groups.filter(function (q) { return q.k === k; })[0]; if (!g) groups.push(g = { k: k, L: [] }); g.L.push(x); });
+    groups.forEach(function (g) {
+      var k = g.k, okK = g.L.filter(peToday).length;
+      var hb = el("button", "pe-sect" + (peOpenS !== k ? " shut" : "")); hb.type = "button";
+      hb.appendChild(el("b", null, k)); hb.appendChild(el("span", okK === g.L.length ? "ok" : null, okK + "/" + g.L.length + " aujourd'hui"));
+      hb.addEventListener("click", function () { peOpenS = peOpenS === k ? null : k; peOpenSub = null; renderPentes(); });
+      v.appendChild(hb); var box = el("div", "pe-sbox"); if (peOpenS !== k) box.hidden = true; v.appendChild(box);
+      var rg = g.L.filter(function (x) { return /^RG\b/i.test(x.name); }), rd = g.L.filter(function (x) { return /^RD\b/i.test(x.name); });
+      if (g.L.length < 8 || !rg.length || !rd.length) { g.L.forEach(function (x) { box.appendChild(peCard(x)); }); return; }
+      [["Autres", g.L.filter(function (x) { return rg.indexOf(x) < 0 && rd.indexOf(x) < 0; })], ["Rive gauche", rg], ["Rive droite", rd]].forEach(function (sg) {
+        if (!sg[1].length) return;
+        var sk = k + "|" + sg[0], ok2 = sg[1].filter(peToday).length;
+        var sb = el("button", "pe-sub" + (peOpenSub !== sk ? " shut" : "")); sb.type = "button";
+        sb.appendChild(el("b", null, sg[0])); sb.appendChild(el("span", ok2 === sg[1].length ? "ok" : null, ok2 + "/" + sg[1].length));
+        sb.addEventListener("click", function () { peOpenSub = peOpenSub === sk ? null : sk; renderPentes(); });
+        box.appendChild(sb); var b2 = el("div", "pe-sbox2"); if (peOpenSub !== sk) b2.hidden = true; box.appendChild(b2);
+        sg[1].forEach(function (x) { b2.appendChild(peCard(x)); });
+      });
+    });
+  }
+  function peCard(s) {
       var c = el("div", "pe-card"), th = el("button", "pe-th"); th.type = "button";
       var tu = peThumbs && peThumbs[s.id];
       if (tu) { var im = document.createElement("img"); im.src = tu; im.alt = ""; th.appendChild(im); if (s.last) th.appendChild(peStampEl(s.last.at)); }
@@ -5715,8 +5749,7 @@ body:has(#view.bl) { background: #fff; }
       tx.addEventListener("click", function () { peSel = s.id; renderPentes(); goTop(); });
       var go = el("button", "pe-go" + (peToday(s) ? " done" : ""), peToday(s) ? "✓ Fait" : "📷 Photo"); go.type = "button";
       go.addEventListener("click", function () { peShoot(s); });
-      c.appendChild(th); c.appendChild(tx); c.appendChild(go); box.appendChild(c);
-    });
+      c.appendChild(th); c.appendChild(tx); c.appendChild(go); return c;
   }
   function peNewForm() {
     var f = el("div", "pp-form"), lb = el("label", null, "Nom du point de vue"), inp = document.createElement("input");
