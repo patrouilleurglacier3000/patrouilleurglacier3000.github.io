@@ -1196,6 +1196,11 @@ body:has(#view.bl) { background: #fff; }
 .pr-filt { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 10px; margin-bottom: 8px; }
 .pr-frow { display: flex; gap: 8px; align-items: center; } .pr-frow .pp-in { flex: 1; min-width: 0; margin: 0; } .pr-frow .pbtn { min-height: 56px; flex: none; }
 .pbtn.on { background: #37474f; color: #fff; }
+.bq-badge { position: fixed; left: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 70; max-width: calc(100% - 120px); border: 0; border-radius: 22px; padding: 10px 14px; background: #17324a; color: #fff; font: 800 14px var(--body); box-shadow: 0 4px 14px rgba(0,0,0,.3); cursor: pointer; text-align: left; }
+.bq-badge.bad { background: #b3261e; }
+.pe-pend { position: absolute; right: 6px; top: 6px; background: #17324a; color: #fff; font: 800 12px var(--body); padding: 2px 7px; border-radius: 6px; } .pe-pend.bad { background: #b3261e; }
+.pr-pend.go { background: #e7f0f8; color: #17324a; border-color: #17324a; }
+.pr-pend { grid-template-columns: 64px 1fr; align-items: center; } .pr-pth { width: 64px; height: 64px; object-fit: cover; border-radius: 10px; }
 .pr-pend { background: #fde8e6; color: #5c1410; border: 2px solid #b3261e; border-radius: 14px; padding: 12px; margin-bottom: 14px; display: grid; gap: 8px; }
 .pr-day { margin: 18px 0 8px; font-size: 15px; color: var(--muted); text-transform: capitalize; }
 .pr-card { display: flex; gap: 12px; width: 100%; text-align: left; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 8px; margin-bottom: 8px; color: var(--ink); cursor: pointer; font: 500 14px var(--body); }
@@ -1233,7 +1238,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794657083";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794657271";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1339,7 +1344,7 @@ body:has(#view.bl) { background: #fff; }
   function call(fn) {
     var args = Array.prototype.slice.call(arguments, 1);
     // délai max : sans réponse au bout de 25 s, on abandonne (sinon l'écran peut rester bloqué)
-    var ac = window.AbortController ? new AbortController() : null, to = ac ? setTimeout(function () { ac.abort(); }, /^(assistant|photoPente|deposerPreuve|verifierPreuves)$/.test(fn) ? 70000 : 25000) : null;
+    var ac = window.AbortController ? new AbortController() : null, to = ac ? setTimeout(function () { ac.abort(); }, /^(assistant|photoPente|deposerPreuve|verifierPreuves|ajouterPhoto\w*)$/.test(fn) ? 70000 : 25000) : null;
     if (window.API_URL) return fetch(window.API_URL, { method: "POST", body: JSON.stringify({ fn: fn, args: args }), headers: { "Content-Type": "text/plain;charset=utf-8" }, credentials: "omit", redirect: "follow", signal: ac ? ac.signal : undefined })
       .then(function (r) { clearTimeout(to); return r; }, function (e) { clearTimeout(to); throw new Error(e && e.name === "AbortError" ? "Pas de réponse (réseau lent)" : "Pas de connexion"); })
       .then(function (r) { if (!r.ok) throw new Error("Pas de connexion"); return r.json(); })
@@ -1430,6 +1435,8 @@ body:has(#view.bl) { background: #fff; }
     clearTimeout(loadRetry); loadRetry = setTimeout(function () { if (!data) load(); }, 10000);
   }
   // Mise à jour automatique toutes les 30 s (sans déranger une saisie en cours)
+  setTimeout(bqInit, 0);
+  setInterval(function () { if (BQ.length && !bqBusy) bqRun(); }, 30000);
   setInterval(function () {
     if (!data || busy || panel || document.hidden || Object.keys(countDraft).length || cmdOpen || evEdit || dmEdit || tkEdit || tkConfirm || tkDel || tkDraft || swOpen || ppLock || (area === "bilan" && (blEdit || blRev))) return;
     var a = document.activeElement; if (a && /INPUT|SELECT|TEXTAREA/.test(a.tagName)) return;
@@ -1679,8 +1686,8 @@ body:has(#view.bl) { background: #fff; }
   function tkType(t) { return t.prio === "attention" ? TK_TYPES[0] : t.prio === "urgent" ? TK_TYPES[1] : TK_TYPES[2]; }
   function tkRank(t) { return t.prio === "attention" ? 0 : t.prio === "urgent" ? 1 : 2; }
   function tkPhoto(id, file) { // photo réduite sur le téléphone avant l'envoi (environ 200 Ko)
-    showStatus("Envoi de la photo…", false, true);
-    return syncChain.then(function () { return shrink(file); }).then(function (u) { return act("ajouterPhotoTache", [id, u], "Photo ajoutée"); })
+    showStatus("📤 Photo en cours d'envoi…");
+    return syncChain.then(function () { return shrink(file); }).then(function (u) { return bqAdd("act", "ajouterPhotoTache", [id, u], "Photo ajoutée à la tâche"); })
       .catch(function (er) { if (er && /Format/.test(er.message)) showStatus(er.message.replace(/^Error:\s*/, ""), true); });
   }
   function tkPickPhoto(cb) { var inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; inp.addEventListener("change", function () { if (inp.files && inp.files[0]) cb(inp.files[0]); }); inp.click(); }
@@ -2215,7 +2222,7 @@ body:has(#view.bl) { background: #fff; }
       act("enregistrerDemande", [dmEdit], isNew ? "Demande d'achat enregistrée" : "Demande modifiée").then(function () {
         // nouvelle demande : retour à la liste des demandes, menu des articles refermé ; modification : retour à la fiche
         dmEdit = null; dmFile = null; dmOpen = isNew ? null : id; lowOpen = false; renderAchat(); goTop();
-        if (file) { showStatus("Envoi de la photo…", false, true); shrink(file).then(function (u) { return act("ajouterPhotoDemande", [id, u], "Photo ajoutée"); }).catch(function (er) { if (er && /Format/.test(er.message)) showStatus(er.message, true); }); }
+        if (file) { showStatus("📤 Photo en cours d'envoi…"); shrink(file).then(function (u) { return bqAdd("act", "ajouterPhotoDemande", [id, u], "Photo ajoutée"); }).catch(function (er) { if (er && /Format/.test(er.message)) showStatus(er.message, true); }); }
       }, function () { save.disabled = false; });
     });
     return f;
@@ -2269,8 +2276,8 @@ body:has(#view.bl) { background: #fff; }
       var ed = el("button", "pbtn", "Modifier"); ed.type = "button"; ed.addEventListener("click", function () { dmEdit = JSON.parse(JSON.stringify(d)); dmFile = null; renderAchat(); });
       var lp = el("label", "pbtn"); lp.style.display = "inline-block"; lp.textContent = "+ Photo";
       var fi = document.createElement("input"); fi.type = "file"; fi.accept = "image/*"; fi.hidden = true; lp.appendChild(fi);
-      fi.addEventListener("change", function () { var file = fi.files && fi.files[0]; if (!file) return; showStatus("Envoi de la photo…", false, true);
-        shrink(file).then(function (u) { return act("ajouterPhotoDemande", [d.id, u], "Photo ajoutée"); }).catch(function (er) { if (er && /Format/.test(er.message)) showStatus(er.message, true); }); });
+      fi.addEventListener("change", function () { var file = fi.files && fi.files[0]; if (!file) return; showStatus("📤 Photo en cours d'envoi…");
+        shrink(file).then(function (u) { return bqAdd("act", "ajouterPhotoDemande", [d.id, u], "Photo ajoutée"); }).catch(function (er) { if (er && /Format/.test(er.message)) showStatus(er.message, true); }); });
       var del = el("button", "pbtn dang", "Supprimer"); del.type = "button";
       del.addEventListener("click", function () { if (twoStep(del, "Confirmer la suppression")) act("supprimerDemande", [d.id], "Demande supprimée").then(function () { dmOpen = null; renderAchat(); }, function () {}); });
       bt.appendChild(ed); bt.appendChild(del); box.appendChild(bt);
@@ -4341,8 +4348,8 @@ body:has(#view.bl) { background: #fff; }
     goTop();
   }
   function avPhoto(id, file) {
-    showStatus("Envoi de la photo…", false, true);
-    return syncChain.then(function () { return shrink(file); }).then(function (u) { return act("ajouterPhotoAvalanche", [id, u], "Photo ajoutée"); })
+    showStatus("📤 Photo en cours d'envoi…");
+    return syncChain.then(function () { return shrink(file); }).then(function (u) { return bqAdd("act", "ajouterPhotoAvalanche", [id, u], "Photo ajoutée à l'avalanche"); })
       .catch(function (er) { if (er && /Format/.test(er.message)) showStatus(er.message.replace(/^Error:\s*/, ""), true); });
   }
   function renderAval() {
@@ -5293,6 +5300,79 @@ body:has(#view.bl) { background: #fff; }
     });
   }
 
+  /* ---------- Envois en arrière-plan : la photo est gardée dans le téléphone jusqu'à « ✓ enregistré » ---------- */
+  var BQ = [], bqBusy = false, bqDb = null, bqTimer = null;
+  function bqOpen() {
+    return new Promise(function (res) {
+      try { var r = indexedDB.open("vigo-envois", 1); r.onupgradeneeded = function () { r.result.createObjectStore("q", { keyPath: "id" }); }; r.onsuccess = function () { bqDb = r.result; res(bqDb); }; r.onerror = function () { res(null); }; }
+      catch (e) { res(null); }
+    });
+  }
+  function bqStore(op, x) { if (!bqDb) return; try { var st = bqDb.transaction("q", "readwrite").objectStore("q"); if (op === "put") st.put(x); else st.delete(x); } catch (e) {} }
+  function bqInit() {
+    bqOpen().then(function (db) {
+      if (!db) return;
+      try { var rq = db.transaction("q").objectStore("q").getAll(); rq.onsuccess = function () { (rq.result || []).forEach(function (it) { if (!BQ.some(function (y) { return y.id === it.id; })) BQ.push(it); }); BQ.sort(function (a, b) { return a.t - b.t; }); bqBadge(); bqRun(); }; } catch (e) {}
+    });
+    window.addEventListener("online", function () { BQ.forEach(function (x) { x.tries = 0; }); bqRun(); });
+  }
+  function bqAdd(kind, fn, args, label, extra) {
+    var it = { id: "b" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), kind: kind, fn: fn, args: args, label: label, extra: extra || {}, t: Date.now(), tries: 0 };
+    BQ.push(it); bqStore("put", it); bqBadge(); bqRun();
+    return it;
+  }
+  function bqNet(m) { return /connexion|réseau|Failed to fetch|NetworkError|Load failed|timeout/i.test(m); }
+  function bqRun() {
+    if (bqBusy || !code) return;
+    var it = BQ.filter(function (x) { return !x.stop; })[0]; if (!it) return;
+    bqBusy = true; it.err = null; bqBadge();
+    call.apply(null, [it.fn, code].concat(it.args)).then(function (d) {
+      bqBusy = false; BQ = BQ.filter(function (x) { return x !== it; }); bqStore("del", it.id);
+      try { bqDone(it, d); } catch (e) {}
+      bqBadge(); bqRun();
+    }, function (e) {
+      bqBusy = false; var m = String(e && e.message || e).replace(/^Error:\s*/, ""); it.err = m; it.tries++;
+      if (/CODE/.test(m)) { bqBadge(); return handleError(e); }
+      if (!bqNet(m) || it.tries >= 8) it.stop = true; // erreur du serveur : on n'insiste pas, l'utilisateur décide
+      bqStore("put", it); bqBadge();
+      clearTimeout(bqTimer); bqTimer = setTimeout(bqRun, Math.min(60000, 4000 * Math.pow(2, Math.min(it.tries, 4))));
+      if (area === "preuve" && !prOpen) renderPreuves();
+      if (area === "pentes") renderPentes();
+    });
+  }
+  function bqOk(msg) { showStatus(msg); if (navigator.vibrate) navigator.vibrate(60); }
+  function bqDone(it, d) {
+    if (it.kind === "preuve") {
+      data.preuvesInfo = d.preuvesInfo; saveCache(data); ppFull[d.preuve.f] = it.args[0];
+      bqOk("✓ Preuve " + d.preuve.num + " enregistrée · " + zHeure(d.preuve.at, true) + (d.preuve.lat ? "" : " · sans GPS"));
+      prItems = null; prAll = null; if (area === "preuve" && !prOpen && !ppLock) renderPreuves();
+    } else if (it.kind === "pente") {
+      var x = it.extra, H = peHist[x.spot];
+      data.pentes = d.pentes; saveCache(data); ppFull[d.photo.f] = it.args[1];
+      if (H) { var k = H.map(function (q) { return q.id; }).indexOf(x.tmp); if (k >= 0) H[k] = d.photo; else H.unshift(d.photo); H.sort(function (a, b) { return b.at - a.at; }); }
+      if (peThumbs && d.photo.thumb) peThumbs[x.spot] = d.photo.thumb;
+      bqOk("✓ Photo enregistrée · " + (x.name || "") + " · " + zHeure(d.photo.at, true));
+      if (x.point) call("enregistrerPente", code, x.point, myName()).then(function (r) { data.pentes = r.pentes; saveCache(data); if (area === "pentes" && !ppLock) renderPentes(); }, function () {});
+      if (area === "pentes" && !ppLock) renderPentes();
+    } else {
+      if (!syncN) { data = full(d); saveCache(data); renderAll(); }
+      bqOk("✓ " + (it.label || "Enregistré"));
+    }
+  }
+  // Petit bandeau en bas : envois en cours / en attente (toucher pour réessayer)
+  function bqBadge() {
+    var b = document.getElementById("bq-badge");
+    if (!BQ.length) { if (b) b.remove(); return; }
+    if (!b) { b = el("button", "bq-badge"); b.id = "bq-badge"; b.type = "button"; document.body.appendChild(b); b.addEventListener("click", function () {
+      var bad = BQ.filter(function (x) { return x.err; });
+      if (bad.length) showStatus(bad.map(function (x) { return x.label + " : " + x.err; }).join(" · "), true);
+      BQ.forEach(function (x) { x.stop = false; x.tries = 0; }); bqRun();
+    }); }
+    var wait = BQ.filter(function (x) { return x.err; }).length;
+    b.className = "bq-badge" + (wait ? " bad" : "");
+    b.textContent = wait ? "⚠ " + BQ.length + " envoi" + (BQ.length > 1 ? "s" : "") + " en attente · toucher pour réessayer" : "⏳ Envoi en cours" + (BQ.length > 1 ? " (" + BQ.length + ")" : "") + "…";
+  }
+
   /* ---------- Photos horodatées : Suivi des pentes + Preuves ---------- */
   // Heure affichée = heure du serveur Google, toujours en heure suisse
   var ZFMT = {};
@@ -5632,13 +5712,14 @@ body:has(#view.bl) { background: #fff; }
     var H = peHist[s.id];
     if (H && H.length > 1) { var fm = el("button", "pp-big ghost", "▶ Film : " + H.length + " jours d'évolution"); fm.type = "button"; fm.addEventListener("click", function () { ppFilm(s, H); }); v.appendChild(fm); }
     v.appendChild(g);
-    if (H && H.length !== s.n) { H = null; delete peHist[s.id]; }
+    if (H && H.filter(function (q) { return !q.pending; }).length !== s.n) { var pend = H.filter(function (q) { return q.pending; }); H = null; delete peHist[s.id]; if (pend.length) peLoadHist(s.id).then(function (L) { pend.forEach(function (q) { if (BQ.some(function (b) { return b.extra && b.extra.tmp === q.id; })) L.unshift(q); }); }); }
     if (!H) { g.appendChild(el("p", "empty", "Chargement de l'historique…")); peLoadHist(s.id).then(function () { if (area === "pentes" && peSel === s.id) renderPentes(); }, function (e) { g.textContent = ""; g.appendChild(el("p", "empty", "Historique indisponible : " + String(e && e.message || e))); }); }
     else if (!H.length) g.appendChild(el("p", "empty", "Aucune photo pour l'instant."));
     else H.forEach(function (p, i) {
       var b = el("button", "pe-cell"); b.type = "button";
       if (p.thumb) { var im = document.createElement("img"); im.src = p.thumb; im.alt = ""; im.loading = "lazy"; b.appendChild(im); }
       b.appendChild(peStampEl(p.at)); if (p.note) b.appendChild(el("span", "pe-note", p.note));
+      if (p.pending) { var bq = BQ.filter(function (x) { return x.extra && x.extra.tmp === p.id; })[0]; b.appendChild(el("span", "pe-pend" + (bq && bq.err ? " bad" : ""), bq && bq.err ? "⚠ en attente" : "⏳ envoi…")); }
       b.addEventListener("click", function () { ppViewer(s, H, i); }); g.appendChild(b);
     });
     // Réglages du point de vue
@@ -5708,21 +5789,17 @@ body:has(#view.bl) { background: #fff; }
     ok.addEventListener("click", function () {
       var note = sel.concat(tx.value.trim() ? [tx.value.trim()] : []).join(" · ");
       ok.disabled = no.disabled = true; ok.textContent = "Envoi…";
-      var P0 = null;
+      // Affichage tout de suite, envoi en arrière-plan (la photo reste dans le téléphone jusqu'au « ✓ »)
+      var cid = "q" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+      ppFull[cid] = u[0];
+      var tmp = { id: cid, at: tel, by: myName(), note: note, f: cid, thumb: u[1], traits: S, pending: true };
+      if (peHist[s.id]) peHist[s.id].unshift(tmp);
+      end(); showStatus("📤 Photo en cours d'envoi… tu peux continuer"); if (area === "pentes") renderPentes();
       Promise.race([posP, new Promise(function (r) { setTimeout(function () { r(null); }, 1500); })]).then(function (p) {
-        P0 = p;
-        return ppCall("photoPente", [s.id, u[0], u[1], { note: note, tel: tel, traits: S, lat: p && p.lat, lng: p && p.lng }, myName()], "Envoi de la photo…");
-      }).then(function (d) {
-        data.pentes = d.pentes; saveCache(data);
-        // Première photo (ou point à redéfinir) : cet endroit devient le point de prise de vue
-        if ((!s.lat || peRedef[s.id]) && P0 && P0.acc <= 30) {
-          delete peRedef[s.id];
-          call("enregistrerPente", code, { id: s.id, name: s.name, lat: P0.lat, lng: P0.lng, alt: P0.alt, cap: cap, acc: P0.acc }, myName()).then(function (r) { data.pentes = r.pentes; saveCache(data); showStatus("📍 Point de prise de vue enregistré (± " + Math.round(P0.acc) + " m)"); if (area === "pentes") renderPentes(); }, function () {});
-        }
-        if (peHist[s.id]) peHist[s.id].unshift(d.photo);
-        if (peThumbs && d.photo.thumb) peThumbs[s.id] = d.photo.thumb;
-        end(); showStatus("Photo enregistrée · " + zHeure(d.photo.at, true)); if (area === "pentes") renderPentes();
-      }, function () { ok.disabled = no.disabled = false; ok.textContent = "Réessayer"; });
+        var pt = (!s.lat || peRedef[s.id]) && p && p.acc <= 30 ? { id: s.id, name: s.name, lat: p.lat, lng: p.lng, alt: p.alt, cap: cap, acc: p.acc } : null;
+        if (pt) delete peRedef[s.id];
+        bqAdd("pente", "photoPente", [s.id, u[0], u[1], { note: note, tel: tel, traits: S, lat: p && p.lat, lng: p && p.lng, cid: cid }, myName()], "Photo " + s.name, { spot: s.id, tmp: cid, name: s.name, point: pt });
+      });
     });
   }
   // ----- Zoom à deux doigts + dessin au doigt (commun : visionneuse, dessin, film) -----
@@ -5904,7 +5981,9 @@ body:has(#view.bl) { background: #fff; }
     next.addEventListener("click", function () { if (i > 0) { i--; show(); } });
     cmp.addEventListener("click", function () { if (H.length < 2) return showStatus("Il faut au moins 2 photos.", true); cmpOn = !cmpOn; j = i < H.length - 1 ? i + 1 : i - 1; show(); });
     grn.addEventListener("click", function () { peShowG = !peShowG; show(); });
+    function busyP() { if (H[i] && H[i].pending) { showStatus("Attends le « ✓ Photo enregistrée » avant de modifier cette photo.", true); return true; } }
     drw.addEventListener("click", function () {
+      if (busyP()) return;
       var p = H[i]; showStatus("Ouverture…", false, true);
       ppPhoto(p.f).catch(function () { return p.thumb; }).then(function (u) { showStatus("Prêt"); return ppDraw(u, p.traits, peGreen(H, p.at), s.name + " · " + zJour(p.at)); }).then(function (S) {
         if (!S) return;
@@ -5918,10 +5997,12 @@ body:has(#view.bl) { background: #fff; }
         .catch(function (e) { showStatus(String(e && e.message || e), true); });
     });
     ed.addEventListener("click", function () {
+      if (busyP()) return;
       var p = H[i], n = prompt("Note pour cette photo :", p.note || ""); if (n == null) return;
       ppCall("notePente", [p.id, n.trim()]).then(function (d) { p.note = n.trim(); data.pentes = d.pentes; saveCache(data); show(); showStatus("Note enregistrée"); });
     });
     del.addEventListener("click", function () {
+      if (busyP()) return;
       var p = H[i]; if (!confirm("Supprimer la photo du " + zStamp(p.at) + " ?")) return;
       ppCall("supprimerPhotoPente", [p.id], "Suppression…").then(function (d) { data.pentes = d.pentes; saveCache(data); H.splice(i, 1); peThumbs = null; if (!H.length) return close(); if (i >= H.length) i = H.length - 1; cmpOn = false; show(); showStatus("Photo supprimée"); });
     });
@@ -6052,7 +6133,7 @@ body:has(#view.bl) { background: #fff; }
     if (avReady) prPaint(); else avMap.once("load", prPaint);
   }
 
-  var PR_C = "#37474f", prItems = null, prMore = false, prOpen = null, prCheck = null, prPending = [], prCats = {}, prTotal = 0;
+  var PR_C = "#37474f", prItems = null, prMore = false, prOpen = null, prCheck = null, prCats = {}, prTotal = 0;
   var prF = { cat: "", jour: "", near: null }, prPosP = null, prPos = null;
   function prTile() { var i = data.preuvesInfo || {}; return i.n ? i.n + " preuve" + (i.n > 1 ? "s" : "") + " · dernière le " + zDate(i.last) : "Touche un secteur, prends la photo, c'est tout"; }
   // Secteurs : ceux du suivi des pentes + ceux de base
@@ -6079,13 +6160,13 @@ body:has(#view.bl) { background: #fff; }
     prSects().forEach(function (k) { var b = el("button", "pr-sect", k); b.type = "button"; b.addEventListener("click", function () { prShoot(k); }); g.appendChild(b); });
     var au = el("button", "pr-sect other", "Autre"); au.type = "button"; au.addEventListener("click", function () { prShoot(""); }); g.appendChild(au);
     v.appendChild(g);
-    prPending.forEach(function (P) {
-      var pb = el("div", "pr-pend"); pb.appendChild(el("b", null, (P.err ? "⚠ Pas encore envoyée" : "⏳ Envoi en cours") + " · " + (P.meta.cat || "Autre") + " · " + zHeure(P.meta.tel)));
-      if (P.err) {
-        pb.appendChild(el("span", null, "Pas de réseau. La photo reste sur ce téléphone jusqu'à l'envoi (ne ferme pas l'appli)."));
-        var rt = el("button", "pp-big", "Réessayer l'envoi"); rt.type = "button"; rt.style.background = "#b3261e"; rt.addEventListener("click", function () { prSend(P); }); pb.appendChild(rt);
-      }
-      v.appendChild(pb);
+    BQ.filter(function (x) { return x.kind === "preuve"; }).forEach(function (P) {
+      var pb = el("div", "pr-pend" + (P.err ? "" : " go")), m = P.args[2];
+      var im = document.createElement("img"); im.src = P.extra.thumb || P.args[1]; im.alt = ""; im.className = "pr-pth"; pb.appendChild(im);
+      var tx = el("div"); tx.appendChild(el("b", null, (P.err ? "⚠ En attente" : "⏳ Envoi en cours") + " · " + (m.cat || "Autre") + " · " + zHeure(m.tel)));
+      tx.appendChild(el("span", null, P.err ? (bqNet(P.err) ? "Pas de réseau : la photo est gardée dans le téléphone et repart toute seule." : P.err) : "Tu peux continuer, tu auras « ✓ enregistrée »."));
+      if (P.err) { var rt = el("button", "pbtn", "Réessayer maintenant"); rt.type = "button"; rt.addEventListener("click", function () { P.stop = false; P.tries = 0; bqRun(); }); tx.appendChild(rt); }
+      pb.appendChild(tx); v.appendChild(pb);
     });
     // 2) Retrouver : carte de la station + frise des dates + secteur
     v.appendChild(el("h3", "pr-h", "🔎 Retrouver une preuve"));
@@ -6123,20 +6204,14 @@ body:has(#view.bl) { background: #fff; }
     camOpen({ title: "Preuve · " + (sect || "Autre") }).then(function (f) {
       ppLock = false; if (!f) return;
       var m = { cat: sect, obj: sect || "Autre", tel: Date.now() };
+      showStatus("📤 Preuve en cours d'envoi… tu peux continuer");
       return Promise.all([ppShrink(f, 2000, .9), ppShrink(f, 320, .6), Promise.race([posP, new Promise(function (r) { setTimeout(function () { r(null); }, 6000); })])]).then(function (r) {
         var p = r[2]; if (p) { m.lat = p.lat; m.lng = p.lng; m.acc = p.acc; }
-        var P = { img: r[0], thumb: r[1], meta: m }; prPending.push(P); prSend(P);
+        m.cid = "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        bqAdd("preuve", "deposerPreuve", [r[0], r[1], m, myName()], "Preuve " + (sect || "Autre") + " " + zHeure(m.tel), { thumb: r[1] });
+        if (area === "preuve" && !prOpen) renderPreuves();
       });
     }).catch(function (e) { ppLock = false; showStatus(String(e && e.message || e), true); });
-  }
-  function prSend(P) {
-    P.err = false; if (area === "preuve") renderPreuves();
-    ppCall("deposerPreuve", [P.img, P.thumb, P.meta, myName()], "Envoi de la preuve…").then(function (d) {
-      prPending = prPending.filter(function (x) { return x !== P; });
-      data.preuvesInfo = d.preuvesInfo; saveCache(data); ppFull[d.preuve.f] = P.img;
-      showStatus("✓ Preuve " + d.preuve.num + " · " + zHeure(d.preuve.at, true) + (d.preuve.lat ? "" : " · sans GPS"));
-      prItems = null; prAll = null; if (area === "preuve") renderPreuves();
-    }, function () { P.err = true; if (area === "preuve") renderPreuves(); });
   }
   function prLines(p) { return [p.num + "  ·  " + zDate(p.at) + "  " + zHeure(p.at, true) + " (heure serveur)", p.obj + (p.lieu ? "  ·  " + p.lieu : "") + (p.by ? "  ·  " + p.by : ""), "SHA-256 " + String(p.sha).slice(0, 16) + "…" + (p.lat ? "  ·  " + p.lat.toFixed(5) + ", " + p.lng.toFixed(5) : "")]; }
   function prRenderOne(v, p) {
@@ -6301,8 +6376,8 @@ body:has(#view.bl) { background: #fff; }
       lp.appendChild(fi); p.appendChild(lp);
       fi.addEventListener("change", function () {
         var file = fi.files && fi.files[0]; if (!file) return;
-        showStatus("Envoi de la photo…", false, true);
-        shrink(file).then(function (dataUrl) { return act("ajouterPhoto", [s.id, dataUrl], "Photo ajoutée"); })
+        showStatus("📤 Photo en cours d'envoi…");
+        shrink(file).then(function (dataUrl) { return bqAdd("act", "ajouterPhoto", [s.id, dataUrl], "Photo ajoutée"); })
           .then(closePanel, function (e) { if (e && /Format/.test(e.message)) showStatus(e.message, true); });
       });
       if (s.photos.length) {

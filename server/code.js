@@ -1474,18 +1474,28 @@ function supprimerPente(code, id) {
 function photoPente(code, spotId, dataUrl, vign, meta, par) {
   verifier_(code);
   meta = meta || {};
+  var cid = /^q[a-z0-9]{6,24}$/.test(String(meta.cid || '')) ? String(meta.cid) : '';
+  if (cid) { // envoi répété (réseau coupé après l'enregistrement) : on renvoie la photo déjà enregistrée
+    var deja = historiqueLigne_(cid);
+    if (deja) return { pentes: pentes_(), photo: deja };
+  }
   var img = image_(dataUrl, 4e6), t = Date.now(), sha = sha256_(img.octets);
   var sp = lire_(ONGLET_PENTES).filter(function (x) { return String(x.id) === String(spotId); })[0];
   if (!sp) throw new Error('Point de vue introuvable. Il a peut-être été supprimé : recharge la page.');
   var nomF = 'pente-' + String(sp.nom).replace(/[^A-Za-z0-9]+/g, '-').slice(0, 30) + '-' + horo_(t) + '.jpg';
   var f = sousDossier_('dossier_pentes', 'Suivi des pentes').createFile(Utilities.newBlob(img.octets, img.type, nomF));
   f.setDescription('Suivi des pentes · ' + sp.nom + ' · ' + Utilities.formatDate(new Date(t), 'Europe/Zurich', 'dd.MM.yyyy HH:mm:ss') + ' (heure serveur) · SHA-256 ' + sha);
-  var id = 'q' + t.toString(36) + Math.random().toString(36).slice(2, 5), note = String(meta.note || '').slice(0, 300);
+  var id = cid || 'q' + t.toString(36) + Math.random().toString(36).slice(2, 5), note = String(meta.note || '').slice(0, 300);
   return verrou_(function () {
     var tr = traits_(meta.traits);
     ongletPph_().appendRow([id, String(sp.id), t, String(par || '').slice(0, 60), note, f.getId(), coord_(meta.lat), coord_(meta.lng), sha, Number(meta.tel) || '', vignette_(vign), tr.length ? JSON.stringify(tr) : '']);
     return { pentes: pentes_(), photo: { id: id, at: t, by: String(par || ''), note: note, f: f.getId(), sha: sha, thumb: vignette_(vign), traits: tr } };
   });
+}
+function historiqueLigne_(id) {
+  if (!classeur_().getSheetByName(ONGLET_PPH)) return null;
+  var p = lire_(ONGLET_PPH).filter(function (x) { return String(x.id) === String(id); })[0];
+  return p ? { id: String(p.id), at: Number(p.date), by: String(p.par || ''), note: String(p.note || ''), f: String(p.fichier), sha: String(p.sha256 || ''), thumb: String(p.vignette || ''), traits: traits_(p.traits) } : null;
 }
 function historiquePente(code, spotId) {
   verifier_(code);
@@ -1550,12 +1560,14 @@ function deposerPreuve(code, dataUrl, vign, meta, par) {
   meta = meta || {};
   var objet = String(meta.obj || '').trim().slice(0, 120);
   if (!objet) throw new Error("Écris ce que la photo prouve (ex. « Filet n°12 posé »).");
-  var img = image_(dataUrl, 6e6), sha = sha256_(img.octets);
+  var img = image_(dataUrl, 6e6), sha = sha256_(img.octets), cid = /^p[a-z0-9]{6,24}$/.test(String(meta.cid || '')) ? String(meta.cid) : '';
   return verrou_(function () {
     var s = ongletCree_(ONGLET_PREUVES, COL_PREUVES, true), t = Date.now(), an = Utilities.formatDate(new Date(t), 'Europe/Zurich', 'yyyy');
     var avant = lireCols_(ONGLET_PREUVES, NB_PREUVE_COLS), der = avant[avant.length - 1];
+    var deja = cid && avant.filter(function (x) { return String(x.id) === cid; })[0];
+    if (deja) return { preuvesInfo: preuvesInfo_(), preuve: preuveObj_(deja, false) };
     var nAn = avant.filter(function (o) { return String(o.numero).indexOf('P-' + an + '-') === 0; }).length + 1;
-    var o = { id: 'p' + t.toString(36) + Math.random().toString(36).slice(2, 5), numero: 'P-' + an + '-' + ('000' + nAn).slice(-4), date: t, par: String(par || '').slice(0, 60),
+    var o = { id: cid || 'p' + t.toString(36) + Math.random().toString(36).slice(2, 5), numero: 'P-' + an + '-' + ('000' + nAn).slice(-4), date: t, par: String(par || '').slice(0, 60),
       categorie: String(meta.cat || '').slice(0, 40), objet: objet, lieu: String(meta.lieu || '').slice(0, 120), lat: coord_(meta.lat), lng: coord_(meta.lng), sha256: sha };
     o.chaine = chaineLigne_(der ? String(der.chaine) : '', o);
     var nomF = o.numero + '-' + horo_(t) + '-' + sha.slice(0, 8) + '.jpg';
