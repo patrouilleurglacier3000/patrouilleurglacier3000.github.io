@@ -1118,6 +1118,12 @@ body:has(#view.bl) { background: #fff; }
 .pv-top { position: static; background: #000; }
 .cam-x { width: 56px; height: 56px; border-radius: 50%; border: 0; background: rgba(255,255,255,.18); color: #fff; font: 800 24px var(--body); cursor: pointer; flex: none; }
 .cam-bot { padding: 10px 16px calc(14px + env(safe-area-inset-bottom)); background: #000; }
+.cam { touch-action: none; }
+.cam-stage video { transform-origin: 50% 50%; }
+.cam-zr { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
+.cam-z { min-width: 60px; min-height: 48px; border-radius: 24px; border: 2px solid #555; background: #1b1b1b; color: #fff; font: 800 17px var(--body); cursor: pointer; }
+.cam-z.on { background: #ffd600; color: #111; border-color: #ffd600; } .cam-z:disabled { opacity: .3; }
+.cam-zl { justify-self: end; font: 800 20px var(--body); color: #ffd600; }
 .cam-gw { display: flex; align-items: center; gap: 12px; font: 700 15px var(--body); margin-bottom: 10px; } .cam-gw input { flex: 1; height: 36px; }
 .cam-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; }
 .cam-alt { justify-self: start; border: 1px solid #555; background: #1b1b1b; color: #fff; border-radius: 12px; min-height: 52px; padding: 6px 10px; font: 700 14px var(--body); max-width: 130px; cursor: pointer; }
@@ -1186,7 +1192,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794646682";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794647701";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -5311,19 +5317,42 @@ body:has(#view.bl) { background: #fff; }
         gw.appendChild(lb); gw.appendChild(rg); bot.appendChild(gw);
       }
       var row = el("div", "cam-row"), alt = el("button", "cam-alt", "Appareil du téléphone"), sh = el("button", "cam-sh"); alt.type = "button"; sh.type = "button"; sh.setAttribute("aria-label", "Prendre la photo");
-      row.appendChild(alt); row.appendChild(sh); row.appendChild(el("span", "cam-sp")); bot.appendChild(row);
+      // Zoom : boutons (gants) + pincer à deux doigts ; le niveau est retenu pour ce point de vue
+      var zr = el("div", "cam-zr"), zl = el("span", "cam-zl", "1×"), zoom = 1, zmax = 5, hw = null, track = null;
+      [1, 2, 3, 5].forEach(function (z) { var b = el("button", "cam-z", z + "×"); b.type = "button"; b.dataset.z = z; b.addEventListener("click", function () { setZoom(z); }); zr.appendChild(b); });
+      bot.insertBefore(zr, bot.firstChild);
+      row.appendChild(alt); row.appendChild(sh); row.appendChild(zl); bot.appendChild(row);
+      function setZoom(z) {
+        zoom = Math.max(1, Math.min(zmax, Math.round(z * 10) / 10)); zl.textContent = zoom + "×";
+        zr.querySelectorAll(".cam-z").forEach(function (b) { b.classList.toggle("on", Math.abs(+b.dataset.z - zoom) < .05); b.disabled = +b.dataset.z > zmax; });
+        if (hw) { try { track.applyConstraints({ advanced: [{ zoom: Math.min(hw.max, Math.max(hw.min, zoom)) }] }).catch(function () {}); } catch (e) {} vid.style.transform = ""; }
+        else vid.style.transform = "scale(" + zoom + ")";
+        if (o.zoomKey) try { localStorage.setItem("stock-pistes-camz-" + o.zoomKey, String(zoom)); } catch (e) {}
+      }
+      var PZ = {}, pz0 = null;
+      stage.style.touchAction = "none";
+      stage.addEventListener("pointerdown", function (e) { PZ[e.pointerId] = [e.clientX, e.clientY]; var a = Object.keys(PZ).map(function (k) { return PZ[k]; }); if (a.length === 2) pz0 = { d: Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]) || 1, z: zoom }; });
+      stage.addEventListener("pointermove", function (e) { if (!PZ[e.pointerId]) return; PZ[e.pointerId] = [e.clientX, e.clientY]; var a = Object.keys(PZ).map(function (k) { return PZ[k]; }); if (a.length === 2 && pz0) setZoom(pz0.z * Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]) / pz0.d); });
+      function pzUp(e) { delete PZ[e.pointerId]; if (Object.keys(PZ).length < 2) pz0 = null; }
+      stage.addEventListener("pointerup", pzUp); stage.addEventListener("pointercancel", pzUp);
       ov.appendChild(stage); ov.appendChild(top); ov.appendChild(bot); document.body.appendChild(ov);
       function close(v) { if (closed) return; closed = true; if (stream) stream.getTracks().forEach(function (t) { t.stop(); }); ov.remove(); res(v); }
       x.addEventListener("click", function () { close(null); });
       alt.addEventListener("click", function () { if (stream) stream.getTracks().forEach(function (t) { t.stop(); }); closed = true; ov.remove(); camNative(res); });
       sh.addEventListener("click", function () {
         if (!vid.videoWidth) return;
-        var c = document.createElement("canvas"); c.width = vid.videoWidth; c.height = vid.videoHeight; c.getContext("2d").drawImage(vid, 0, 0);
+        var c = document.createElement("canvas"), vw = vid.videoWidth, vh = vid.videoHeight, k = hw ? 1 : zoom;
+        c.width = Math.round(vw / k); c.height = Math.round(vh / k);
+        c.getContext("2d").drawImage(vid, (vw - c.width) / 2, (vh - c.height) / 2, c.width, c.height, 0, 0, c.width, c.height);
         sh.disabled = true; c.toBlob(function (b) { close(b); }, "image/jpeg", .92);
       });
       md.getUserMedia({ video: { facingMode: { ideal: "environment" }, width: { ideal: 2560 }, height: { ideal: 1920 } }, audio: false }).then(function (s) {
         if (closed) { s.getTracks().forEach(function (t) { t.stop(); }); return; }
         stream = s; vid.srcObject = s; var p = vid.play(); if (p && p.catch) p.catch(function () {});
+        track = s.getVideoTracks()[0];
+        try { var cp = track.getCapabilities && track.getCapabilities(); if (cp && cp.zoom && cp.zoom.max > 1) { hw = cp.zoom; zmax = Math.min(10, hw.max); } } catch (e) {}
+        var z0 = 1; if (o.zoomKey) try { z0 = +localStorage.getItem("stock-pistes-camz-" + o.zoomKey) || 1; } catch (e) {}
+        setZoom(z0);
       }, function () { if (closed) return; closed = true; ov.remove(); camNative(res); });
     });
   }
@@ -5471,7 +5500,7 @@ body:has(#view.bl) { background: #fff; }
     var ghostP = s.last && s.last.f ? ppPhoto(s.last.f).catch(function () { return null; }) : Promise.resolve(null);
     showStatus("Ouverture de l'appareil…", false, true);
     var posP = null;
-    ghostP.then(function (gu) { return camOpen({ ghost: gu, title: s.name }); }).then(function (f) {
+    ghostP.then(function (gu) { return camOpen({ ghost: gu, title: s.name, zoomKey: s.id }); }).then(function (f) {
       if (!f) { ppLock = false; return; }
       var tel = Date.now();
       return Promise.all([ppShrink(f, 1600, .85), ppShrink(f, 320, .6)]).then(function (u) { return peNoteSheet(s, u, posP, tel); });
