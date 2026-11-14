@@ -1128,6 +1128,7 @@ body:has(#view.bl) { background: #fff; }
 .pe-sect::before { content: "▾"; margin-right: 4px; } .pe-sect.shut::before { content: "▸"; }
 .pe-sect b { flex: 1; } .pe-sect span { font-size: 14px; font-weight: 700; opacity: .85; } .pe-sect span.ok { color: #7be0a6; opacity: 1; }
 .pe-sk { display: block; color: var(--muted); font: 800 13px var(--body); text-transform: uppercase; letter-spacing: .5px; }
+.pe-pt { font: 700 15px var(--body); color: #b26a00; margin: 2px 0 8px; } .pe-pt.ok { color: var(--ok); }
 .pe-more { margin-top: 22px; }
 .pg { position: fixed; inset: 0; z-index: 90; background: #0b1520; color: #fff; display: flex; flex-direction: column; transition: background .3s; }
 .pg.ok { background: #0f5132; }
@@ -1238,7 +1239,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794657271";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794660221";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -5705,6 +5706,7 @@ body:has(#view.bl) { background: #fff; }
     var hd = el("div", "pe-hd"); if (s.sect) hd.appendChild(el("small", "pe-sk", s.sect)); hd.appendChild(el("h2", null, s.name));
     var meta = el("p", "pmeta", s.n ? s.n + " photo" + (s.n > 1 ? "s" : "") + " depuis le " + (peHist[s.id] && peHist[s.id].length ? zDate(peHist[s.id][peHist[s.id].length - 1].at) : "…") : "Pas encore de photo");
     hd.appendChild(meta);
+    hd.appendChild(el("p", "pe-pt" + (s.lat ? " ok" : ""), s.lat ? "📍 Point de prise enregistré" + (s.acc ? " (± " + Math.round(s.acc) + " m)" : "") + " · guidage actif" + (s.cap != null ? " · direction ✓" : "") : "📍 Pas encore de point de prise : il sera enregistré à la prochaine photo, à l'endroit où tu la prends."));
     v.appendChild(hd);
     var go = el("button", "pp-big", peToday(s) ? "📷 Reprendre une photo" : "📷 Photo du jour"); go.type = "button"; go.style.background = PE_C;
     go.addEventListener("click", function () { peShoot(s); }); v.appendChild(go);
@@ -5795,10 +5797,18 @@ body:has(#view.bl) { background: #fff; }
       var tmp = { id: cid, at: tel, by: myName(), note: note, f: cid, thumb: u[1], traits: S, pending: true };
       if (peHist[s.id]) peHist[s.id].unshift(tmp);
       end(); showStatus("📤 Photo en cours d'envoi… tu peux continuer"); if (area === "pentes") renderPentes();
-      Promise.race([posP, new Promise(function (r) { setTimeout(function () { r(null); }, 1500); })]).then(function (p) {
-        var pt = (!s.lat || peRedef[s.id]) && p && p.acc <= 30 ? { id: s.id, name: s.name, lat: p.lat, lng: p.lng, alt: p.alt, cap: cap, acc: p.acc } : null;
-        if (pt) delete peRedef[s.id];
-        bqAdd("pente", "photoPente", [s.id, u[0], u[1], { note: note, tel: tel, traits: S, lat: p && p.lat, lng: p && p.lng, cid: cid }, myName()], "Photo " + s.name, { spot: s.id, tmp: cid, name: s.name, point: pt });
+      Promise.race([posP, new Promise(function (r) { setTimeout(function () { r(null); }, 2500); })]).then(function (p) {
+        bqAdd("pente", "photoPente", [s.id, u[0], u[1], { note: note, tel: tel, traits: S, lat: p && p.lat, lng: p && p.lng, cid: cid }, myName()], "Photo " + s.name, { spot: s.id, tmp: cid, name: s.name });
+      });
+      // Point de prise de vue : on attend le GPS aussi longtemps qu'il faut (sans bloquer l'écran)
+      if (!s.lat || peRedef[s.id]) posP.then(function (p) {
+        if (!p) return showStatus("📍 GPS introuvable : le point de prise sera enregistré à la prochaine photo (active la localisation).", true);
+        if (p.acc > 50) return showStatus("📍 GPS trop imprécis (± " + Math.round(p.acc) + " m) : point de prise pas enregistré, réessaie à la prochaine photo.", true);
+        delete peRedef[s.id];
+        call("enregistrerPente", code, { id: s.id, name: s.name, lat: p.lat, lng: p.lng, alt: p.alt, cap: cap, acc: p.acc }, myName()).then(function (r) {
+          data.pentes = r.pentes; saveCache(data); showStatus("📍 Point de prise enregistré (± " + Math.round(p.acc) + " m) : la prochaine fois, je te guide jusqu'ici");
+          if (area === "pentes" && !ppLock) renderPentes();
+        }, function () { showStatus("📍 Point de prise pas enregistré (réseau) : il le sera à la prochaine photo.", true); });
       });
     });
   }
