@@ -74,7 +74,7 @@ function doGet() {
 
 /* ------------------------------------------------------------ Accès depuis la page de l'équipe (hors Google) */
 // La page hébergée à part appelle ces fonctions par l'adresse /exec : ça marche même avec plusieurs comptes Google connectés.
-var API_ = {donnees: donnees, importerDonnees: importerDonnees, photoBase64: photoBase64, mouvement: mouvement, comptage: comptage, enregistrerArticle: enregistrerArticle, supprimerArticle: supprimerArticle, ajouterPhoto: ajouterPhoto, retirerPhoto: retirerPhoto, enregistrerPrep: enregistrerPrep, cocher: cocher, validerPrep: validerPrep, supprimerPrep: supprimerPrep, creerCommande: creerCommande, prendreCommande: prendreCommande, livrerCommande: livrerCommande, supprimerCommande: supprimerCommande, ajouterRubrique: ajouterRubrique, ajouterVideo: ajouterVideo, supprimerVideo: supprimerVideo, enregistrerEvenement: enregistrerEvenement, supprimerEvenement: supprimerEvenement, enregistrerDemande: enregistrerDemande, statutDemande: statutDemande, supprimerDemande: supprimerDemande, ajouterPhotoDemande: ajouterPhotoDemande, retirerPhotoDemande: retirerPhotoDemande, enregistrerPlanning: enregistrerPlanning, enregistrerTache: enregistrerTache, prendreTache: prendreTache, terminerTache: terminerTache, rouvrirTache: rouvrirTache, supprimerTache: supprimerTache, ordonnerTaches: ordonnerTaches, ajouterPhotoTache: ajouterPhotoTache, retirerPhotoTache: retirerPhotoTache, enregistrerBilan: enregistrerBilan, supprimerBilan: supprimerBilan, enregistrerAvalanche: enregistrerAvalanche, supprimerAvalanche: supprimerAvalanche, ajouterPhotoAvalanche: ajouterPhotoAvalanche, retirerPhotoAvalanche: retirerPhotoAvalanche, enregistrerRecco: enregistrerRecco, supprimerRecco: supprimerRecco, enregistrerPanneau: enregistrerPanneau, meteoPanneau: meteoPanneau, bibleFichier: bibleFichier, assistant: assistant, annulerAssistant: annulerAssistant, enregistrerCleIA: enregistrerCleIA, etatIA: etatIA};
+var API_ = {donnees: donnees, importerDonnees: importerDonnees, photoBase64: photoBase64, mouvement: mouvement, comptage: comptage, enregistrerArticle: enregistrerArticle, supprimerArticle: supprimerArticle, ajouterPhoto: ajouterPhoto, retirerPhoto: retirerPhoto, enregistrerPrep: enregistrerPrep, cocher: cocher, validerPrep: validerPrep, supprimerPrep: supprimerPrep, creerCommande: creerCommande, prendreCommande: prendreCommande, livrerCommande: livrerCommande, supprimerCommande: supprimerCommande, ajouterRubrique: ajouterRubrique, ajouterVideo: ajouterVideo, supprimerVideo: supprimerVideo, enregistrerEvenement: enregistrerEvenement, supprimerEvenement: supprimerEvenement, enregistrerDemande: enregistrerDemande, statutDemande: statutDemande, supprimerDemande: supprimerDemande, ajouterPhotoDemande: ajouterPhotoDemande, retirerPhotoDemande: retirerPhotoDemande, enregistrerPlanning: enregistrerPlanning, enregistrerTache: enregistrerTache, prendreTache: prendreTache, terminerTache: terminerTache, rouvrirTache: rouvrirTache, supprimerTache: supprimerTache, ordonnerTaches: ordonnerTaches, ajouterPhotoTache: ajouterPhotoTache, retirerPhotoTache: retirerPhotoTache, enregistrerBilan: enregistrerBilan, supprimerBilan: supprimerBilan, enregistrerAvalanche: enregistrerAvalanche, supprimerAvalanche: supprimerAvalanche, ajouterPhotoAvalanche: ajouterPhotoAvalanche, retirerPhotoAvalanche: retirerPhotoAvalanche, enregistrerRecco: enregistrerRecco, supprimerRecco: supprimerRecco, enregistrerPanneau: enregistrerPanneau, meteoPanneau: meteoPanneau, bibleFichier: bibleFichier, assistant: assistant, annulerAssistant: annulerAssistant, enregistrerCleIA: enregistrerCleIA, etatIA: etatIA, enregistrerPente: enregistrerPente, supprimerPente: supprimerPente, photoPente: photoPente, historiquePente: historiquePente, vignettesPentes: vignettesPentes, notePente: notePente, supprimerPhotoPente: supprimerPhotoPente, deposerPreuve: deposerPreuve, listePreuves: listePreuves, marquerPreuve: marquerPreuve, verifierPreuves: verifierPreuves, heureServeur: heureServeur};
 function doPost(e) {
   var out;
   try {
@@ -272,7 +272,7 @@ function donnees(code) {
       cat: CATS_PLAN.indexOf(String(o.categorie)) >= 0 ? String(o.categorie) : 'autre', imp: o.important === true || String(o.important).toLowerCase() === 'oui',
       who: String(o.qui || ''), note: String(o.note || '') };
   }).filter(function (e) { return e.date >= depuisTxt; });
-  return { stock: stock, lieux: lieux.map(function (l) { return { name: l.name, last: l.last }; }), preps: preps, moves: mouv, orders: cmds, formation: formation, events: events, planjour: planJour_(), taches: taches_(), zones: zones_(), bilans: bilans_(), avalanches: avalanches_(), recco: recco_(), reccoPages: reccoPages_(), panneau: panneau_(), bible: bible_(),
+  return { stock: stock, lieux: lieux.map(function (l) { return { name: l.name, last: l.last }; }), preps: preps, moves: mouv, orders: cmds, formation: formation, events: events, planjour: planJour_(), taches: taches_(), zones: zones_(), bilans: bilans_(), avalanches: avalanches_(), pentes: pentes_(), preuvesInfo: preuvesInfo_(), recco: recco_(), reccoPages: reccoPages_(), panneau: panneau_(), bible: bible_(),
     demandes: lire_(ONGLET_DEM).map(function (o) {
       return { id: String(o.id), title: String(o.titre || ''), type: o.type === 'acheter' ? 'acheter' : 'fabriquer', qty: Math.max(1, Number(o.quantite) || 1),
         by: String(o.demande_par || ''), owner: String(o.qui || ''), note: String(o.note || ''), status: STATUTS_DEM.indexOf(String(o.statut)) >= 0 ? String(o.statut) : 'demande',
@@ -1348,3 +1348,208 @@ function annulerAssistant(code, a) {
   else if (a.t === 'evt') verrou_(function () { var o = lire_(ONGLET_PLAN).filter(function (x) { return String(x.id) === String(a.id); })[0]; if (o) onglet_(ONGLET_PLAN).deleteRow(o._ligne); });
   return { ok: true };
 }
+
+// ---------- Photos horodatées par le serveur (Suivi des pentes + Preuves) ----------
+// L'heure est celle du serveur Google (le téléphone ne peut pas la changer). Chaque photo reçoit son empreinte SHA-256 :
+// le fichier original n'est jamais modifié, si un seul pixel change, l'empreinte ne correspond plus.
+function hex_(octets) { return octets.map(function (b) { return ('0' + ((b + 256) % 256).toString(16)).slice(-2); }).join(''); }
+function sha256_(x) { return hex_(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, x)); }
+function lireCols_(nom, n) {
+  var s = classeur_().getSheetByName(nom); if (!s || s.getLastRow() < 2) return [];
+  var v = s.getRange(1, 1, s.getLastRow(), n).getValues(), entete = v.shift(), out = [];
+  v.forEach(function (r, i) { if (r[0] === '' || r[0] === null) return; var o = { _ligne: i + 2 }; entete.forEach(function (k, j) { o[k] = r[j]; }); out.push(o); });
+  return out;
+}
+function ongletCree_(nom, cols, proteger) {
+  var c = classeur_(), s = c.getSheetByName(nom);
+  if (!s) {
+    s = c.insertSheet(nom); s.getRange(1, 1, 1, cols.length).setValues([cols]); s.setFrozenRows(1);
+    s.getRange(1, 1, s.getMaxRows(), cols.length).setNumberFormat('@'); // texte brut : « 12/3 » reste « 12/3 », jamais une date
+    if (proteger) { try { var p = s.protect().setDescription('Journal des preuves : ne pas modifier à la main'); p.setWarningOnly(true); } catch (e) {} }
+  }
+  return s;
+}
+function sousDossier_(cle, nom) {
+  var pr = PropertiesService.getScriptProperties(), id = pr.getProperty(cle);
+  if (id) { try { var d = DriveApp.getFolderById(id); if (!d.isTrashed()) return d; } catch (e) {} }
+  var d2 = DriveApp.getFolderById(reglage_('dossier_photos')).createFolder(nom);
+  pr.setProperty(cle, d2.getId()); return d2;
+}
+function image_(dataUrl, max) {
+  var m = /^data:(image\/(?:jpeg|png));base64,(.+)$/.exec(String(dataUrl || ''));
+  if (!m) throw new Error('Format de photo non pris en charge : choisis une photo JPEG ou PNG.');
+  if (m[2].length > max) throw new Error('Format de photo : image trop lourde.');
+  return { type: m[1], octets: Utilities.base64Decode(m[2]) };
+}
+function vignette_(u) { u = String(u || ''); return /^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(u) && u.length < 48000 ? u : ''; }
+function coord_(x) { var n = Number(x); return isFinite(n) && n !== 0 ? Math.round(n * 1e6) / 1e6 : ''; }
+function horo_(t) { return Utilities.formatDate(new Date(t), 'Europe/Zurich', 'yyyyMMdd-HHmmss'); }
+
+// ----- Suivi des pentes : des points de vue fixes, une photo par jour, tout l'historique -----
+var ONGLET_PENTES = 'Pentes', COL_PENTES = ['id', 'nom', 'lat', 'lng', 'cree_le', 'par'];
+var ONGLET_PPH = 'Pentes photos', COL_PPH = ['id', 'spot', 'date', 'par', 'note', 'fichier', 'lat', 'lng', 'sha256', 'heure_tel', 'vignette'];
+function pentes_() {
+  if (!classeur_().getSheetByName(ONGLET_PENTES)) return [];
+  var ph = lireCols_(ONGLET_PPH, COL_PPH.length - 1), par = {};
+  ph.forEach(function (p) {
+    var k = String(p.spot), o = par[k] || (par[k] = { n: 0, last: null });
+    o.n++; if (!o.last || Number(p.date) > o.last.at) o.last = { id: String(p.id), at: Number(p.date), by: String(p.par || ''), note: String(p.note || ''), f: String(p.fichier || '') };
+  });
+  return lire_(ONGLET_PENTES).map(function (o) {
+    var x = par[String(o.id)] || { n: 0, last: null };
+    return { id: String(o.id), name: String(o.nom), lat: Number(o.lat) || null, lng: Number(o.lng) || null, at: Number(o.cree_le) || 0, n: x.n, last: x.last };
+  });
+}
+function enregistrerPente(code, sp, par) {
+  verifier_(code);
+  sp = sp || {};
+  var id = String(sp.id || '').replace(/[^A-Za-z0-9_-]/g, ''), nom = String(sp.name || '').trim().slice(0, 60);
+  if (!/^s[a-z0-9]{4,24}$/.test(id)) throw new Error('Point de vue sans identifiant.');
+  if (!nom) throw new Error('Écris le nom du point de vue.');
+  return verrou_(function () {
+    var s = ongletCree_(ONGLET_PENTES, COL_PENTES), o = lire_(ONGLET_PENTES).filter(function (x) { return String(x.id) === id; })[0];
+    if (o) {
+      s.getRange(o._ligne, 2).setValue(nom);
+      if (sp.lat && sp.lng) s.getRange(o._ligne, 3, 1, 2).setValues([[coord_(sp.lat), coord_(sp.lng)]]);
+    } else s.appendRow([id, nom, coord_(sp.lat), coord_(sp.lng), Date.now(), String(par || '').slice(0, 60)]);
+    ongletCree_(ONGLET_PPH, COL_PPH);
+    return { pentes: pentes_() };
+  });
+}
+function supprimerPente(code, id) {
+  verifier_(code);
+  return verrou_(function () {
+    var ph = classeur_().getSheetByName(ONGLET_PPH);
+    if (ph) lireCols_(ONGLET_PPH, COL_PPH.length - 1).reverse().forEach(function (p) {
+      if (String(p.spot) !== String(id)) return;
+      try { DriveApp.getFileById(String(p.fichier)).setTrashed(true); } catch (e) {}
+      ph.deleteRow(p._ligne);
+    });
+    var s = classeur_().getSheetByName(ONGLET_PENTES);
+    if (s) lire_(ONGLET_PENTES).reverse().forEach(function (o) { if (String(o.id) === String(id)) s.deleteRow(o._ligne); });
+    return { pentes: pentes_() };
+  });
+}
+function photoPente(code, spotId, dataUrl, vign, meta, par) {
+  verifier_(code);
+  meta = meta || {};
+  var img = image_(dataUrl, 4e6), t = Date.now(), sha = sha256_(img.octets);
+  var sp = lire_(ONGLET_PENTES).filter(function (x) { return String(x.id) === String(spotId); })[0];
+  if (!sp) throw new Error('Point de vue introuvable. Il a peut-être été supprimé : recharge la page.');
+  var nomF = 'pente-' + String(sp.nom).replace(/[^A-Za-z0-9]+/g, '-').slice(0, 30) + '-' + horo_(t) + '.jpg';
+  var f = sousDossier_('dossier_pentes', 'Suivi des pentes').createFile(Utilities.newBlob(img.octets, img.type, nomF));
+  f.setDescription('Suivi des pentes · ' + sp.nom + ' · ' + Utilities.formatDate(new Date(t), 'Europe/Zurich', 'dd.MM.yyyy HH:mm:ss') + ' (heure serveur) · SHA-256 ' + sha);
+  var id = 'q' + t.toString(36) + Math.random().toString(36).slice(2, 5), note = String(meta.note || '').slice(0, 300);
+  return verrou_(function () {
+    ongletCree_(ONGLET_PPH, COL_PPH).appendRow([id, String(sp.id), t, String(par || '').slice(0, 60), note, f.getId(), coord_(meta.lat), coord_(meta.lng), sha, Number(meta.tel) || '', vignette_(vign)]);
+    return { pentes: pentes_(), photo: { id: id, at: t, by: String(par || ''), note: note, f: f.getId(), sha: sha, thumb: vignette_(vign) } };
+  });
+}
+function historiquePente(code, spotId) {
+  verifier_(code);
+  return lire_(ONGLET_PPH).filter(function (p) { return String(p.spot) === String(spotId); }).map(function (p) {
+    return { id: String(p.id), at: Number(p.date), by: String(p.par || ''), note: String(p.note || ''), f: String(p.fichier), lat: Number(p.lat) || null, lng: Number(p.lng) || null, sha: String(p.sha256 || ''), thumb: String(p.vignette || '') };
+  }).sort(function (a, b) { return b.at - a.at; });
+}
+function vignettesPentes(code) {
+  verifier_(code);
+  if (!classeur_().getSheetByName(ONGLET_PPH)) return {};
+  var best = {};
+  lire_(ONGLET_PPH).forEach(function (p) { var k = String(p.spot); if (!best[k] || Number(p.date) > best[k].at) best[k] = { at: Number(p.date), thumb: String(p.vignette || '') }; });
+  var out = {}; Object.keys(best).forEach(function (k) { out[k] = best[k].thumb; }); return out;
+}
+function notePente(code, photoId, note) {
+  verifier_(code);
+  return verrou_(function () {
+    var p = lireCols_(ONGLET_PPH, 5).filter(function (x) { return String(x.id) === String(photoId); })[0];
+    if (!p) throw new Error('Photo introuvable. Elle a peut-être été supprimée : recharge la page.');
+    onglet_(ONGLET_PPH).getRange(p._ligne, 5).setValue(String(note || '').slice(0, 300));
+    return { pentes: pentes_() };
+  });
+}
+function supprimerPhotoPente(code, photoId) {
+  verifier_(code);
+  return verrou_(function () {
+    lireCols_(ONGLET_PPH, 6).reverse().forEach(function (p) {
+      if (String(p.id) !== String(photoId)) return;
+      try { DriveApp.getFileById(String(p.fichier)).setTrashed(true); } catch (e) {}
+      onglet_(ONGLET_PPH).deleteRow(p._ligne);
+    });
+    return { pentes: pentes_() };
+  });
+}
+
+// ----- Preuves : journal en ajout seul, chaque ligne est liée à la précédente (chaîne d'empreintes) -----
+var ONGLET_PREUVES = 'Preuves', COL_PREUVES = ['id', 'numero', 'date', 'par', 'categorie', 'objet', 'lieu', 'lat', 'lng', 'precision_m', 'heure_tel', 'fichier', 'sha256', 'chaine', 'statut', 'vignette'];
+var NB_PREUVE_COLS = COL_PREUVES.length - 1;
+function chaineLigne_(prec, o) {
+  return sha256_([prec || '', o.id, o.numero, Number(o.date), o.par, o.categorie, o.objet, o.lieu, o.lat, o.lng, o.sha256].join('|'));
+}
+function preuveObj_(o, thumb) {
+  return { id: String(o.id), num: String(o.numero), at: Number(o.date), by: String(o.par || ''), cat: String(o.categorie || ''), obj: String(o.objet || ''), lieu: String(o.lieu || ''),
+    lat: Number(o.lat) || null, lng: Number(o.lng) || null, acc: Number(o.precision_m) || null, tel: Number(o.heure_tel) || null, f: String(o.fichier), sha: String(o.sha256), chain: String(o.chaine), st: String(o.statut || ''), thumb: thumb ? String(o.vignette || '') : undefined };
+}
+function preuvesInfo_() {
+  var s = classeur_().getSheetByName(ONGLET_PREUVES); if (!s || s.getLastRow() < 2) return { n: 0, last: 0 };
+  return { n: s.getLastRow() - 1, last: Number(s.getRange(s.getLastRow(), 3).getValue()) || 0 };
+}
+function deposerPreuve(code, dataUrl, vign, meta, par) {
+  verifier_(code);
+  meta = meta || {};
+  var objet = String(meta.obj || '').trim().slice(0, 120);
+  if (!objet) throw new Error("Écris ce que la photo prouve (ex. « Filet n°12 posé »).");
+  var img = image_(dataUrl, 6e6), sha = sha256_(img.octets);
+  return verrou_(function () {
+    var s = ongletCree_(ONGLET_PREUVES, COL_PREUVES, true), t = Date.now(), an = Utilities.formatDate(new Date(t), 'Europe/Zurich', 'yyyy');
+    var avant = lireCols_(ONGLET_PREUVES, NB_PREUVE_COLS), der = avant[avant.length - 1];
+    var nAn = avant.filter(function (o) { return String(o.numero).indexOf('P-' + an + '-') === 0; }).length + 1;
+    var o = { id: 'p' + t.toString(36) + Math.random().toString(36).slice(2, 5), numero: 'P-' + an + '-' + ('000' + nAn).slice(-4), date: t, par: String(par || '').slice(0, 60),
+      categorie: String(meta.cat || '').slice(0, 40), objet: objet, lieu: String(meta.lieu || '').slice(0, 120), lat: coord_(meta.lat), lng: coord_(meta.lng), sha256: sha };
+    o.chaine = chaineLigne_(der ? String(der.chaine) : '', o);
+    var nomF = o.numero + '-' + horo_(t) + '-' + sha.slice(0, 8) + '.jpg';
+    var f = sousDossier_('dossier_preuves', 'Preuves (ne pas modifier)').createFile(Utilities.newBlob(img.octets, img.type, nomF));
+    f.setDescription('Preuve ' + o.numero + ' · ' + objet + ' · ' + Utilities.formatDate(new Date(t), 'Europe/Zurich', 'dd.MM.yyyy HH:mm:ss') + ' (heure serveur, Europe/Zurich) · par ' + o.par + ' · SHA-256 ' + sha);
+    s.appendRow([o.id, o.numero, t, o.par, o.categorie, o.objet, o.lieu, o.lat, o.lng, Math.round(Number(meta.acc)) || '', Number(meta.tel) || '', f.getId(), sha, o.chaine, '', vignette_(vign)]);
+    o.fichier = f.getId(); o.precision_m = Math.round(Number(meta.acc)) || ''; o.heure_tel = Number(meta.tel) || ''; o.statut = ''; o.vignette = vignette_(vign);
+    return { preuvesInfo: preuvesInfo_(), preuve: preuveObj_(o, true) };
+  });
+}
+function listePreuves(code, avant, n) {
+  verifier_(code);
+  n = Math.min(60, Number(n) || 30);
+  var s = classeur_().getSheetByName(ONGLET_PREUVES); if (!s || s.getLastRow() < 2) return { items: [], plus: false };
+  var L = lireCols_(ONGLET_PREUVES, NB_PREUVE_COLS).sort(function (a, b) { return Number(b.date) - Number(a.date); });
+  if (avant) L = L.filter(function (o) { return Number(o.date) < Number(avant); });
+  var page = L.slice(0, n), lignes = page.map(function (o) { return o._ligne; });
+  var vg = {}; if (lignes.length) { var a = Math.min.apply(null, lignes), b = Math.max.apply(null, lignes), v = s.getRange(a, 16, b - a + 1, 1).getValues(); lignes.forEach(function (l) { vg[l] = String(v[l - a][0] || ''); }); }
+  return { items: page.map(function (o) { var p = preuveObj_(o, false); p.thumb = vg[o._ligne] || ''; return p; }), plus: L.length > n };
+}
+function marquerPreuve(code, id, raison, par) {
+  verifier_(code);
+  raison = String(raison || '').trim().slice(0, 120);
+  if (!raison) throw new Error('Écris pourquoi cette preuve est une erreur.');
+  return verrou_(function () {
+    var o = lireCols_(ONGLET_PREUVES, NB_PREUVE_COLS).filter(function (x) { return String(x.id) === String(id); })[0];
+    if (!o) throw new Error('Preuve introuvable.');
+    var st = 'ERREUR : ' + raison + ' (' + String(par || '').slice(0, 40) + ', ' + Utilities.formatDate(new Date(), 'Europe/Zurich', 'dd.MM.yyyy HH:mm') + ')';
+    onglet_(ONGLET_PREUVES).getRange(o._ligne, 15).setValue(st);
+    o.statut = st; return { preuvesInfo: preuvesInfo_(), preuve: preuveObj_(o, false) };
+  });
+}
+// Contrôle complet : recalcule l'empreinte de chaque photo dans le Drive et la chaîne du journal
+function verifierPreuves(code) {
+  verifier_(code);
+  var L = lireCols_(ONGLET_PREUVES, NB_PREUVE_COLS), prec = '', pb = [], debut = Date.now(), vus = 0;
+  L.forEach(function (o) {
+    if (chaineLigne_(prec, o) !== String(o.chaine)) pb.push(o.numero + ' : ligne du journal modifiée');
+    prec = String(o.chaine);
+  });
+  for (var i = L.length - 1; i >= 0 && Date.now() - debut < 50000; i--, vus++) {
+    var o = L[i];
+    try { if (sha256_(DriveApp.getFileById(String(o.fichier)).getBlob().getBytes()) !== String(o.sha256)) pb.push(o.numero + ' : photo modifiée'); }
+    catch (e) { pb.push(o.numero + ' : photo introuvable dans le Drive'); }
+  }
+  return { n: L.length, problemes: pb, at: Date.now(), info: vus < L.length ? 'Photos contrôlées : les ' + vus + ' plus récentes sur ' + L.length + ' (relance pour le reste). Journal entier contrôlé.' : '' };
+}
+// Heure du serveur (pour comparer avec celle du téléphone)
+function heureServeur(code) { verifier_(code); return Date.now(); }

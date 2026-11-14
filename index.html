@@ -1078,6 +1078,90 @@ body:has(#view.bl) { background: #fff; }
 .bb-pg { display: block; width: 100%; height: auto; margin: 0 auto 10px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.4); }
 .bb-msg { color: #fff; font: 700 17px var(--body); text-align: center; margin-top: 40px; }
 .rc-add .av-in { flex: 1; width: auto; min-width: 0; }
+/* ---------- Suivi des pentes + Preuves ---------- */
+.pp-big { display: block; width: 100%; min-height: 62px; border: 0; border-radius: 14px; background: var(--tc, var(--accent)); color: #fff; font: 800 19px var(--body); cursor: pointer; margin: 4px 0 14px; }
+.pp-big.ghost { background: var(--bg) !important; color: var(--ink); border: 2px solid var(--line); }
+.pp-big:disabled { opacity: .6; }
+.pp-form { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+.pp-form label { display: grid; gap: 6px; font: 800 15px var(--body); }
+.pp-in { width: 100%; box-sizing: border-box; min-height: 56px; font: 600 18px var(--body); padding: 10px 12px; border: 2px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); margin: 6px 0; }
+.pp-hint { color: var(--muted); font-size: 14px; margin: 8px 0; }
+.pp-row { display: flex; gap: 10px; } .pp-row .pp-big { flex: 1; margin-bottom: 0; }
+.pp-stamp { position: absolute; left: 6px; bottom: 6px; background: rgba(0,0,0,.66); color: #fff; font: 800 12px var(--body); padding: 3px 7px; border-radius: 6px; letter-spacing: .2px; white-space: pre; pointer-events: none; }
+.pp-stamp.big { font-size: 17px; padding: 6px 10px; left: auto; right: 10px; bottom: 10px; }
+.pp-stamp.big.left { right: auto; left: 10px; display: none; }
+.pe-card { display: grid; grid-template-columns: 104px 1fr; gap: 0 12px; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 10px; margin-bottom: 12px; }
+.pe-th { position: relative; grid-row: span 2; width: 104px; height: 104px; border: 0; border-radius: 10px; overflow: hidden; background: var(--bg); color: var(--muted); padding: 0; cursor: pointer; }
+.pe-th img { width: 100%; height: 100%; object-fit: cover; display: block; } .pe-th svg { width: 40px; height: 40px; }
+.pe-th .pp-stamp { font-size: 10px; left: 3px; bottom: 3px; padding: 2px 4px; }
+.pe-tx { border: 0; background: none; color: var(--ink); text-align: left; padding: 2px 0; display: grid; gap: 3px; cursor: pointer; font: 500 14px var(--body); }
+.pe-tx b { font-size: 18px; } .pe-tx span { color: var(--muted); } .pe-tx i { color: var(--ink); }
+.pe-go { align-self: end; min-height: 52px; border: 0; border-radius: 12px; background: var(--tc); color: #fff; font: 800 17px var(--body); cursor: pointer; }
+.pe-go.done { background: var(--bg); color: var(--ok); border: 2px solid var(--ok); }
+.pe-hd h2 { margin: 0 0 2px; font-size: 24px; } .pe-dist { font: 700 16px var(--body); color: var(--muted); margin: 4px 0 10px; min-height: 1em; } .pe-dist.ok { color: var(--ok); }
+.pe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.pe-cell { position: relative; aspect-ratio: 4/3; border: 0; padding: 0; border-radius: 10px; overflow: hidden; background: var(--bg); cursor: pointer; }
+.pe-cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pe-note { position: absolute; left: 6px; top: 6px; right: 6px; background: rgba(255,214,0,.92); color: #111; font: 800 12px var(--body); padding: 2px 6px; border-radius: 6px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pe-more { margin-top: 22px; } .pe-more summary { font: 700 15px var(--body); color: var(--muted); cursor: pointer; padding: 10px 0; }
+.pe-more .pbtn { display: block; width: 100%; min-height: 52px; margin: 8px 0; }
+.pbtn.danger { color: #b3261e; border-color: #e6b3ae; }
+.cam, .pv, .pp-sheet { position: fixed; inset: 0; z-index: 90; background: #000; color: #fff; display: flex; flex-direction: column; }
+.cam-stage, .pv-stage { position: relative; flex: 1; min-height: 0; overflow: hidden; }
+.cam-stage video, .cam-ghost, .pv-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.cam-ghost { pointer-events: none; }
+.cam-top, .pv-top { position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: calc(10px + env(safe-area-inset-top)) 12px 10px; background: linear-gradient(rgba(0,0,0,.65), transparent); z-index: 2; font: 800 17px var(--body); }
+.pv-top { position: static; background: #000; }
+.cam-x { width: 56px; height: 56px; border-radius: 50%; border: 0; background: rgba(255,255,255,.18); color: #fff; font: 800 24px var(--body); cursor: pointer; flex: none; }
+.cam-bot { padding: 10px 16px calc(14px + env(safe-area-inset-bottom)); background: #000; }
+.cam-gw { display: flex; align-items: center; gap: 12px; font: 700 15px var(--body); margin-bottom: 10px; } .cam-gw input { flex: 1; height: 36px; }
+.cam-row { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; }
+.cam-alt { justify-self: start; border: 1px solid #555; background: #1b1b1b; color: #fff; border-radius: 12px; min-height: 52px; padding: 6px 10px; font: 700 14px var(--body); max-width: 130px; cursor: pointer; }
+.cam-sh { width: 84px; height: 84px; border-radius: 50%; border: 6px solid #fff; background: #e8e8e8; box-shadow: inset 0 0 0 4px #000; cursor: pointer; }
+.cam-sh:active { background: #fff; transform: scale(.95); }
+.pp-sheet { background: rgba(0,0,0,.6); justify-content: flex-end; color: var(--ink); }
+.pp-sbox { background: var(--paper); border-radius: 18px 18px 0 0; padding: 16px 16px calc(16px + env(safe-area-inset-bottom)); max-height: 92vh; overflow: auto; }
+.pp-prev { width: 100%; max-height: 34vh; object-fit: contain; border-radius: 10px; background: #000; display: block; }
+.pp-st { display: block; font: 800 20px var(--body); margin: 10px 0 6px; }
+.pp-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0; }
+.pp-chip { min-height: 48px; padding: 6px 14px; border-radius: 24px; border: 2px solid var(--line); background: var(--bg); color: var(--ink); font: 700 16px var(--body); cursor: pointer; }
+.pp-chip.on { background: var(--tc, #2b7a78); border-color: transparent; color: #fff; }
+.pp-sheet .pp-chip.on { background: #2b7a78; }
+.pv-note { margin: 0; padding: 8px 14px; min-height: 1.4em; font: 700 16px var(--body); color: #ffe57a; background: #000; }
+.pv-bar { display: grid; grid-template-columns: 58px repeat(4, 1fr) 58px; gap: 6px; padding: 8px 8px calc(10px + env(safe-area-inset-bottom)); background: #000; }
+.pv-btn { min-height: 58px; border: 0; border-radius: 12px; background: #262626; color: #fff; font: 800 15px var(--body); cursor: pointer; padding: 0 4px; }
+.pv-btn:not(.w) { font-size: 30px; } .pv-btn:disabled { opacity: .3; } .pv-btn.danger { color: #ff8a80; }
+.pv-wipe, .pv-pick { display: none; }
+.pv.cmp .pv-wipe { display: block; width: calc(100% - 28px); margin: 8px 14px 0; height: 40px; }
+.pv.cmp .pv-pick { display: block; margin: 6px 14px 0; min-height: 48px; font: 700 16px var(--body); border-radius: 10px; }
+.pv.cmp .pp-stamp.big.left { display: block; }
+.pr-pend { background: #fde8e6; color: #5c1410; border: 2px solid #b3261e; border-radius: 14px; padding: 12px; margin-bottom: 14px; display: grid; gap: 8px; }
+.pr-day { margin: 18px 0 8px; font-size: 15px; color: var(--muted); text-transform: capitalize; }
+.pr-card { display: flex; gap: 12px; width: 100%; text-align: left; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 8px; margin-bottom: 8px; color: var(--ink); cursor: pointer; font: 500 14px var(--body); }
+.pr-card.bad { opacity: .6; } .pr-card.bad b { text-decoration: line-through; }
+.pr-th { width: 84px; height: 84px; flex: none; border-radius: 10px; overflow: hidden; background: var(--bg); }
+.pr-th img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pr-tx { display: grid; gap: 3px; align-content: center; } .pr-tx b { font-size: 17px; } .pr-tx span { color: var(--muted); } .pr-tx i { color: #b3261e; font-style: normal; font-weight: 700; }
+.pr-check { margin-top: 22px; } .pr-check .pbtn { width: 100%; min-height: 52px; }
+.pr-check p { font: 700 15px var(--body); } .pr-check .ok { color: var(--ok); } .pr-check .bad { color: #b3261e; }
+.pr-fig { position: relative; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+.pr-fig img { width: 100%; max-height: 60vh; object-fit: contain; display: block; }
+.pr-bad { background: #fde8e6; color: #8c1d18; font-weight: 800; padding: 10px; border-radius: 10px; }
+.pr-dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 12px; font-size: 15px; }
+.pr-dl dt { color: var(--muted); font-weight: 700; } .pr-dl dd { margin: 0; font-weight: 600; word-break: break-word; } .pr-dl dd.mono { font: 600 13px ui-monospace, Menlo, monospace; }
+.pr-dl a { color: var(--sky); }
+.pr-acts { display: grid; gap: 8px; margin-top: 14px; } .pr-acts .pbtn { min-height: 52px; }
+#pr-print { display: none; }
+@media print {
+  body > *:not(#pr-print) { display: none !important; }
+  #pr-print { display: block !important; color: #000; background: #fff; font: 12pt/1.4 system-ui, sans-serif; }
+  #pr-print h1 { font-size: 17pt; margin: 0 0 8pt; }
+  #pr-print img { width: 100%; max-height: 13cm; object-fit: contain; }
+  #pr-print table { width: 100%; border-collapse: collapse; margin: 8pt 0; font-size: 10pt; }
+  #pr-print th, #pr-print td { border: 1px solid #999; padding: 4pt 6pt; text-align: left; vertical-align: top; word-break: break-all; }
+  #pr-print th { width: 34%; background: #eee; }
+  #pr-print p { font-size: 9.5pt; }
+}
 </style>
 <script>window.__LOGO="data:image/jpeg;base64,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";</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1088,7 +1172,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794635942";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794641326";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1104,6 +1188,8 @@ body:has(#view.bl) { background: #fff; }
   var NS = "http://www.w3.org/2000/svg";
   var ICONS = {
     aval: "M2 20L9 7l3 5 3-3 7 11z M9 7l1.5 6 M15 9l-1 5",
+    cam: "M4 8h3l2-3h6l2 3h3v11H4z M12 10a3.5 3.5 0 1 0 0 7a3.5 3.5 0 1 0 0-7",
+    shield: "M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z M9 12l2 2 4-4",
     board: "M3 4h18v12H3z M8 20l4-4 4 4 M7 8h5 M7 11h8",
     ext: "M14 4h6v6 M20 4l-9 9 M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5",
     r9: "M7 3h10v18H7z M10 7h4 M10 11h4 M12 15v2",
@@ -1192,7 +1278,7 @@ body:has(#view.bl) { background: #fff; }
   function call(fn) {
     var args = Array.prototype.slice.call(arguments, 1);
     // délai max : sans réponse au bout de 25 s, on abandonne (sinon l'écran peut rester bloqué)
-    var ac = window.AbortController ? new AbortController() : null, to = ac ? setTimeout(function () { ac.abort(); }, fn === "assistant" ? 70000 : 25000) : null;
+    var ac = window.AbortController ? new AbortController() : null, to = ac ? setTimeout(function () { ac.abort(); }, /^(assistant|photoPente|deposerPreuve|verifierPreuves)$/.test(fn) ? 70000 : 25000) : null;
     if (window.API_URL) return fetch(window.API_URL, { method: "POST", body: JSON.stringify({ fn: fn, args: args }), headers: { "Content-Type": "text/plain;charset=utf-8" }, credentials: "omit", redirect: "follow", signal: ac ? ac.signal : undefined })
       .then(function (r) { clearTimeout(to); return r; }, function (e) { clearTimeout(to); throw new Error(e && e.name === "AbortError" ? "Pas de réponse (réseau lent)" : "Pas de connexion"); })
       .then(function (r) { if (!r.ok) throw new Error("Pas de connexion"); return r.json(); })
@@ -1284,7 +1370,7 @@ body:has(#view.bl) { background: #fff; }
   }
   // Mise à jour automatique toutes les 30 s (sans déranger une saisie en cours)
   setInterval(function () {
-    if (!data || busy || panel || document.hidden || Object.keys(countDraft).length || cmdOpen || evEdit || dmEdit || tkEdit || tkConfirm || tkDel || tkDraft || swOpen || (area === "bilan" && (blEdit || blRev))) return;
+    if (!data || busy || panel || document.hidden || Object.keys(countDraft).length || cmdOpen || evEdit || dmEdit || tkEdit || tkConfirm || tkDel || tkDraft || swOpen || ppLock || (area === "bilan" && (blEdit || blRev))) return;
     var a = document.activeElement; if (a && /INPUT|SELECT|TEXTAREA/.test(a.tagName)) return;
     load(true);
   }, 30000);
@@ -1347,11 +1433,13 @@ body:has(#view.bl) { background: #fff; }
     else if (area === "achat" && dmEdit && dmEdit.created) up = ["‹ Retour", function () { dmEdit = null; dmFile = null; renderAchat(); }];
     else if (area === "bilan" && (blViewId || blEdit || blRev)) up = ["‹ Fiches", function () { blViewId = null; blEdit = false; blRev = null; renderBilan(); goTop(); }];
     else if (area === "aval" && (avEdit || avView)) up = ["‹ Avalanches", function () { avEdit = null; avView = null; avDraw = false; avFull = false; avSensStop(); renderAval(); goTop(); }];
+    else if (area === "pentes" && (peSel || peNew)) up = ["‹ Suivi des pentes", function () { peSel = null; peNew = null; renderAll(); goTop(); }];
+    else if (area === "preuve" && prOpen) up = ["‹ Preuves", function () { prOpen = null; renderAll(); goTop(); }];
     else if (area === "achat" && (dmEdit || dmOpen)) up = ["‹ Achats", function () { dmEdit = null; dmFile = null; dmOpen = null; lowOpen = false; renderAchat(); }];
     if (up) { back.textContent = up[0]; back.addEventListener("click", up[1]); }
     else { back.appendChild(icon("home")); back.lastChild.style.cssText = "width:18px;height:18px"; back.appendChild(document.createTextNode("Accueil")); back.addEventListener("click", function () { goArea("home"); }); }
     b.appendChild(back);
-    b.appendChild(el("span", "where", area === "stock" ? "Stock matériel" : area === "plan" ? "Agenda" : area === "presence" ? "Planning" : area === "taches" ? "Tâches équipe" : area === "bilan" ? "Bilan victime" : area === "achat" ? "Achats & fabrication" : area === "aval" ? "Avalanches" : area === "recco" ? "RECCO R9" : area === "panneau" ? "Panneau Scex Rouge" : formRub || "Formation"));
+    b.appendChild(el("span", "where", area === "stock" ? "Stock matériel" : area === "plan" ? "Agenda" : area === "presence" ? "Planning" : area === "taches" ? "Tâches équipe" : area === "bilan" ? "Bilan victime" : area === "achat" ? "Achats & fabrication" : area === "aval" ? "Avalanches" : area === "pentes" ? "Suivi des pentes" : area === "preuve" ? "Preuves" : area === "recco" ? "RECCO R9" : area === "panneau" ? "Panneau Scex Rouge" : formRub || "Formation"));
   }
   function bigTile(ic, color, title, sub, onClick, light) {
     var t = el("button", "tile" + (light ? " light" : "")); t.type = "button"; t.style.setProperty("--tc", color);
@@ -1377,6 +1465,8 @@ body:has(#view.bl) { background: #fff; }
     g.appendChild(bigTile("tasks", "#6b4fbb", "Tâches équipe", tkOpenN.length ? (tkAtt ? "⚠ " + tkAtt + " attention · " : "") + (tkOpenN.length - tkAtt) + " à faire" + (tkUrg ? " · dont " + tkUrg + " urgente" + (tkUrg > 1 ? "s" : "") : "") : "Rien à faire pour l'instant", function () { goArea("taches"); }));
     var avT = (data.avalanches || []).filter(function (a) { return a.at >= avDayStart(Date.now()); }).length, avS = (data.avalanches || []).filter(function (a) { return a.at >= avSeasonStart(); }).length;
     g.appendChild(bigTile("aval", AV_C, "Avalanches", avT ? avT + " notée" + (avT > 1 ? "s" : "") + " aujourd'hui · " + avS + " cette saison" : "Carte 3D · dessine la coulée" + (avS ? " · " + avS + " cette saison" : ""), function () { avEdit = null; avView = null; goArea("aval"); }));
+    g.appendChild(bigTile("cam", PE_C, "Suivi des pentes", peTile(), function () { peSel = null; peNew = null; peThumbs = null; goArea("pentes"); }));
+    g.appendChild(bigTile("shield", PR_C, "Preuves", prTile(), function () { prOpen = null; prItems = null; goArea("preuve"); }));
     // Lien vers le logiciel WAC.3 de Wyssen (ouvert à part, chacun se connecte avec son propre compte)
     g.appendChild(bigTile("ext", "#1f4e79", "WAC.3 · Wyssen", "Ouvre le site Wyssen · connexion avec ton compte", function () { var a = document.createElement("a"); a.href = "https://control.wyssenavalanche.com"; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove(); }));
     g.appendChild(bigTile("box", "#d63a3a", "Stock matériel", subS, function () { goArea("stock"); }));
@@ -5057,6 +5147,8 @@ body:has(#view.bl) { background: #fff; }
     if (area === "bilan") return renderBilan();
     if (area === "presence") return renderPresence();
     if (area === "aval") return renderAval();
+    if (area === "pentes") return renderPentes();
+    if (area === "preuve") return renderPreuves();
     if (area === "recco") return renderRecco();
     if (area === "panneau") return renderPanneau();
     renderTabs();
@@ -5101,6 +5193,472 @@ body:has(#view.bl) { background: #fff; }
       im.onerror = function () { URL.revokeObjectURL(url); reject(new Error("Format de photo non pris en charge : choisis une photo JPEG ou PNG.")); };
       im.src = url;
     });
+  }
+
+  /* ---------- Photos horodatées : Suivi des pentes + Preuves ---------- */
+  // Heure affichée = heure du serveur Google, toujours en heure suisse
+  var ZFMT = {};
+  function zf(t, o) { var k = JSON.stringify(o); try { ZFMT[k] = ZFMT[k] || new Intl.DateTimeFormat("fr-CH", Object.assign({ timeZone: "Europe/Zurich" }, o)); return ZFMT[k].format(new Date(t)); } catch (e) { return new Date(t).toLocaleString(); } }
+  function zDate(t) { return zf(t, { day: "2-digit", month: "2-digit", year: "numeric" }); }
+  function zHeure(t, sec) { return zf(t, sec ? { hour: "2-digit", minute: "2-digit", second: "2-digit" } : { hour: "2-digit", minute: "2-digit" }); }
+  function zJour(t) { return zf(t, { weekday: "short", day: "numeric", month: "short" }); }
+  function zKey(t) { return zf(t, { year: "numeric", month: "2-digit", day: "2-digit" }); }
+  function zStamp(t) { return zDate(t) + " · " + zHeure(t); }
+  function myName() { try { return localStorage.getItem("stock-pistes-avobs") || ""; } catch (e) { return ""; } }
+  function setMyName(n) { try { localStorage.setItem("stock-pistes-avobs", n); } catch (e) {} }
+  var ppLock = false, ppFull = {}, ppFullK = [];
+  function ppCall(fn, args, wait) {
+    busy++; if (wait) showStatus(wait, false, true);
+    return call.apply(null, [fn, code].concat(args || [])).then(function (d) { busy--; return d; }, function (e) { busy--; handleError(e); throw e; });
+  }
+  // Photo en grand : demandée au serveur avec le code de l'équipe (jamais de lien public)
+  function ppPhoto(fid) {
+    if (ppFull[fid]) return Promise.resolve(ppFull[fid]);
+    return call("photoBase64", code, fid).then(function (u) {
+      ppFull[fid] = u; ppFullK.push(fid); if (ppFullK.length > 24) delete ppFull[ppFullK.shift()];
+      return u;
+    });
+  }
+  function ppShrink(src, max, q) {
+    return new Promise(function (resolve, reject) {
+      var url = typeof src === "string" ? src : URL.createObjectURL(src), im = new Image();
+      im.onload = function () {
+        var k = Math.min(1, max / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement("canvas");
+        c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k);
+        c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); if (typeof src !== "string") URL.revokeObjectURL(url);
+        resolve(c.toDataURL("image/jpeg", q));
+      };
+      im.onerror = function () { if (typeof src !== "string") URL.revokeObjectURL(url); reject(new Error("Format de photo non pris en charge : choisis une photo JPEG ou PNG.")); };
+      im.src = url;
+    });
+  }
+  function ppPos(timeout) {
+    return new Promise(function (res) {
+      if (!navigator.geolocation) return res(null);
+      var done = false, t = setTimeout(function () { if (!done) { done = true; res(null); } }, timeout || 8000);
+      navigator.geolocation.getCurrentPosition(function (p) { if (done) return; done = true; clearTimeout(t); res({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy }); },
+        function () { if (done) return; done = true; clearTimeout(t); res(null); }, { enableHighAccuracy: true, timeout: timeout || 8000, maximumAge: 20000 });
+    });
+  }
+  function ppDist(a, b) {
+    if (!a || !b || !a.lat || !b.lat) return null;
+    var R = 6371000, r = Math.PI / 180, dl = (b.lat - a.lat) * r, dg = (b.lng - a.lng) * r;
+    var h = Math.sin(dl / 2) * Math.sin(dl / 2) + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dg / 2) * Math.sin(dg / 2);
+    return Math.round(2 * R * Math.asin(Math.sqrt(h)));
+  }
+  // Tampon gravé dans l'image (pour partager ou imprimer ; l'original reste intact sur le serveur)
+  function ppBurn(src, lines) {
+    return new Promise(function (resolve, reject) {
+      var im = new Image();
+      im.onload = function () {
+        var c = document.createElement("canvas"), w = im.naturalWidth, h = im.naturalHeight; c.width = w; c.height = h;
+        var g = c.getContext("2d"); g.drawImage(im, 0, 0);
+        var fs = Math.max(16, Math.round(w / 34)), pad = Math.round(fs * .6), bh = lines.length * fs * 1.3 + pad * 2;
+        g.fillStyle = "rgba(0,0,0,.62)"; g.fillRect(0, h - bh, w, bh);
+        g.fillStyle = "#fff"; g.textBaseline = "top";
+        lines.forEach(function (l, i) { g.font = (i ? "600 " + Math.round(fs * .8) : "800 " + fs) + "px system-ui, sans-serif"; g.fillText(l, pad, h - bh + pad + i * fs * 1.3, w - pad * 2); });
+        c.toBlob(function (b) { b ? resolve(b) : reject(new Error("image")); }, "image/jpeg", .9);
+      };
+      im.onerror = function () { reject(new Error("Image illisible")); }; im.src = src;
+    });
+  }
+  function ppShare(blob, name, txt) {
+    var f = null; try { f = new File([blob], name, { type: "image/jpeg" }); } catch (e) {}
+    if (f && navigator.canShare && navigator.canShare({ files: [f] })) return navigator.share({ files: [f], text: txt }).catch(function () {});
+    return saveFile(name, blob);
+  }
+
+  // Appareil photo avec la photo précédente en transparence (pour cadrer pareil chaque jour)
+  function camNative(res) {
+    var inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; inp.setAttribute("capture", "environment");
+    inp.addEventListener("change", function () { res(inp.files && inp.files[0] || null); });
+    inp.addEventListener("cancel", function () { res(null); });
+    inp.click();
+  }
+  function camOpen(o) {
+    o = o || {};
+    return new Promise(function (res) {
+      var md = navigator.mediaDevices;
+      if (!md || !md.getUserMedia || window.__NO_LIVE_CAM) return camNative(res);
+      var ov = el("div", "cam"), stage = el("div", "cam-stage"), vid = document.createElement("video"), stream = null, closed = false;
+      vid.setAttribute("playsinline", ""); vid.muted = true; vid.autoplay = true; stage.appendChild(vid);
+      var gh = null; if (o.ghost) { gh = document.createElement("img"); gh.className = "cam-ghost"; gh.src = o.ghost; gh.alt = ""; stage.appendChild(gh); }
+      var top = el("div", "cam-top"), x = el("button", "cam-x", "✕"); x.type = "button"; x.setAttribute("aria-label", "Fermer");
+      top.appendChild(el("b", null, o.title || "Photo")); top.appendChild(x);
+      var bot = el("div", "cam-bot");
+      if (gh) {
+        var gw = el("div", "cam-gw"), lb = el("span", null, "Photo précédente"), rg = document.createElement("input");
+        rg.type = "range"; rg.min = "0"; rg.max = "80"; rg.value = "40"; rg.setAttribute("aria-label", "Transparence de la photo précédente");
+        gh.style.opacity = ".4"; rg.addEventListener("input", function () { gh.style.opacity = String(rg.value / 100); });
+        gw.appendChild(lb); gw.appendChild(rg); bot.appendChild(gw);
+      }
+      var row = el("div", "cam-row"), alt = el("button", "cam-alt", "Appareil du téléphone"), sh = el("button", "cam-sh"); alt.type = "button"; sh.type = "button"; sh.setAttribute("aria-label", "Prendre la photo");
+      row.appendChild(alt); row.appendChild(sh); row.appendChild(el("span", "cam-sp")); bot.appendChild(row);
+      ov.appendChild(stage); ov.appendChild(top); ov.appendChild(bot); document.body.appendChild(ov);
+      function close(v) { if (closed) return; closed = true; if (stream) stream.getTracks().forEach(function (t) { t.stop(); }); ov.remove(); res(v); }
+      x.addEventListener("click", function () { close(null); });
+      alt.addEventListener("click", function () { if (stream) stream.getTracks().forEach(function (t) { t.stop(); }); closed = true; ov.remove(); camNative(res); });
+      sh.addEventListener("click", function () {
+        if (!vid.videoWidth) return;
+        var c = document.createElement("canvas"); c.width = vid.videoWidth; c.height = vid.videoHeight; c.getContext("2d").drawImage(vid, 0, 0);
+        sh.disabled = true; c.toBlob(function (b) { close(b); }, "image/jpeg", .92);
+      });
+      md.getUserMedia({ video: { facingMode: { ideal: "environment" }, width: { ideal: 2560 }, height: { ideal: 1920 } }, audio: false }).then(function (s) {
+        if (closed) { s.getTracks().forEach(function (t) { t.stop(); }); return; }
+        stream = s; vid.srcObject = s; var p = vid.play(); if (p && p.catch) p.catch(function () {});
+      }, function () { if (closed) return; closed = true; ov.remove(); camNative(res); });
+    });
+  }
+
+  /* ----- Suivi des pentes ----- */
+  var PE_C = "#2b7a78", peSel = null, peHist = {}, peThumbs = null, peNew = null, peHere = null, peEditSpot = false;
+  var PE_NOTES = ["RAS", "Reptation", "Fissure", "Gueule de baleine", "Coulée", "Corniche", "Neige fraîche", "Vent"];
+  function peList() { return (data.pentes || []).slice().sort(function (a, b) { return a.name.localeCompare(b.name, "fr"); }); }
+  function peById(id) { return (data.pentes || []).filter(function (s) { return s.id === id; })[0]; }
+  function peToday(s) { return s.last && zKey(s.last.at) === zKey(Date.now()); }
+  function peTile() {
+    var L = data.pentes || [], ok = L.filter(peToday).length;
+    return L.length ? L.length + " point" + (L.length > 1 ? "s" : "") + " de vue · " + ok + "/" + L.length + " photo" + (ok > 1 ? "s" : "") + " aujourd'hui" : "Une photo par jour, au même endroit";
+  }
+  function peLoadThumbs() {
+    if (peThumbs) return;
+    peThumbs = {};
+    call("vignettesPentes", code).then(function (t) { peThumbs = t || {}; if (area === "pentes" && !peSel) renderPentes(); }, function () { peThumbs = null; });
+  }
+  function peLoadHist(id, force) {
+    if (peHist[id] && !force) return Promise.resolve(peHist[id]);
+    return call("historiquePente", code, id).then(function (L) { peHist[id] = L || []; return peHist[id]; });
+  }
+  function peStampEl(t, big) { var s = el("span", "pp-stamp" + (big ? " big" : ""), zDate(t) + "  " + zHeure(t)); return s; }
+  function renderPentes() {
+    var v = clearView(); v.style.setProperty("--tc", PE_C);
+    if (peSel && peById(peSel)) return peRenderSpot(v, peById(peSel));
+    peSel = null; peLoadThumbs();
+    var add = el("button", "pp-big", "＋ Nouveau point de vue"); add.type = "button"; add.style.background = PE_C;
+    add.addEventListener("click", function () { peNew = { name: "" }; renderPentes(); });
+    if (peNew) v.appendChild(peNewForm()); else v.appendChild(add);
+    var L = peList();
+    if (!L.length && !peNew) v.appendChild(el("p", "empty", "Crée un point de vue par endroit à surveiller (une face, une combe, un couloir). Ensuite, une photo par jour, toujours du même endroit."));
+    L.forEach(function (s) {
+      var c = el("div", "pe-card"), th = el("button", "pe-th"); th.type = "button";
+      var tu = peThumbs && peThumbs[s.id];
+      if (tu) { var im = document.createElement("img"); im.src = tu; im.alt = ""; th.appendChild(im); if (s.last) th.appendChild(peStampEl(s.last.at)); }
+      else th.appendChild(icon("cam"));
+      th.addEventListener("click", function () { peSel = s.id; renderPentes(); goTop(); });
+      var tx = el("button", "pe-tx"); tx.type = "button"; tx.appendChild(el("b", null, s.name));
+      tx.appendChild(el("span", null, s.n ? s.n + " photo" + (s.n > 1 ? "s" : "") + " · dernière " + (peToday(s) ? "aujourd'hui " + zHeure(s.last.at) : zJour(s.last.at)) + (s.last.by ? " · " + s.last.by : "") : "Pas encore de photo"));
+      if (s.last && s.last.note) tx.appendChild(el("i", null, "« " + s.last.note + " »"));
+      tx.addEventListener("click", function () { peSel = s.id; renderPentes(); goTop(); });
+      var go = el("button", "pe-go" + (peToday(s) ? " done" : ""), peToday(s) ? "✓ Fait" : "📷 Photo"); go.type = "button";
+      go.addEventListener("click", function () { peShoot(s); });
+      c.appendChild(th); c.appendChild(tx); c.appendChild(go); v.appendChild(c);
+    });
+  }
+  function peNewForm() {
+    var f = el("div", "pp-form"), lb = el("label", null, "Nom du point de vue"), inp = document.createElement("input");
+    inp.value = peNew.name; inp.placeholder = "Ex. Face nord Sex Rouge, depuis la station"; inp.maxLength = 60; inp.className = "pp-in";
+    inp.addEventListener("input", function () { peNew.name = inp.value; });
+    lb.appendChild(inp); f.appendChild(lb);
+    f.appendChild(el("p", "pp-hint", "Ta position actuelle est enregistrée : mets-toi à l'endroit d'où tu prendras la photo chaque jour."));
+    var row = el("div", "pp-row"), ok = el("button", "pp-big", "Créer"), no = el("button", "pp-big ghost", "Annuler"); ok.type = no.type = "button"; ok.style.background = PE_C;
+    no.addEventListener("click", function () { peNew = null; renderPentes(); });
+    ok.addEventListener("click", function () {
+      var n = inp.value.trim(); if (!n) { inp.focus(); return showStatus("Écris le nom du point de vue.", true); }
+      ok.disabled = true; showStatus("Position GPS…", false, true);
+      ppPos(8000).then(function (p) {
+        var sp = { id: "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), name: n, lat: p && p.lat, lng: p && p.lng };
+        return ppCall("enregistrerPente", [sp, myName()], "Enregistrement…").then(function (d) { data.pentes = d.pentes; saveCache(data); peNew = null; peSel = sp.id; showStatus(p ? "Point de vue créé" : "Point créé (sans position GPS)"); renderPentes(); });
+      }).catch(function () { ok.disabled = false; });
+    });
+    row.appendChild(no); row.appendChild(ok); f.appendChild(row);
+    setTimeout(function () { inp.focus(); }, 60);
+    return f;
+  }
+  function peRenderSpot(v, s) {
+    var hd = el("div", "pe-hd"); hd.appendChild(el("h2", null, s.name));
+    var meta = el("p", "pmeta", s.n ? s.n + " photo" + (s.n > 1 ? "s" : "") + " depuis le " + (peHist[s.id] && peHist[s.id].length ? zDate(peHist[s.id][peHist[s.id].length - 1].at) : "…") : "Pas encore de photo");
+    hd.appendChild(meta);
+    var dist = el("p", "pe-dist"); hd.appendChild(dist);
+    if (s.lat) ppPos(6000).then(function (p) {
+      var d = ppDist(p, s); if (d == null || !dist.isConnected) return;
+      dist.textContent = d <= 25 ? "📍 Tu es au point (" + d + " m)" : "📍 Tu es à " + (d < 1000 ? d + " m" : (d / 1000).toFixed(1) + " km") + " du point";
+      dist.className = "pe-dist" + (d <= 25 ? " ok" : "");
+    });
+    v.appendChild(hd);
+    var go = el("button", "pp-big", peToday(s) ? "📷 Reprendre une photo" : "📷 Photo du jour"); go.type = "button"; go.style.background = PE_C;
+    go.addEventListener("click", function () { peShoot(s); }); v.appendChild(go);
+    var g = el("div", "pe-grid"); v.appendChild(g);
+    var H = peHist[s.id];
+    if (H && H.length !== s.n) { H = null; delete peHist[s.id]; }
+    if (!H) { g.appendChild(el("p", "empty", "Chargement de l'historique…")); peLoadHist(s.id).then(function () { if (area === "pentes" && peSel === s.id) renderPentes(); }, function (e) { g.textContent = ""; g.appendChild(el("p", "empty", "Historique indisponible : " + String(e && e.message || e))); }); }
+    else if (!H.length) g.appendChild(el("p", "empty", "Aucune photo pour l'instant."));
+    else H.forEach(function (p, i) {
+      var b = el("button", "pe-cell"); b.type = "button";
+      if (p.thumb) { var im = document.createElement("img"); im.src = p.thumb; im.alt = ""; im.loading = "lazy"; b.appendChild(im); }
+      b.appendChild(peStampEl(p.at)); if (p.note) b.appendChild(el("span", "pe-note", p.note));
+      b.addEventListener("click", function () { ppViewer(s, H, i); }); g.appendChild(b);
+    });
+    // Réglages du point de vue
+    var more = el("details", "pe-more"); more.appendChild(el("summary", null, "Réglages du point de vue"));
+    var rn = el("button", "pbtn", "Renommer"), here = el("button", "pbtn", "📍 Mettre le point ici (ma position)"), del = el("button", "pbtn danger", "Supprimer ce point et ses photos");
+    [rn, here, del].forEach(function (b) { b.type = "button"; more.appendChild(b); });
+    rn.addEventListener("click", function () {
+      var n = prompt("Nouveau nom :", s.name); if (!n || !n.trim()) return;
+      ppCall("enregistrerPente", [{ id: s.id, name: n.trim() }, myName()]).then(function (d) { data.pentes = d.pentes; saveCache(data); renderPentes(); showStatus("Renommé"); });
+    });
+    here.addEventListener("click", function () {
+      showStatus("Position GPS…", false, true);
+      ppPos(10000).then(function (p) {
+        if (!p) return showStatus("Position introuvable.", true);
+        ppCall("enregistrerPente", [{ id: s.id, name: s.name, lat: p.lat, lng: p.lng }, myName()]).then(function (d) { data.pentes = d.pentes; saveCache(data); renderPentes(); showStatus("Position du point enregistrée (± " + Math.round(p.acc) + " m)"); });
+      });
+    });
+    del.addEventListener("click", function () {
+      if (!confirm("Supprimer « " + s.name + " » et ses " + (s.n || 0) + " photo(s) ? C'est définitif.")) return;
+      ppCall("supprimerPente", [s.id], "Suppression…").then(function (d) { data.pentes = d.pentes; saveCache(data); delete peHist[s.id]; peSel = null; renderPentes(); showStatus("Point supprimé"); });
+    });
+    v.appendChild(more);
+  }
+  function peShoot(s) {
+    if (ppLock) return; ppLock = true;
+    var ghostP = s.last && s.last.f ? ppPhoto(s.last.f).catch(function () { return null; }) : Promise.resolve(null);
+    showStatus("Ouverture de l'appareil…", false, true);
+    var posP = ppPos(15000);
+    ghostP.then(function (gu) { return camOpen({ ghost: gu, title: s.name }); }).then(function (f) {
+      if (!f) { ppLock = false; return; }
+      var tel = Date.now();
+      return Promise.all([ppShrink(f, 1600, .85), ppShrink(f, 320, .6)]).then(function (u) { return peNoteSheet(s, u, posP, tel); });
+    }).catch(function (e) { ppLock = false; showStatus(String(e && e.message || e), true); });
+  }
+  // Après la photo : une note rapide (ou rien), puis envoi
+  function peNoteSheet(s, u, posP, tel) {
+    var ov = el("div", "pp-sheet"), box = el("div", "pp-sbox"), im = document.createElement("img"); im.src = u[0]; im.alt = ""; im.className = "pp-prev";
+    box.appendChild(im); box.appendChild(el("b", "pp-st", s.name));
+    var sel = [], chips = el("div", "pp-chips");
+    PE_NOTES.forEach(function (n) {
+      var c = el("button", "pp-chip", n); c.type = "button";
+      c.addEventListener("click", function () { var i = sel.indexOf(n); if (i >= 0) sel.splice(i, 1); else sel.push(n); c.classList.toggle("on", i < 0); });
+      chips.appendChild(c);
+    });
+    box.appendChild(chips);
+    var tx = document.createElement("input"); tx.className = "pp-in"; tx.placeholder = "Note (facultatif)"; tx.maxLength = 200; box.appendChild(tx);
+    var row = el("div", "pp-row"), no = el("button", "pp-big ghost", "Jeter"), ok = el("button", "pp-big", "Enregistrer"); no.type = ok.type = "button"; ok.style.background = PE_C;
+    row.appendChild(no); row.appendChild(ok); box.appendChild(row); ov.appendChild(box); document.body.appendChild(ov);
+    function end() { ov.remove(); ppLock = false; }
+    no.addEventListener("click", end);
+    ok.addEventListener("click", function () {
+      var note = sel.concat(tx.value.trim() ? [tx.value.trim()] : []).join(" · ");
+      ok.disabled = no.disabled = true; ok.textContent = "Envoi…";
+      Promise.race([posP, new Promise(function (r) { setTimeout(function () { r(null); }, 1500); })]).then(function (p) {
+        return ppCall("photoPente", [s.id, u[0], u[1], { note: note, lat: p && p.lat, lng: p && p.lng, tel: tel }, myName()], "Envoi de la photo…");
+      }).then(function (d) {
+        data.pentes = d.pentes; saveCache(data);
+        if (peHist[s.id]) peHist[s.id].unshift(d.photo);
+        if (peThumbs && d.photo.thumb) peThumbs[s.id] = d.photo.thumb;
+        end(); showStatus("Photo enregistrée · " + zHeure(d.photo.at, true)); if (area === "pentes") renderPentes();
+      }, function () { ok.disabled = no.disabled = false; ok.textContent = "Réessayer"; });
+    });
+  }
+  // Visionneuse : glisser pour passer d'un jour à l'autre, comparer avec un autre jour
+  function ppViewer(s, H, i) {
+    var ov = el("div", "pv"), top = el("div", "pv-top"), cnt = el("b"), x = el("button", "cam-x", "✕"); x.type = "button"; x.setAttribute("aria-label", "Fermer");
+    top.appendChild(cnt); top.appendChild(x);
+    var stage = el("div", "pv-stage"), img = document.createElement("img"), img2 = document.createElement("img"), st = el("span", "pp-stamp big"), st2 = el("span", "pp-stamp big left");
+    img.alt = ""; img2.alt = ""; img2.className = "pv-b"; stage.appendChild(img2); stage.appendChild(img); stage.appendChild(st); stage.appendChild(st2);
+    var note = el("p", "pv-note"), bar = el("div", "pv-bar");
+    var prev = el("button", "pv-btn", "‹"), next = el("button", "pv-btn", "›"), cmp = el("button", "pv-btn w", "Comparer"), shr = el("button", "pv-btn w", "Partager"), ed = el("button", "pv-btn w", "Note"), del = el("button", "pv-btn w danger", "Suppr.");
+    [prev, next, cmp, shr, ed, del].forEach(function (b) { b.type = "button"; });
+    bar.appendChild(prev); bar.appendChild(cmp); bar.appendChild(shr); bar.appendChild(ed); bar.appendChild(del); bar.appendChild(next);
+    var wipe = document.createElement("input"); wipe.type = "range"; wipe.min = "0"; wipe.max = "100"; wipe.value = "50"; wipe.className = "pv-wipe"; wipe.setAttribute("aria-label", "Glisser pour comparer");
+    var pick = document.createElement("select"); pick.className = "pv-pick"; pick.setAttribute("aria-label", "Comparer avec");
+    ov.appendChild(top); ov.appendChild(stage); ov.appendChild(wipe); ov.appendChild(pick); ov.appendChild(note); ov.appendChild(bar); document.body.appendChild(ov);
+    ppLock = true;
+    var cmpOn = false, j = Math.min(H.length - 1, i + 1);
+    function close() { ov.remove(); ppLock = false; if (area === "pentes") renderPentes(); }
+    function load(imEl, p) { imEl.src = p.thumb || ""; ppPhoto(p.f).then(function (u) { if (imEl.dataset.k === p.id) imEl.src = u; }, function () {}); imEl.dataset.k = p.id; }
+    function show() {
+      var p = H[i]; if (!p) return close();
+      cnt.textContent = s.name + " · " + (i + 1) + "/" + H.length;
+      load(img, p); st.textContent = zDate(p.at) + "  " + zHeure(p.at);
+      note.textContent = (p.note ? "« " + p.note + " »  " : "") + (p.by ? "— " + p.by : "");
+      prev.disabled = i >= H.length - 1; next.disabled = i <= 0;
+      ov.classList.toggle("cmp", cmpOn); cmp.textContent = cmpOn ? "Fin compar." : "Comparer";
+      if (cmpOn) {
+        pick.textContent = ""; H.forEach(function (q, k) { if (k === i) return; var o = el("option", null, zJour(q.at) + " " + zHeure(q.at)); o.value = k; if (k === j) o.selected = true; pick.appendChild(o); });
+        load(img2, H[j]); st2.textContent = zDate(H[j].at) + "  " + zHeure(H[j].at); clip();
+      } else img.style.clipPath = "";
+    }
+    function clip() { img.style.clipPath = cmpOn ? "inset(0 0 0 " + wipe.value + "%)" : ""; }
+    wipe.addEventListener("input", clip);
+    pick.addEventListener("change", function () { j = +pick.value; show(); });
+    x.addEventListener("click", close);
+    prev.addEventListener("click", function () { if (i < H.length - 1) { i++; show(); } });
+    next.addEventListener("click", function () { if (i > 0) { i--; show(); } });
+    cmp.addEventListener("click", function () { if (H.length < 2) return showStatus("Il faut au moins 2 photos.", true); cmpOn = !cmpOn; j = i < H.length - 1 ? i + 1 : i - 1; show(); });
+    var sx = null;
+    stage.addEventListener("touchstart", function (e) { if (!cmpOn && e.touches.length === 1) sx = e.touches[0].clientX; }, { passive: true });
+    stage.addEventListener("touchend", function (e) { if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; sx = null; if (dx > 50) prev.click(); else if (dx < -50) next.click(); });
+    shr.addEventListener("click", function () {
+      var p = H[i]; showStatus("Préparation…", false, true);
+      ppPhoto(p.f).then(function (u) { return ppBurn(u, [zDate(p.at) + "  " + zHeure(p.at) + "  ·  " + s.name, (p.note ? p.note + "  ·  " : "") + (p.by || "") + "  ·  heure serveur"]); })
+        .then(function (b) { showStatus("Prêt"); return ppShare(b, "pente-" + fileName(s.name) + "-" + zKey(p.at).split(".").reverse().join("-") + ".jpg", s.name + " · " + zStamp(p.at)); })
+        .catch(function (e) { showStatus(String(e && e.message || e), true); });
+    });
+    ed.addEventListener("click", function () {
+      var p = H[i], n = prompt("Note pour cette photo :", p.note || ""); if (n == null) return;
+      ppCall("notePente", [p.id, n.trim()]).then(function (d) { p.note = n.trim(); data.pentes = d.pentes; saveCache(data); show(); showStatus("Note enregistrée"); });
+    });
+    del.addEventListener("click", function () {
+      var p = H[i]; if (!confirm("Supprimer la photo du " + zStamp(p.at) + " ?")) return;
+      ppCall("supprimerPhotoPente", [p.id], "Suppression…").then(function (d) { data.pentes = d.pentes; saveCache(data); H.splice(i, 1); peThumbs = null; if (!H.length) return close(); if (i >= H.length) i = H.length - 1; cmpOn = false; show(); showStatus("Photo supprimée"); });
+    });
+    show();
+  }
+
+  /* ----- Preuves : photo datée par le serveur, empreinte SHA-256, journal enchaîné ----- */
+  var PR_C = "#37474f", prItems = null, prMore = false, prOpen = null, prCheck = null, prPending = null;
+  var PR_CATS = ["Filet", "Balisage", "Panneau", "Fermeture", "Matelas", "Damage", "Dégât", "Autre"];
+  function prTile() { var i = data.preuvesInfo || {}; return i.n ? i.n + " preuve" + (i.n > 1 ? "s" : "") + " · dernière le " + zDate(i.last) : "Photo datée par le serveur · infalsifiable"; }
+  function prLoad(more) {
+    var avant = more && prItems && prItems.length ? prItems[prItems.length - 1].at : 0;
+    return call("listePreuves", code, avant, 30).then(function (r) { prItems = (more ? prItems || [] : []).concat(r.items || []); prMore = !!r.plus; if (area === "preuve") renderPreuves(); }, function (e) { if (!prItems) prItems = []; handleError(e); });
+  }
+  function prById(id) { return (prItems || []).filter(function (p) { return p.id === id; })[0]; }
+  function prSha(sha) { return String(sha || "").replace(/(.{8})/g, "$1 ").trim(); }
+  function renderPreuves() {
+    var v = clearView(); v.style.setProperty("--tc", PR_C);
+    if (prOpen && prById(prOpen)) return prRenderOne(v, prById(prOpen));
+    prOpen = null;
+    var go = el("button", "pp-big", "📷 Nouvelle preuve"); go.type = "button"; go.style.background = PR_C;
+    go.addEventListener("click", prNew); v.appendChild(go);
+    if (prPending) {
+      var pb = el("div", "pr-pend"); pb.appendChild(el("b", null, "⚠ Preuve pas encore enregistrée : " + prPending.meta.obj));
+      pb.appendChild(el("span", null, "Pas de réseau. La photo est gardée sur ce téléphone jusqu'à l'envoi."));
+      var rt = el("button", "pp-big", "Réessayer l'envoi"); rt.type = "button"; rt.style.background = "#b3261e"; rt.addEventListener("click", prSend);
+      var ab = el("button", "pbtn", "Abandonner"); ab.type = "button"; ab.addEventListener("click", function () { if (confirm("Abandonner cette preuve ?")) { prPending = null; renderPreuves(); } });
+      pb.appendChild(rt); pb.appendChild(ab); v.appendChild(pb);
+    }
+    if (!prItems) { v.appendChild(el("p", "empty", "Chargement du journal…")); prLoad(false); return; }
+    if (!prItems.length) v.appendChild(el("p", "empty", "Aucune preuve pour l'instant. Exemple : photographier chaque filet de protection quand il est posé."));
+    var day = "";
+    prItems.forEach(function (p) {
+      var k = zDate(p.at); if (k !== day) { day = k; v.appendChild(el("h3", "pr-day", zf(p.at, { weekday: "long", day: "numeric", month: "long", year: "numeric" }))); }
+      var c = el("button", "pr-card" + (p.st ? " bad" : "")); c.type = "button";
+      var th = el("span", "pr-th"); if (p.thumb) { var im = document.createElement("img"); im.src = p.thumb; im.alt = ""; im.loading = "lazy"; th.appendChild(im); } c.appendChild(th);
+      var tx = el("span", "pr-tx"); tx.appendChild(el("b", null, p.obj)); tx.appendChild(el("span", null, zHeure(p.at, true) + " · " + p.num + (p.by ? " · " + p.by : "")));
+      if (p.cat || p.lieu) tx.appendChild(el("span", null, [p.cat, p.lieu].filter(String).join(" · ")));
+      if (p.st) tx.appendChild(el("i", null, p.st));
+      c.appendChild(tx); c.addEventListener("click", function () { prOpen = p.id; renderPreuves(); goTop(); }); v.appendChild(c);
+    });
+    if (prMore) { var m = el("button", "pbtn", "Afficher les plus anciennes"); m.type = "button"; m.style.cssText = "width:100%;min-height:52px;margin-top:10px"; m.addEventListener("click", function () { m.disabled = true; prLoad(true); }); v.appendChild(m); }
+    var ck = el("div", "pr-check"), cb = el("button", "pbtn", "🔍 Vérifier tout le journal"); cb.type = "button";
+    ck.appendChild(cb);
+    if (prCheck) ck.appendChild(el("p", prCheck.problemes.length ? "bad" : "ok", prCheck.problemes.length ? "⚠ " + prCheck.problemes.join(" · ") : "✓ " + prCheck.n + " preuve" + (prCheck.n > 1 ? "s" : "") + " contrôlée" + (prCheck.n > 1 ? "s" : "") + " le " + zStamp(prCheck.at) + " : aucune photo ni ligne modifiée."));
+    if (prCheck && prCheck.info) ck.appendChild(el("p", "pp-hint", prCheck.info));
+    cb.addEventListener("click", function () { cb.disabled = true; cb.textContent = "Contrôle en cours…"; call("verifierPreuves", code).then(function (r) { prCheck = r; renderPreuves(); }, function (e) { cb.disabled = false; cb.textContent = "🔍 Vérifier tout le journal"; handleError(e); }); });
+    v.appendChild(ck);
+  }
+  // Nouvelle preuve : d'abord quoi (2 touches), puis la photo, envoi immédiat
+  function prNew() {
+    if (ppLock) return; ppLock = true;
+    var last = {}; try { last = JSON.parse(localStorage.getItem("stock-pistes-prlast") || "{}"); } catch (e) {}
+    var posP = ppPos(20000), m = { cat: last.cat || "", obj: "", lieu: last.lieu || "" };
+    var ov = el("div", "pp-sheet"), box = el("div", "pp-sbox"); box.appendChild(el("b", "pp-st", "Nouvelle preuve"));
+    var chips = el("div", "pp-chips");
+    PR_CATS.forEach(function (n) {
+      var c = el("button", "pp-chip" + (m.cat === n ? " on" : ""), n); c.type = "button";
+      c.addEventListener("click", function () { m.cat = m.cat === n ? "" : n; chips.querySelectorAll(".pp-chip").forEach(function (x) { x.classList.toggle("on", x.textContent === m.cat); }); });
+      chips.appendChild(c);
+    });
+    box.appendChild(chips);
+    var ob = document.createElement("input"); ob.className = "pp-in"; ob.placeholder = "Ce que la photo prouve (ex. Filet n°12 posé)"; ob.maxLength = 120; box.appendChild(ob);
+    var li = document.createElement("input"); li.className = "pp-in"; li.placeholder = "Lieu / piste (facultatif)"; li.maxLength = 120; li.value = m.lieu; box.appendChild(li);
+    var nm = null; if (!myName()) { nm = document.createElement("input"); nm.className = "pp-in"; nm.placeholder = "Ton prénom et nom"; nm.maxLength = 60; box.appendChild(nm); }
+    var row = el("div", "pp-row"), no = el("button", "pp-big ghost", "Annuler"), ok = el("button", "pp-big", "📷 Prendre la photo"); no.type = ok.type = "button"; ok.style.background = PR_C;
+    row.appendChild(no); row.appendChild(ok); box.appendChild(row); ov.appendChild(box); document.body.appendChild(ov);
+    setTimeout(function () { ob.focus(); }, 60);
+    no.addEventListener("click", function () { ov.remove(); ppLock = false; });
+    ok.addEventListener("click", function () {
+      m.obj = ob.value.trim(); m.lieu = li.value.trim();
+      if (!m.obj) { ob.focus(); return showStatus("Écris ce que la photo prouve.", true); }
+      if (nm) { if (!nm.value.trim()) { nm.focus(); return showStatus("Écris ton nom (il figure sur la preuve).", true); } setMyName(nm.value.trim()); }
+      try { localStorage.setItem("stock-pistes-prlast", JSON.stringify({ cat: m.cat, lieu: m.lieu })); } catch (e) {}
+      ov.remove();
+      camOpen({ title: m.obj }).then(function (f) {
+        if (!f) { ppLock = false; return; }
+        m.tel = Date.now(); showStatus("Préparation de la photo…", false, true);
+        return Promise.all([ppShrink(f, 2000, .9), ppShrink(f, 320, .6), Promise.race([posP, new Promise(function (r) { setTimeout(function () { r(null); }, 2500); })])]).then(function (r) {
+          var p = r[2]; if (p) { m.lat = p.lat; m.lng = p.lng; m.acc = p.acc; }
+          prPending = { img: r[0], thumb: r[1], meta: m }; ppLock = false; prSend();
+        });
+      }).catch(function (e) { ppLock = false; showStatus(String(e && e.message || e), true); });
+    });
+  }
+  function prSend() {
+    var P = prPending; if (!P) return;
+    ppCall("deposerPreuve", [P.img, P.thumb, P.meta, myName()], "Envoi de la preuve…").then(function (d) {
+      prPending = null; data.preuvesInfo = d.preuvesInfo; saveCache(data);
+      (prItems = prItems || []).unshift(d.preuve); prOpen = d.preuve.id; ppFull[d.preuve.f] = P.img;
+      showStatus("Preuve " + d.preuve.num + " enregistrée · " + zHeure(d.preuve.at, true));
+      if (area !== "preuve") goArea("preuve"); else { renderPreuves(); goTop(); }
+    }, function () { if (area !== "preuve") goArea("preuve"); else renderPreuves(); });
+  }
+  function prLines(p) { return [p.num + "  ·  " + zDate(p.at) + "  " + zHeure(p.at, true) + " (heure serveur)", p.obj + (p.lieu ? "  ·  " + p.lieu : "") + (p.by ? "  ·  " + p.by : ""), "SHA-256 " + String(p.sha).slice(0, 16) + "…" + (p.lat ? "  ·  " + p.lat.toFixed(5) + ", " + p.lng.toFixed(5) : "")]; }
+  function prRenderOne(v, p) {
+    var fig = el("div", "pr-fig"), im = document.createElement("img"); im.alt = ""; im.src = p.thumb || ""; fig.appendChild(im);
+    var stp = el("span", "pp-stamp big", zDate(p.at) + "  " + zHeure(p.at, true)); fig.appendChild(stp);
+    ppPhoto(p.f).then(function (u) { im.src = u; }, function () {});
+    v.appendChild(fig);
+    if (p.st) v.appendChild(el("p", "pr-bad", p.st));
+    var t = el("dl", "pr-dl");
+    function row(k, val, cls) { t.appendChild(el("dt", null, k)); var d = el("dd", cls || null); if (val && val.nodeType) d.appendChild(val); else d.textContent = val || "—"; t.appendChild(d); }
+    row("N° de preuve", p.num);
+    row("Objet", p.obj); if (p.cat) row("Catégorie", p.cat); if (p.lieu) row("Lieu", p.lieu);
+    row("Date et heure", zf(p.at, { weekday: "long", day: "numeric", month: "long", year: "numeric" }) + " à " + zHeure(p.at, true) + " — heure du serveur Google (Europe/Zurich)");
+    if (p.tel) row("Heure du téléphone", zHeure(p.tel, true) + " (écart " + Math.round((p.at - p.tel) / 1000) + " s : temps d'envoi)");
+    row("Auteur", p.by);
+    if (p.lat) { var a = document.createElement("a"); a.href = "https://www.google.com/maps?q=" + p.lat + "," + p.lng; a.target = "_blank"; a.rel = "noopener"; a.textContent = p.lat.toFixed(6) + ", " + p.lng.toFixed(6) + (p.acc ? " (± " + p.acc + " m)" : ""); row("Position GPS", a); }
+    else row("Position GPS", "non disponible");
+    row("Empreinte SHA-256", prSha(p.sha), "mono");
+    row("Chaîne du journal", prSha(p.chain), "mono");
+    v.appendChild(t);
+    var acts = el("div", "pr-acts");
+    var fi = el("button", "pp-big", "🖨 Fiche de preuve (PDF)"), sh = el("button", "pbtn", "Photo avec tampon"), og = el("button", "pbtn", "Photo originale"), er = el("button", "pbtn danger", "Marquer comme erreur");
+    [fi, sh, og, er].forEach(function (b) { b.type = "button"; acts.appendChild(b); }); fi.style.background = PR_C;
+    if (p.st) er.remove();
+    fi.addEventListener("click", function () { prPrint(p); });
+    sh.addEventListener("click", function () { showStatus("Préparation…", false, true); ppPhoto(p.f).then(function (u) { return ppBurn(u, prLines(p)); }).then(function (b) { showStatus("Prêt"); return ppShare(b, p.num + "-tampon.jpg", "Preuve " + p.num + " · " + p.obj); }).catch(function (e) { showStatus(String(e && e.message || e), true); }); });
+    og.addEventListener("click", function () { showStatus("Téléchargement…", false, true); ppPhoto(p.f).then(d2b).then(function (b) { showStatus("Prêt"); return saveFile(p.num + "-original-" + String(p.sha).slice(0, 8) + ".jpg", b); }).catch(function (e) { showStatus(String(e && e.message || e), true); }); });
+    er.addEventListener("click", function () {
+      var r = prompt("Pourquoi cette preuve est-elle une erreur ? (elle reste dans le journal, barrée)"); if (!r || !r.trim()) return;
+      ppCall("marquerPreuve", [p.id, r.trim(), myName()]).then(function (d) { p.st = d.preuve.st; renderPreuves(); showStatus("Marquée comme erreur"); });
+    });
+    v.appendChild(acts);
+    v.appendChild(el("p", "pp-hint", "La photo originale n'est jamais modifiée : son empreinte SHA-256 permet à un expert de vérifier qu'elle est identique au fichier enregistré le jour même. Le journal est enchaîné : supprimer ou changer une ligne casse la chaîne."));
+  }
+  // Fiche imprimable (Imprimer → Enregistrer en PDF)
+  function prPrint(p) {
+    showStatus("Préparation de la fiche…", false, true);
+    ppPhoto(p.f).then(function (u) { return ppBurn(u, prLines(p)).then(function (b) { return new Promise(function (r) { var fr = new FileReader(); fr.onload = function () { r(fr.result); }; fr.readAsDataURL(b); }); }); }).then(function (img) {
+      var z = document.getElementById("pr-print"); if (z) z.remove();
+      z = el("div"); z.id = "pr-print";
+      z.appendChild(el("h1", null, "Fiche de preuve photographique · " + p.num));
+      var im = document.createElement("img"); im.src = img; im.alt = "Photo " + p.num; z.appendChild(im);
+      var tb = document.createElement("table");
+      [["Objet", p.obj], ["Catégorie", p.cat || "—"], ["Lieu", p.lieu || "—"], ["Date et heure (serveur Google, Europe/Zurich)", zf(p.at, { weekday: "long", day: "numeric", month: "long", year: "numeric" }) + " à " + zHeure(p.at, true)],
+        ["Heure indiquée par le téléphone", p.tel ? zDate(p.tel) + " " + zHeure(p.tel, true) : "—"], ["Auteur", p.by || "—"],
+        ["Position GPS", p.lat ? p.lat.toFixed(6) + ", " + p.lng.toFixed(6) + (p.acc ? " (précision ± " + p.acc + " m)" : "") : "non disponible"],
+        ["Empreinte SHA-256 du fichier original", p.sha], ["Maillon du journal (chaîne SHA-256)", p.chain], ["Identifiant du fichier (Google Drive)", p.f], ["Statut", p.st || "Valide"]].forEach(function (r) {
+        var tr = document.createElement("tr"); tr.appendChild(el("th", null, r[0])); tr.appendChild(el("td", null, r[1])); tb.appendChild(tr);
+      });
+      z.appendChild(tb);
+      z.appendChild(el("p", null, "Méthode : la date et l'heure sont fixées par le serveur Google à la réception de la photo, et non par le téléphone. Le fichier original est conservé sans modification ; son empreinte SHA-256 (calculée à la réception) permet de vérifier qu'il n'a pas été altéré. Chaque enregistrement est lié au précédent par une chaîne d'empreintes : une suppression ou une modification du journal est détectable. Le bandeau sur la photo ci-dessus est ajouté pour la lecture ; il ne fait pas partie du fichier original."));
+      z.appendChild(el("p", null, "Fiche éditée le " + zStamp(Date.now()) + "."));
+      document.body.appendChild(z); showStatus("Prêt");
+      var bye = function () { window.removeEventListener("afterprint", bye); setTimeout(function () { z.remove(); }, 400); };
+      window.addEventListener("afterprint", bye);
+      setTimeout(function () { window.print(); }, 150);
+    }).catch(function (e) { showStatus(String(e && e.message || e), true); });
   }
 
   /* ---------- Lieux ---------- */
