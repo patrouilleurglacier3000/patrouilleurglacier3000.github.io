@@ -1246,7 +1246,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794663871";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794664067";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1490,6 +1490,7 @@ body:has(#view.bl) { background: #fff; }
   var area = "home", formRub = null;
   try { area = localStorage.getItem("stock-pistes-area") || "home"; } catch (e) {}
   function goArea(a, rub) {
+    if (a !== area) { peSel = null; peNew = null; peOpenS = null; prOpen = null; } // on revient toujours sur la page principale de l'onglet
     area = a; formRub = rub || null; panel = null; evView = null; lowOpen = false; try { localStorage.setItem("stock-pistes-area", a); } catch (e) {}
     renderAll(); goTop();
   }
@@ -1541,7 +1542,7 @@ body:has(#view.bl) { background: #fff; }
     g.appendChild(bigTile("tasks", "#6b4fbb", "Tâches équipe", tkOpenN.length ? (tkAtt ? "⚠ " + tkAtt + " attention · " : "") + (tkOpenN.length - tkAtt) + " à faire" + (tkUrg ? " · dont " + tkUrg + " urgente" + (tkUrg > 1 ? "s" : "") : "") : "Rien à faire pour l'instant", function () { goArea("taches"); }));
     var avT = (data.avalanches || []).filter(function (a) { return a.at >= avDayStart(Date.now()); }).length, avS = (data.avalanches || []).filter(function (a) { return a.at >= avSeasonStart(); }).length;
     g.appendChild(bigTile("aval", AV_C, "Avalanches", avT ? avT + " notée" + (avT > 1 ? "s" : "") + " aujourd'hui · " + avS + " cette saison" : "Carte 3D · dessine la coulée" + (avS ? " · " + avS + " cette saison" : ""), function () { avEdit = null; avView = null; goArea("aval"); }));
-    g.appendChild(bigTile("cam", PE_C, "Suivi des pentes", peTile(), function () { peSel = null; peNew = null; peThumbs = null; goArea("pentes"); }));
+    g.appendChild(bigTile("cam", PE_C, "Suivi des pentes", peTile(), function () { peSel = null; peNew = null; peThumbs = null; peOpenS = null; goArea("pentes"); }));
     g.appendChild(bigTile("shield", PR_C, "Preuves", prTile(), function () { prOpen = null; prItems = null; prAll = null; goArea("preuve"); }));
     // Lien vers le logiciel WAC.3 de Wyssen (ouvert à part, chacun se connecte avec son propre compte)
     g.appendChild(bigTile("ext", "#1f4e79", "WAC.3 · Wyssen", "Ouvre le site Wyssen · connexion avec ton compte", function () { var a = document.createElement("a"); a.href = "https://control.wyssenavalanche.com"; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove(); }));
@@ -5652,7 +5653,7 @@ body:has(#view.bl) { background: #fff; }
     "Martizberg": ["Sous arrivée TS2", "RG", "RD", "Oldenegg arrivée TS1"],
     "Reusch": ["RD cabane à chiotte", "RD secteur cascade chalet Budemli", "RG Lawinen-Hang"]
   };
-  var peShut = {}; try { peShut = JSON.parse(localStorage.getItem("stock-pistes-peshut") || "{}"); } catch (e) {}
+  var peOpenS = null; // un seul secteur ouvert à la fois ; en revenant de l'accueil, tout est refermé
   function peList() {
     var L = (data.pentes || []).slice(), first = {};
     L.forEach(function (x) { var k = x.sect || ""; if (first[k] == null || x.at < first[k]) first[k] = x.at; });
@@ -5698,10 +5699,10 @@ body:has(#view.bl) { background: #fff; }
       var k = s.sect || "Sans secteur";
       if (k !== cur) {
         cur = k; var inK = L.filter(function (x) { return (x.sect || "Sans secteur") === k; }), okK = inK.filter(peToday).length;
-        var hb = el("button", "pe-sect" + (peShut[k] ? " shut" : "")); hb.type = "button";
+        var hb = el("button", "pe-sect" + (peOpenS !== k ? " shut" : "")); hb.type = "button";
         hb.appendChild(el("b", null, k)); hb.appendChild(el("span", okK === inK.length ? "ok" : null, okK + "/" + inK.length + " aujourd'hui"));
-        hb.addEventListener("click", (function (k) { return function () { if (peShut[k]) delete peShut[k]; else peShut[k] = 1; try { localStorage.setItem("stock-pistes-peshut", JSON.stringify(peShut)); } catch (e) {} renderPentes(); }; })(k));
-        v.appendChild(hb); box = el("div", "pe-sbox"); if (peShut[k]) box.hidden = true; v.appendChild(box);
+        hb.addEventListener("click", (function (k) { return function () { peOpenS = peOpenS === k ? null : k; renderPentes(); }; })(k));
+        v.appendChild(hb); box = el("div", "pe-sbox"); if (peOpenS !== k) box.hidden = true; v.appendChild(box);
       }
       var c = el("div", "pe-card"), th = el("button", "pe-th"); th.type = "button";
       var tu = peThumbs && peThumbs[s.id];
