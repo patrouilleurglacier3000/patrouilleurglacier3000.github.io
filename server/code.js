@@ -1563,15 +1563,23 @@ function deposerPreuve(code, dataUrl, vign, meta, par) {
     return { preuvesInfo: preuvesInfo_(), preuve: preuveObj_(o, true) };
   });
 }
-function listePreuves(code, avant, n) {
+function listePreuves(code, avant, n, f) {
   verifier_(code);
-  n = Math.min(60, Number(n) || 30);
-  var s = classeur_().getSheetByName(ONGLET_PREUVES); if (!s || s.getLastRow() < 2) return { items: [], plus: false };
-  var L = lireCols_(ONGLET_PREUVES, NB_PREUVE_COLS).sort(function (a, b) { return Number(b.date) - Number(a.date) || b._ligne - a._ligne; });
-  if (avant) L = L.filter(function (o) { return Number(o.date) < Number(avant); });
-  var page = L.slice(0, n), lignes = page.map(function (o) { return o._ligne; });
+  n = Math.min(60, Number(n) || 30); f = f || {};
+  var s = classeur_().getSheetByName(ONGLET_PREUVES); if (!s || s.getLastRow() < 2) return { items: [], plus: false, cats: {} };
+  var L = lireCols_(ONGLET_PREUVES, NB_PREUVE_COLS).sort(function (a, b) { return Number(b.date) - Number(a.date) || b._ligne - a._ligne; }), cats = {};
+  L.forEach(function (o) { var c = String(o.categorie || ''); cats[c] = (cats[c] || 0) + 1; });
+  // Filtres : secteur, jour (heure suisse), et tri par distance d'un point
+  if (f.cat) L = L.filter(function (o) { return String(o.categorie || '') === String(f.cat); });
+  if (f.jour) L = L.filter(function (o) { return Utilities.formatDate(new Date(Number(o.date)), 'Europe/Zurich', 'yyyy-MM-dd') === String(f.jour); });
+  if (f.near && f.near.length === 2) {
+    var la = Number(f.near[0]), lo = Number(f.near[1]), r = Math.PI / 180;
+    L.forEach(function (o) { var a = Number(o.lat), b = Number(o.lng); o._d = a && b ? Math.round(6371000 * Math.acos(Math.min(1, Math.sin(la * r) * Math.sin(a * r) + Math.cos(la * r) * Math.cos(a * r) * Math.cos((b - lo) * r)))) : 1e12; });
+    L.sort(function (x, y) { return x._d - y._d; });
+  } else if (avant) L = L.filter(function (o) { return Number(o.date) < Number(avant); });
+  var skip = Math.max(0, Number(f.skip) || 0), page = L.slice(skip, skip + n), lignes = page.map(function (o) { return o._ligne; });
   var vg = {}; if (lignes.length) { var a = Math.min.apply(null, lignes), b = Math.max.apply(null, lignes), v = s.getRange(a, 16, b - a + 1, 1).getValues(); lignes.forEach(function (l) { vg[l] = String(v[l - a][0] || ''); }); }
-  return { items: page.map(function (o) { var p = preuveObj_(o, false); p.thumb = vg[o._ligne] || ''; return p; }), plus: L.length > n };
+  return { items: page.map(function (o) { var p = preuveObj_(o, false); p.thumb = vg[o._ligne] || ''; if (o._d != null && o._d < 1e12) p.dist = o._d; return p; }), plus: L.length > skip + n, total: L.length, cats: cats };
 }
 function marquerPreuve(code, id, raison, par) {
   verifier_(code);

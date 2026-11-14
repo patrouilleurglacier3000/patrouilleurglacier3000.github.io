@@ -1155,6 +1155,13 @@ body:has(#view.bl) { background: #fff; }
 .pv.cmp .pv-wipe { display: block; width: calc(100% - 28px); margin: 8px 14px 0; height: 40px; }
 .pv.cmp .pv-pick { display: block; margin: 6px 14px 0; min-height: 48px; font: 700 16px var(--body); border-radius: 10px; }
 .pv.cmp .pp-stamp.big.left { display: block; }
+.pr-h { margin: 6px 0 10px; font-size: 18px; }
+.pr-sects { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.pr-sect { min-height: 76px; border: 0; border-radius: 14px; background: #37474f; color: #fff; font: 800 19px var(--body); cursor: pointer; padding: 8px; }
+.pr-sect:active { transform: scale(.97); } .pr-sect.other { background: var(--bg); color: var(--ink); border: 2px solid var(--line); }
+.pr-filt { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 10px; margin-bottom: 8px; }
+.pr-frow { display: flex; gap: 8px; align-items: center; } .pr-frow .pp-in { flex: 1; min-width: 0; margin: 0; } .pr-frow .pbtn { min-height: 56px; flex: none; }
+.pbtn.on { background: #37474f; color: #fff; }
 .pr-pend { background: #fde8e6; color: #5c1410; border: 2px solid #b3261e; border-radius: 14px; padding: 12px; margin-bottom: 14px; display: grid; gap: 8px; }
 .pr-day { margin: 18px 0 8px; font-size: 15px; color: var(--muted); text-transform: capitalize; }
 .pr-card { display: flex; gap: 12px; width: 100%; text-align: left; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 8px; margin-bottom: 8px; color: var(--ink); cursor: pointer; font: 500 14px var(--body); }
@@ -1192,7 +1199,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794647927";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794649579";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -5252,12 +5259,12 @@ body:has(#view.bl) { background: #fff; }
       im.src = url;
     });
   }
-  function ppPos(timeout) {
+  function ppPos(timeout, maxAge) {
     return new Promise(function (res) {
       if (!navigator.geolocation) return res(null);
       var done = false, t = setTimeout(function () { if (!done) { done = true; res(null); } }, timeout || 8000);
       navigator.geolocation.getCurrentPosition(function (p) { if (done) return; done = true; clearTimeout(t); res({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy }); },
-        function () { if (done) return; done = true; clearTimeout(t); res(null); }, { enableHighAccuracy: true, timeout: timeout || 8000, maximumAge: 20000 });
+        function () { if (done) return; done = true; clearTimeout(t); res(null); }, { enableHighAccuracy: true, timeout: timeout || 8000, maximumAge: maxAge == null ? 20000 : maxAge });
     });
   }
   function ppDist(a, b) {
@@ -5775,41 +5782,77 @@ body:has(#view.bl) { background: #fff; }
   }
 
   /* ----- Preuves : photo datée par le serveur, empreinte SHA-256, journal enchaîné ----- */
-  var PR_C = "#37474f", prItems = null, prMore = false, prOpen = null, prCheck = null, prPending = null;
-  var PR_CATS = ["Filet", "Balisage", "Panneau", "Fermeture", "Matelas", "Damage", "Dégât", "Autre"];
-  function prTile() { var i = data.preuvesInfo || {}; return i.n ? i.n + " preuve" + (i.n > 1 ? "s" : "") + " · dernière le " + zDate(i.last) : "Photo datée par le serveur · infalsifiable"; }
+  var PR_C = "#37474f", prItems = null, prMore = false, prOpen = null, prCheck = null, prPending = [], prCats = {}, prTotal = 0;
+  var prF = { cat: "", jour: "", near: null }, prPosP = null, prPos = null;
+  function prTile() { var i = data.preuvesInfo || {}; return i.n ? i.n + " preuve" + (i.n > 1 ? "s" : "") + " · dernière le " + zDate(i.last) : "Touche un secteur, prends la photo, c'est tout"; }
+  // Secteurs : ceux du suivi des pentes + ceux de base
+  function prSects() { var o = peSects ? peSects() : []; Object.keys(PE_SEED).forEach(function (k) { if (o.indexOf(k) < 0) o.push(k); }); return o; }
   function prLoad(more) {
-    var avant = more && prItems && prItems.length ? prItems[prItems.length - 1].at : 0;
-    return call("listePreuves", code, avant, 30).then(function (r) { prItems = (more ? prItems || [] : []).concat(r.items || []); prMore = !!r.plus; if (area === "preuve") renderPreuves(); }, function (e) { if (!prItems) prItems = []; handleError(e); });
+    var f = { cat: prF.cat, jour: prF.jour, near: prF.near, skip: more && prItems ? prItems.length : 0 };
+    return call("listePreuves", code, 0, 30, f).then(function (r) {
+      prItems = (more ? prItems || [] : []).concat(r.items || []); prMore = !!r.plus; prCats = r.cats || {}; prTotal = r.total || 0;
+      if (area === "preuve") renderPreuves();
+    }, function (e) { if (!prItems) prItems = []; handleError(e); });
   }
   function prById(id) { return (prItems || []).filter(function (p) { return p.id === id; })[0]; }
   function prSha(sha) { return String(sha || "").replace(/(.{8})/g, "$1 ").trim(); }
+  function prDist(m) { return m < 1000 ? m + " m" : (m / 1000).toFixed(1) + " km"; }
   function renderPreuves() {
     var v = clearView(); v.style.setProperty("--tc", PR_C);
     if (prOpen && prById(prOpen)) return prRenderOne(v, prById(prOpen));
     prOpen = null;
-    var go = el("button", "pp-big", "📷 Nouvelle preuve"); go.type = "button"; go.style.background = PR_C;
-    go.addEventListener("click", prNew); v.appendChild(go);
-    if (prPending) {
-      var pb = el("div", "pr-pend"); pb.appendChild(el("b", null, "⚠ Preuve pas encore enregistrée : " + prPending.meta.obj));
-      pb.appendChild(el("span", null, "Pas de réseau. La photo est gardée sur ce téléphone jusqu'à l'envoi."));
-      var rt = el("button", "pp-big", "Réessayer l'envoi"); rt.type = "button"; rt.style.background = "#b3261e"; rt.addEventListener("click", prSend);
-      var ab = el("button", "pbtn", "Abandonner"); ab.type = "button"; ab.addEventListener("click", function () { if (confirm("Abandonner cette preuve ?")) { prPending = null; renderPreuves(); } });
-      pb.appendChild(rt); pb.appendChild(ab); v.appendChild(pb);
-    }
+    // GPS demandé dès l'ouverture : il est prêt quand la photo part
+    if (!prPosP) prPosP = ppPos(20000, 0).then(function (p) { prPos = p; setTimeout(function () { prPosP = null; }, 60000); return p; });
+    // 1) Prendre une preuve : un secteur = une touche = l'appareil photo
+    v.appendChild(el("h3", "pr-h", "📷 Nouvelle preuve : touche le secteur"));
+    var g = el("div", "pr-sects");
+    prSects().forEach(function (k) { var b = el("button", "pr-sect", k); b.type = "button"; b.addEventListener("click", function () { prShoot(k); }); g.appendChild(b); });
+    var au = el("button", "pr-sect other", "Autre"); au.type = "button"; au.addEventListener("click", function () { prShoot(""); }); g.appendChild(au);
+    v.appendChild(g);
+    prPending.forEach(function (P) {
+      var pb = el("div", "pr-pend"); pb.appendChild(el("b", null, (P.err ? "⚠ Pas encore envoyée" : "⏳ Envoi en cours") + " · " + (P.meta.cat || "Autre") + " · " + zHeure(P.meta.tel)));
+      if (P.err) {
+        pb.appendChild(el("span", null, "Pas de réseau. La photo reste sur ce téléphone jusqu'à l'envoi (ne ferme pas l'appli)."));
+        var rt = el("button", "pp-big", "Réessayer l'envoi"); rt.type = "button"; rt.style.background = "#b3261e"; rt.addEventListener("click", function () { prSend(P); }); pb.appendChild(rt);
+      }
+      v.appendChild(pb);
+    });
+    // 2) Retrouver : secteur, jour, près d'ici
+    v.appendChild(el("h3", "pr-h", "🔎 Retrouver une preuve"));
+    var fl = el("div", "pr-filt");
+    var cs = el("div", "pp-chips"), all = el("button", "pp-chip" + (!prF.cat ? " on" : ""), "Tous"); all.type = "button";
+    all.addEventListener("click", function () { prF.cat = ""; prRefresh(); }); cs.appendChild(all);
+    Object.keys(prCats).sort().forEach(function (k) {
+      var c = el("button", "pp-chip" + (prF.cat === k ? " on" : ""), (k || "Autre") + " · " + prCats[k]); c.type = "button";
+      c.addEventListener("click", function () { prF.cat = prF.cat === k ? "" : k; prRefresh(); }); cs.appendChild(c);
+    });
+    fl.appendChild(cs);
+    var row = el("div", "pr-frow"), dj = document.createElement("input"); dj.type = "date"; dj.className = "pp-in"; dj.value = prF.jour; dj.setAttribute("aria-label", "Jour");
+    dj.addEventListener("change", function () { prF.jour = dj.value; prRefresh(); });
+    var nr = el("button", "pbtn" + (prF.near ? " on" : ""), prF.near ? "📍 Près d'ici ✓" : "📍 Près d'ici"); nr.type = "button";
+    nr.addEventListener("click", function () {
+      if (prF.near) { prF.near = null; return prRefresh(); }
+      showStatus("Position GPS…", false, true);
+      ppPos(15000, 3000).then(function (p) { if (!p) return showStatus("Position introuvable : active la localisation.", true); prF.near = [p.lat, p.lng]; showStatus("Les plus proches d'abord"); prRefresh(); });
+    });
+    row.appendChild(dj); row.appendChild(nr);
+    if (prF.jour || prF.cat || prF.near) { var cl = el("button", "pbtn", "✕"); cl.type = "button"; cl.setAttribute("aria-label", "Enlever les filtres"); cl.addEventListener("click", function () { prF = { cat: "", jour: "", near: null }; prRefresh(); }); row.appendChild(cl); }
+    fl.appendChild(row); v.appendChild(fl);
     if (!prItems) { v.appendChild(el("p", "empty", "Chargement du journal…")); prLoad(false); return; }
-    if (!prItems.length) v.appendChild(el("p", "empty", "Aucune preuve pour l'instant. Exemple : photographier chaque filet de protection quand il est posé."));
+    if (!prItems.length) v.appendChild(el("p", "empty", prF.cat || prF.jour || prF.near ? "Aucune preuve avec ces filtres." : "Aucune preuve pour l'instant."));
+    else v.appendChild(el("p", "pp-hint", prTotal + " preuve" + (prTotal > 1 ? "s" : "") + (prF.near ? ", de la plus proche à la plus loin" : "")));
     var day = "";
     prItems.forEach(function (p) {
-      var k = zDate(p.at); if (k !== day) { day = k; v.appendChild(el("h3", "pr-day", zf(p.at, { weekday: "long", day: "numeric", month: "long", year: "numeric" }))); }
+      if (!prF.near) { var k = zDate(p.at); if (k !== day) { day = k; v.appendChild(el("h3", "pr-day", zf(p.at, { weekday: "long", day: "numeric", month: "long", year: "numeric" }))); } }
       var c = el("button", "pr-card" + (p.st ? " bad" : "")); c.type = "button";
       var th = el("span", "pr-th"); if (p.thumb) { var im = document.createElement("img"); im.src = p.thumb; im.alt = ""; im.loading = "lazy"; th.appendChild(im); } c.appendChild(th);
-      var tx = el("span", "pr-tx"); tx.appendChild(el("b", null, p.obj)); tx.appendChild(el("span", null, zHeure(p.at, true) + " · " + p.num + (p.by ? " · " + p.by : "")));
-      if (p.cat || p.lieu) tx.appendChild(el("span", null, [p.cat, p.lieu].filter(String).join(" · ")));
+      var tx = el("span", "pr-tx"); tx.appendChild(el("b", null, (p.cat || "Autre") + (p.dist != null ? " · à " + prDist(p.dist) : "")));
+      tx.appendChild(el("span", null, (prF.near ? zDate(p.at) + " " : "") + zHeure(p.at, true) + " · " + p.num + (p.by ? " · " + p.by : "")));
+      if (!p.lat) tx.appendChild(el("span", null, "sans GPS"));
       if (p.st) tx.appendChild(el("i", null, p.st));
       c.appendChild(tx); c.addEventListener("click", function () { prOpen = p.id; renderPreuves(); goTop(); }); v.appendChild(c);
     });
-    if (prMore) { var m = el("button", "pbtn", "Afficher les plus anciennes"); m.type = "button"; m.style.cssText = "width:100%;min-height:52px;margin-top:10px"; m.addEventListener("click", function () { m.disabled = true; prLoad(true); }); v.appendChild(m); }
+    if (prMore) { var m = el("button", "pbtn", "Afficher la suite"); m.type = "button"; m.style.cssText = "width:100%;min-height:52px;margin-top:10px"; m.addEventListener("click", function () { m.disabled = true; prLoad(true); }); v.appendChild(m); }
     var ck = el("div", "pr-check"), cb = el("button", "pbtn", "🔍 Vérifier tout le journal"); cb.type = "button";
     ck.appendChild(cb);
     if (prCheck) ck.appendChild(el("p", prCheck.problemes.length ? "bad" : "ok", prCheck.problemes.length ? "⚠ " + prCheck.problemes.join(" · ") : "✓ " + prCheck.n + " preuve" + (prCheck.n > 1 ? "s" : "") + " contrôlée" + (prCheck.n > 1 ? "s" : "") + " le " + zStamp(prCheck.at) + " : aucune photo ni ligne modifiée."));
@@ -5817,50 +5860,31 @@ body:has(#view.bl) { background: #fff; }
     cb.addEventListener("click", function () { cb.disabled = true; cb.textContent = "Contrôle en cours…"; call("verifierPreuves", code).then(function (r) { prCheck = r; renderPreuves(); }, function (e) { cb.disabled = false; cb.textContent = "🔍 Vérifier tout le journal"; handleError(e); }); });
     v.appendChild(ck);
   }
-  // Nouvelle preuve : d'abord quoi (2 touches), puis la photo, envoi immédiat
-  function prNew() {
-    if (ppLock) return; ppLock = true;
-    var last = {}; try { last = JSON.parse(localStorage.getItem("stock-pistes-prlast") || "{}"); } catch (e) {}
-    var posP = ppPos(20000), m = { cat: last.cat || "", obj: "", lieu: last.lieu || "" };
-    var ov = el("div", "pp-sheet"), box = el("div", "pp-sbox"); box.appendChild(el("b", "pp-st", "Nouvelle preuve"));
-    var chips = el("div", "pp-chips");
-    PR_CATS.forEach(function (n) {
-      var c = el("button", "pp-chip" + (m.cat === n ? " on" : ""), n); c.type = "button";
-      c.addEventListener("click", function () { m.cat = m.cat === n ? "" : n; chips.querySelectorAll(".pp-chip").forEach(function (x) { x.classList.toggle("on", x.textContent === m.cat); }); });
-      chips.appendChild(c);
-    });
-    box.appendChild(chips);
-    var ob = document.createElement("input"); ob.className = "pp-in"; ob.placeholder = "Ce que la photo prouve (ex. Filet n°12 posé)"; ob.maxLength = 120; box.appendChild(ob);
-    var li = document.createElement("input"); li.className = "pp-in"; li.placeholder = "Lieu / piste (facultatif)"; li.maxLength = 120; li.value = m.lieu; box.appendChild(li);
-    var nm = null; if (!myName()) { nm = document.createElement("input"); nm.className = "pp-in"; nm.placeholder = "Ton prénom et nom"; nm.maxLength = 60; box.appendChild(nm); }
-    var row = el("div", "pp-row"), no = el("button", "pp-big ghost", "Annuler"), ok = el("button", "pp-big", "📷 Prendre la photo"); no.type = ok.type = "button"; ok.style.background = PR_C;
-    row.appendChild(no); row.appendChild(ok); box.appendChild(row); ov.appendChild(box); document.body.appendChild(ov);
-    setTimeout(function () { ob.focus(); }, 60);
-    no.addEventListener("click", function () { ov.remove(); ppLock = false; });
-    ok.addEventListener("click", function () {
-      m.obj = ob.value.trim(); m.lieu = li.value.trim();
-      if (!m.obj) { ob.focus(); return showStatus("Écris ce que la photo prouve.", true); }
-      if (nm) { if (!nm.value.trim()) { nm.focus(); return showStatus("Écris ton nom (il figure sur la preuve).", true); } setMyName(nm.value.trim()); }
-      try { localStorage.setItem("stock-pistes-prlast", JSON.stringify({ cat: m.cat, lieu: m.lieu })); } catch (e) {}
-      ov.remove();
-      camOpen({ title: m.obj }).then(function (f) {
-        if (!f) { ppLock = false; return; }
-        m.tel = Date.now(); showStatus("Préparation de la photo…", false, true);
-        return Promise.all([ppShrink(f, 2000, .9), ppShrink(f, 320, .6), Promise.race([posP, new Promise(function (r) { setTimeout(function () { r(null); }, 2500); })])]).then(function (r) {
-          var p = r[2]; if (p) { m.lat = p.lat; m.lng = p.lng; m.acc = p.acc; }
-          prPending = { img: r[0], thumb: r[1], meta: m }; ppLock = false; prSend();
-        });
-      }).catch(function (e) { ppLock = false; showStatus(String(e && e.message || e), true); });
-    });
+  function prRefresh() { prItems = null; renderPreuves(); }
+  // Une touche sur le secteur → appareil photo → envoi tout seul
+  function prShoot(sect) {
+    if (ppLock) return;
+    if (!myName()) { var n = prompt("Ton prénom et nom (une seule fois, il figure sur les preuves) :"); if (!n || !n.trim()) return; setMyName(n.trim()); }
+    ppLock = true;
+    // position prise au moment de la photo (jamais celle d'un autre endroit)
+    var posP = ppPos(20000, 3000);
+    camOpen({ title: "Preuve · " + (sect || "Autre") }).then(function (f) {
+      ppLock = false; if (!f) return;
+      var m = { cat: sect, obj: sect || "Autre", tel: Date.now() };
+      return Promise.all([ppShrink(f, 2000, .9), ppShrink(f, 320, .6), Promise.race([posP, new Promise(function (r) { setTimeout(function () { r(null); }, 6000); })])]).then(function (r) {
+        var p = r[2]; if (p) { m.lat = p.lat; m.lng = p.lng; m.acc = p.acc; }
+        var P = { img: r[0], thumb: r[1], meta: m }; prPending.push(P); prSend(P);
+      });
+    }).catch(function (e) { ppLock = false; showStatus(String(e && e.message || e), true); });
   }
-  function prSend() {
-    var P = prPending; if (!P) return;
+  function prSend(P) {
+    P.err = false; if (area === "preuve") renderPreuves();
     ppCall("deposerPreuve", [P.img, P.thumb, P.meta, myName()], "Envoi de la preuve…").then(function (d) {
-      prPending = null; data.preuvesInfo = d.preuvesInfo; saveCache(data);
-      (prItems = prItems || []).unshift(d.preuve); prOpen = d.preuve.id; ppFull[d.preuve.f] = P.img;
-      showStatus("Preuve " + d.preuve.num + " enregistrée · " + zHeure(d.preuve.at, true));
-      if (area !== "preuve") goArea("preuve"); else { renderPreuves(); goTop(); }
-    }, function () { if (area !== "preuve") goArea("preuve"); else renderPreuves(); });
+      prPending = prPending.filter(function (x) { return x !== P; });
+      data.preuvesInfo = d.preuvesInfo; saveCache(data); ppFull[d.preuve.f] = P.img;
+      showStatus("✓ Preuve " + d.preuve.num + " · " + zHeure(d.preuve.at, true) + (d.preuve.lat ? "" : " · sans GPS"));
+      prItems = null; if (area === "preuve") renderPreuves();
+    }, function () { P.err = true; if (area === "preuve") renderPreuves(); });
   }
   function prLines(p) { return [p.num + "  ·  " + zDate(p.at) + "  " + zHeure(p.at, true) + " (heure serveur)", p.obj + (p.lieu ? "  ·  " + p.lieu : "") + (p.by ? "  ·  " + p.by : ""), "SHA-256 " + String(p.sha).slice(0, 16) + "…" + (p.lat ? "  ·  " + p.lat.toFixed(5) + ", " + p.lng.toFixed(5) : "")]; }
   function prRenderOne(v, p) {
@@ -5872,7 +5896,7 @@ body:has(#view.bl) { background: #fff; }
     var t = el("dl", "pr-dl");
     function row(k, val, cls) { t.appendChild(el("dt", null, k)); var d = el("dd", cls || null); if (val && val.nodeType) d.appendChild(val); else d.textContent = val || "—"; t.appendChild(d); }
     row("N° de preuve", p.num);
-    row("Objet", p.obj); if (p.cat) row("Catégorie", p.cat); if (p.lieu) row("Lieu", p.lieu);
+    row("Secteur", p.cat || "Autre"); if (p.obj && p.obj !== (p.cat || "Autre")) row("Objet", p.obj); if (p.lieu) row("Lieu", p.lieu);
     row("Date et heure", zf(p.at, { weekday: "long", day: "numeric", month: "long", year: "numeric" }) + " à " + zHeure(p.at, true) + " — heure du serveur Google (Europe/Zurich)");
     if (p.tel) row("Heure du téléphone", zHeure(p.tel, true) + " (écart " + Math.round((p.at - p.tel) / 1000) + " s : temps d'envoi)");
     row("Auteur", p.by);
