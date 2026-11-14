@@ -74,7 +74,7 @@ function doGet() {
 
 /* ------------------------------------------------------------ Accès depuis la page de l'équipe (hors Google) */
 // La page hébergée à part appelle ces fonctions par l'adresse /exec : ça marche même avec plusieurs comptes Google connectés.
-var API_ = {donnees: donnees, importerDonnees: importerDonnees, photoBase64: photoBase64, mouvement: mouvement, comptage: comptage, enregistrerArticle: enregistrerArticle, supprimerArticle: supprimerArticle, ajouterPhoto: ajouterPhoto, retirerPhoto: retirerPhoto, enregistrerPrep: enregistrerPrep, cocher: cocher, validerPrep: validerPrep, supprimerPrep: supprimerPrep, creerCommande: creerCommande, prendreCommande: prendreCommande, livrerCommande: livrerCommande, supprimerCommande: supprimerCommande, ajouterRubrique: ajouterRubrique, ajouterVideo: ajouterVideo, supprimerVideo: supprimerVideo, enregistrerEvenement: enregistrerEvenement, supprimerEvenement: supprimerEvenement, enregistrerDemande: enregistrerDemande, statutDemande: statutDemande, supprimerDemande: supprimerDemande, ajouterPhotoDemande: ajouterPhotoDemande, retirerPhotoDemande: retirerPhotoDemande, enregistrerPlanning: enregistrerPlanning, enregistrerTache: enregistrerTache, prendreTache: prendreTache, terminerTache: terminerTache, rouvrirTache: rouvrirTache, supprimerTache: supprimerTache, ordonnerTaches: ordonnerTaches, ajouterPhotoTache: ajouterPhotoTache, retirerPhotoTache: retirerPhotoTache, enregistrerBilan: enregistrerBilan, supprimerBilan: supprimerBilan, enregistrerAvalanche: enregistrerAvalanche, supprimerAvalanche: supprimerAvalanche, ajouterPhotoAvalanche: ajouterPhotoAvalanche, retirerPhotoAvalanche: retirerPhotoAvalanche, enregistrerRecco: enregistrerRecco, supprimerRecco: supprimerRecco, enregistrerPanneau: enregistrerPanneau, meteoPanneau: meteoPanneau, bibleFichier: bibleFichier, assistant: assistant, annulerAssistant: annulerAssistant, enregistrerCleIA: enregistrerCleIA, etatIA: etatIA, enregistrerPente: enregistrerPente, supprimerPente: supprimerPente, photoPente: photoPente, historiquePente: historiquePente, vignettesPentes: vignettesPentes, notePente: notePente, supprimerPhotoPente: supprimerPhotoPente, deposerPreuve: deposerPreuve, listePreuves: listePreuves, marquerPreuve: marquerPreuve, verifierPreuves: verifierPreuves, heureServeur: heureServeur};
+var API_ = {donnees: donnees, importerDonnees: importerDonnees, photoBase64: photoBase64, mouvement: mouvement, comptage: comptage, enregistrerArticle: enregistrerArticle, supprimerArticle: supprimerArticle, ajouterPhoto: ajouterPhoto, retirerPhoto: retirerPhoto, enregistrerPrep: enregistrerPrep, cocher: cocher, validerPrep: validerPrep, supprimerPrep: supprimerPrep, creerCommande: creerCommande, prendreCommande: prendreCommande, livrerCommande: livrerCommande, supprimerCommande: supprimerCommande, ajouterRubrique: ajouterRubrique, ajouterVideo: ajouterVideo, supprimerVideo: supprimerVideo, enregistrerEvenement: enregistrerEvenement, supprimerEvenement: supprimerEvenement, enregistrerDemande: enregistrerDemande, statutDemande: statutDemande, supprimerDemande: supprimerDemande, ajouterPhotoDemande: ajouterPhotoDemande, retirerPhotoDemande: retirerPhotoDemande, enregistrerPlanning: enregistrerPlanning, enregistrerTache: enregistrerTache, prendreTache: prendreTache, terminerTache: terminerTache, rouvrirTache: rouvrirTache, supprimerTache: supprimerTache, ordonnerTaches: ordonnerTaches, ajouterPhotoTache: ajouterPhotoTache, retirerPhotoTache: retirerPhotoTache, enregistrerBilan: enregistrerBilan, supprimerBilan: supprimerBilan, enregistrerAvalanche: enregistrerAvalanche, supprimerAvalanche: supprimerAvalanche, ajouterPhotoAvalanche: ajouterPhotoAvalanche, retirerPhotoAvalanche: retirerPhotoAvalanche, enregistrerRecco: enregistrerRecco, supprimerRecco: supprimerRecco, enregistrerPanneau: enregistrerPanneau, meteoPanneau: meteoPanneau, bibleFichier: bibleFichier, assistant: assistant, annulerAssistant: annulerAssistant, enregistrerCleIA: enregistrerCleIA, etatIA: etatIA, enregistrerPente: enregistrerPente, supprimerPente: supprimerPente, photoPente: photoPente, importerPentes: importerPentes, historiquePente: historiquePente, vignettesPentes: vignettesPentes, notePente: notePente, supprimerPhotoPente: supprimerPhotoPente, deposerPreuve: deposerPreuve, listePreuves: listePreuves, marquerPreuve: marquerPreuve, verifierPreuves: verifierPreuves, heureServeur: heureServeur};
 function doPost(e) {
   var out;
   try {
@@ -1386,7 +1386,12 @@ function coord_(x) { var n = Number(x); return isFinite(n) && n !== 0 ? Math.rou
 function horo_(t) { return Utilities.formatDate(new Date(t), 'Europe/Zurich', 'yyyyMMdd-HHmmss'); }
 
 // ----- Suivi des pentes : des points de vue fixes, une photo par jour, tout l'historique -----
-var ONGLET_PENTES = 'Pentes', COL_PENTES = ['id', 'nom', 'lat', 'lng', 'cree_le', 'par'];
+var ONGLET_PENTES = 'Pentes', COL_PENTES = ['id', 'nom', 'lat', 'lng', 'cree_le', 'par', 'secteur'];
+function ongletPentes_() {
+  var s = ongletCree_(ONGLET_PENTES, COL_PENTES);
+  if (String(s.getRange(1, 7).getValue()) !== 'secteur') s.getRange(1, 7).setValue('secteur');
+  return s;
+}
 var ONGLET_PPH = 'Pentes photos', COL_PPH = ['id', 'spot', 'date', 'par', 'note', 'fichier', 'lat', 'lng', 'sha256', 'heure_tel', 'vignette'];
 function pentes_() {
   if (!classeur_().getSheetByName(ONGLET_PENTES)) return [];
@@ -1397,7 +1402,7 @@ function pentes_() {
   });
   return lire_(ONGLET_PENTES).map(function (o) {
     var x = par[String(o.id)] || { n: 0, last: null };
-    return { id: String(o.id), name: String(o.nom), lat: Number(o.lat) || null, lng: Number(o.lng) || null, at: Number(o.cree_le) || 0, n: x.n, last: x.last };
+    return { id: String(o.id), name: String(o.nom), sect: String(o.secteur || ''), lat: Number(o.lat) || null, lng: Number(o.lng) || null, at: Number(o.cree_le) || 0, n: x.n, last: x.last };
   });
 }
 function enregistrerPente(code, sp, par) {
@@ -1407,13 +1412,30 @@ function enregistrerPente(code, sp, par) {
   if (!/^s[a-z0-9]{4,24}$/.test(id)) throw new Error('Point de vue sans identifiant.');
   if (!nom) throw new Error('Écris le nom du point de vue.');
   return verrou_(function () {
-    var s = ongletCree_(ONGLET_PENTES, COL_PENTES), o = lire_(ONGLET_PENTES).filter(function (x) { return String(x.id) === id; })[0];
+    var s = ongletPentes_(), o = lire_(ONGLET_PENTES).filter(function (x) { return String(x.id) === id; })[0], sect = String(sp.sect || '').trim().slice(0, 40);
     if (o) {
       s.getRange(o._ligne, 2).setValue(nom);
+      if (sp.sect != null) s.getRange(o._ligne, 7).setValue(sect);
       if (sp.lat && sp.lng) s.getRange(o._ligne, 3, 1, 2).setValues([[coord_(sp.lat), coord_(sp.lng)]]);
-    } else s.appendRow([id, nom, coord_(sp.lat), coord_(sp.lng), Date.now(), String(par || '').slice(0, 60)]);
+    } else s.appendRow([id, nom, coord_(sp.lat), coord_(sp.lng), Date.now(), String(par || '').slice(0, 60), sect]);
     ongletCree_(ONGLET_PPH, COL_PPH);
     return { pentes: pentes_() };
+  });
+}
+// Création en une fois d'une liste de points (secteur + nom) ; ceux qui existent déjà sont ignorés
+function importerPentes(code, liste, par) {
+  verifier_(code);
+  return verrou_(function () {
+    var s = ongletPentes_(), deja = {}, t = Date.now(), lignes = [];
+    lire_(ONGLET_PENTES).forEach(function (o) { deja[String(o.secteur || '').toLowerCase() + '|' + String(o.nom).toLowerCase()] = 1; });
+    (liste || []).slice(0, 200).forEach(function (x, i) {
+      var sect = String(x.sect || '').trim().slice(0, 40), nom = String(x.name || '').trim().slice(0, 60), k = sect.toLowerCase() + '|' + nom.toLowerCase();
+      if (!nom || deja[k]) return; deja[k] = 1;
+      lignes.push(['s' + (t + i).toString(36) + Math.random().toString(36).slice(2, 5), nom, '', '', t + i, String(par || '').slice(0, 60), sect]);
+    });
+    if (lignes.length) s.getRange(s.getLastRow() + 1, 1, lignes.length, 7).setValues(lignes);
+    ongletCree_(ONGLET_PPH, COL_PPH);
+    return { pentes: pentes_(), ajoutes: lignes.length };
   });
 }
 function supprimerPente(code, id) {

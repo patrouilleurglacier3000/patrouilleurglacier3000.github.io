@@ -1103,6 +1103,10 @@ body:has(#view.bl) { background: #fff; }
 .pe-cell { position: relative; aspect-ratio: 4/3; border: 0; padding: 0; border-radius: 10px; overflow: hidden; background: var(--bg); cursor: pointer; }
 .pe-cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .pe-note { position: absolute; left: 6px; top: 6px; right: 6px; background: rgba(255,214,0,.92); color: #111; font: 800 12px var(--body); padding: 2px 6px; border-radius: 6px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pe-sect { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 10px; min-height: 58px; margin: 14px 0 8px; padding: 8px 14px; border: 0; border-radius: 12px; background: #17324a; color: #fff; font: 800 19px var(--body); cursor: pointer; text-align: left; }
+.pe-sect::before { content: "▾"; margin-right: 4px; } .pe-sect.shut::before { content: "▸"; }
+.pe-sect b { flex: 1; } .pe-sect span { font-size: 14px; font-weight: 700; opacity: .85; } .pe-sect span.ok { color: #7be0a6; opacity: 1; }
+.pe-sk { display: block; color: var(--muted); font: 800 13px var(--body); text-transform: uppercase; letter-spacing: .5px; }
 .pe-more { margin-top: 22px; } .pe-more summary { font: 700 15px var(--body); color: var(--muted); cursor: pointer; padding: 10px 0; }
 .pe-more .pbtn { display: block; width: 100%; min-height: 52px; margin: 8px 0; }
 .pbtn.danger { color: #b3261e; border-color: #e6b3ae; }
@@ -1172,7 +1176,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794642566";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794644898";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -5313,7 +5317,21 @@ body:has(#view.bl) { background: #fff; }
   /* ----- Suivi des pentes ----- */
   var PE_C = "#2b7a78", peSel = null, peHist = {}, peThumbs = null, peNew = null, peHere = null, peEditSpot = false;
   var PE_NOTES = ["RAS", "Reptation", "Fissure", "Gueule de baleine", "Coulée", "Corniche", "Neige fraîche", "Vent"];
-  function peList() { return (data.pentes || []).slice().sort(function (a, b) { return a.name.localeCompare(b.name, "fr"); }); }
+  // Secteurs et points de vue repris du Discord « Patrouilleur Glacier 3000 »
+  var PE_SEED = {
+    "Combe d'Audon": ["Face sud", "Télé 1", "Télé 2", "Épaule gauche Gégé", "Gaz-Ex 3", "Gaz-Ex 2", "Gaz-Ex 1", "RG direction Nagelihore", "RG plat Oldenalp", "Nagelihore", "RD télé 3", "RD télé 3 à conduite", "RD conduite à Super-G", "RD Super-G au TS1", "RD Tablar 1 bas", "RD Tablar 2 haut", "RD haut Sanetschhorn", "Gstellihore", "Schluchhore"],
+    "Black Wall": ["McDonald's", "Le Reposoir"],
+    "Red Run": ["Rive droite", "Sablier"],
+    "Martizberg": ["Sous arrivée TS2", "RG", "RD", "Oldenegg arrivée TS1"],
+    "Reusch": ["RD cabane à chiotte", "RD secteur cascade chalet Budemli", "RG Lawinen-Hang"]
+  };
+  var peShut = {}; try { peShut = JSON.parse(localStorage.getItem("stock-pistes-peshut") || "{}"); } catch (e) {}
+  function peList() {
+    var L = (data.pentes || []).slice(), first = {};
+    L.forEach(function (x) { var k = x.sect || ""; if (first[k] == null || x.at < first[k]) first[k] = x.at; });
+    return L.sort(function (a, b) { var ka = a.sect || "", kb = b.sect || ""; return ka === kb ? a.at - b.at || a.name.localeCompare(b.name, "fr") : (ka ? 0 : 1) - (kb ? 0 : 1) || first[ka] - first[kb]; });
+  }
+  function peSects() { var o = []; peList().forEach(function (x) { if (x.sect && o.indexOf(x.sect) < 0) o.push(x.sect); }); return o; }
   function peById(id) { return (data.pentes || []).filter(function (s) { return s.id === id; })[0]; }
   function peToday(s) { return s.last && zKey(s.last.at) === zKey(Date.now()); }
   function peTile() {
@@ -5338,8 +5356,26 @@ body:has(#view.bl) { background: #fff; }
     add.addEventListener("click", function () { peNew = { name: "" }; renderPentes(); });
     if (peNew) v.appendChild(peNewForm()); else v.appendChild(add);
     var L = peList();
-    if (!L.length && !peNew) v.appendChild(el("p", "empty", "Crée un point de vue par endroit à surveiller (une face, une combe, un couloir). Ensuite, une photo par jour, toujours du même endroit."));
+    if (!L.length && !peNew) {
+      var n0 = Object.keys(PE_SEED).reduce(function (t, k) { return t + PE_SEED[k].length; }, 0);
+      var sd = el("button", "pp-big", "Créer les " + n0 + " points de vue des secteurs"); sd.type = "button"; sd.style.background = "#1f5f8b";
+      sd.addEventListener("click", function () {
+        var liste = []; Object.keys(PE_SEED).forEach(function (k) { PE_SEED[k].forEach(function (n) { liste.push({ sect: k, name: n }); }); });
+        sd.disabled = true; ppCall("importerPentes", [liste, myName()], "Création…").then(function (d) { data.pentes = d.pentes; saveCache(data); showStatus(d.ajoutes + " points de vue créés"); renderPentes(); }, function () { sd.disabled = false; });
+      });
+      v.appendChild(sd);
+      v.appendChild(el("p", "pp-hint", Object.keys(PE_SEED).join(" · ")));
+    }
+    var box = v, cur = null;
     L.forEach(function (s) {
+      var k = s.sect || "Sans secteur";
+      if (k !== cur) {
+        cur = k; var inK = L.filter(function (x) { return (x.sect || "Sans secteur") === k; }), okK = inK.filter(peToday).length;
+        var hb = el("button", "pe-sect" + (peShut[k] ? " shut" : "")); hb.type = "button";
+        hb.appendChild(el("b", null, k)); hb.appendChild(el("span", okK === inK.length ? "ok" : null, okK + "/" + inK.length + " aujourd'hui"));
+        hb.addEventListener("click", (function (k) { return function () { if (peShut[k]) delete peShut[k]; else peShut[k] = 1; try { localStorage.setItem("stock-pistes-peshut", JSON.stringify(peShut)); } catch (e) {} renderPentes(); }; })(k));
+        v.appendChild(hb); box = el("div", "pe-sbox"); if (peShut[k]) box.hidden = true; v.appendChild(box);
+      }
       var c = el("div", "pe-card"), th = el("button", "pe-th"); th.type = "button";
       var tu = peThumbs && peThumbs[s.id];
       if (tu) { var im = document.createElement("img"); im.src = tu; im.alt = ""; th.appendChild(im); if (s.last) th.appendChild(peStampEl(s.last.at)); }
@@ -5351,7 +5387,7 @@ body:has(#view.bl) { background: #fff; }
       tx.addEventListener("click", function () { peSel = s.id; renderPentes(); goTop(); });
       var go = el("button", "pe-go" + (peToday(s) ? " done" : ""), peToday(s) ? "✓ Fait" : "📷 Photo"); go.type = "button";
       go.addEventListener("click", function () { peShoot(s); });
-      c.appendChild(th); c.appendChild(tx); c.appendChild(go); v.appendChild(c);
+      c.appendChild(th); c.appendChild(tx); c.appendChild(go); box.appendChild(c);
     });
   }
   function peNewForm() {
@@ -5359,12 +5395,18 @@ body:has(#view.bl) { background: #fff; }
     inp.value = peNew.name; inp.placeholder = "Ex. Face nord Sex Rouge, depuis la station"; inp.maxLength = 60; inp.className = "pp-in";
     inp.addEventListener("input", function () { peNew.name = inp.value; });
     lb.appendChild(inp); f.appendChild(lb);
+    var SS = peSects(); Object.keys(PE_SEED).forEach(function (k) { if (SS.indexOf(k) < 0) SS.push(k); });
+    if (peNew.sect == null) peNew.sect = peSel && peById(peSel) ? peById(peSel).sect : "";
+    f.appendChild(el("label", null, "Secteur"));
+    var ch = el("div", "pp-chips");
+    SS.forEach(function (k) { var c = el("button", "pp-chip" + (peNew.sect === k ? " on" : ""), k); c.type = "button"; c.addEventListener("click", function () { peNew.sect = peNew.sect === k ? "" : k; ch.querySelectorAll(".pp-chip").forEach(function (x) { x.classList.toggle("on", x.textContent === peNew.sect); }); }); ch.appendChild(c); });
+    f.appendChild(ch);
     var row = el("div", "pp-row"), ok = el("button", "pp-big", "Créer"), no = el("button", "pp-big ghost", "Annuler"); ok.type = no.type = "button"; ok.style.background = PE_C;
     no.addEventListener("click", function () { peNew = null; renderPentes(); });
     ok.addEventListener("click", function () {
       var n = inp.value.trim(); if (!n) { inp.focus(); return showStatus("Écris le nom du point de vue.", true); }
       ok.disabled = true;
-      var sp = { id: "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), name: n };
+      var sp = { id: "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), name: n, sect: peNew.sect || "" };
       ppCall("enregistrerPente", [sp, myName()], "Enregistrement…").then(function (d) { data.pentes = d.pentes; saveCache(data); peNew = null; peSel = sp.id; showStatus("Point de vue créé"); renderPentes(); }, function () { ok.disabled = false; });
     });
     row.appendChild(no); row.appendChild(ok); f.appendChild(row);
@@ -5372,7 +5414,7 @@ body:has(#view.bl) { background: #fff; }
     return f;
   }
   function peRenderSpot(v, s) {
-    var hd = el("div", "pe-hd"); hd.appendChild(el("h2", null, s.name));
+    var hd = el("div", "pe-hd"); if (s.sect) hd.appendChild(el("small", "pe-sk", s.sect)); hd.appendChild(el("h2", null, s.name));
     var meta = el("p", "pmeta", s.n ? s.n + " photo" + (s.n > 1 ? "s" : "") + " depuis le " + (peHist[s.id] && peHist[s.id].length ? zDate(peHist[s.id][peHist[s.id].length - 1].at) : "…") : "Pas encore de photo");
     hd.appendChild(meta);
     v.appendChild(hd);
@@ -5391,11 +5433,16 @@ body:has(#view.bl) { background: #fff; }
     });
     // Réglages du point de vue
     var more = el("details", "pe-more"); more.appendChild(el("summary", null, "Réglages du point de vue"));
-    var rn = el("button", "pbtn", "Renommer"), del = el("button", "pbtn danger", "Supprimer ce point et ses photos");
-    [rn, del].forEach(function (b) { b.type = "button"; more.appendChild(b); });
+    var mv = el("button", "pbtn", "Changer de secteur (" + (s.sect || "aucun") + ")"), rn = el("button", "pbtn", "Renommer"), del = el("button", "pbtn danger", "Supprimer ce point et ses photos");
+    [rn, mv, del].forEach(function (b) { b.type = "button"; more.appendChild(b); });
     rn.addEventListener("click", function () {
       var n = prompt("Nouveau nom :", s.name); if (!n || !n.trim()) return;
       ppCall("enregistrerPente", [{ id: s.id, name: n.trim() }, myName()]).then(function (d) { data.pentes = d.pentes; saveCache(data); renderPentes(); showStatus("Renommé"); });
+    });
+    mv.addEventListener("click", function () {
+      var n = prompt("Secteur (" + peSects().join(", ") + ") :", s.sect || ""); if (n == null) return;
+      var m = peSects().filter(function (k) { return k.toLowerCase() === n.trim().toLowerCase(); })[0] || n.trim();
+      ppCall("enregistrerPente", [{ id: s.id, name: s.name, sect: m }, myName()]).then(function (d) { data.pentes = d.pentes; saveCache(data); renderPentes(); showStatus("Secteur changé"); });
     });
     del.addEventListener("click", function () {
       if (!confirm("Supprimer « " + s.name + " » et ses " + (s.n || 0) + " photo(s) ? C'est définitif.")) return;
