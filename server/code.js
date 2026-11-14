@@ -1307,14 +1307,14 @@ function iaAppel_(cle, sys, msgs) {
   return j;
 }
 // messages = [{role:'user'|'assistant', text:'…'}] (la conversation visible)
-function assistant(code, messages, prenom) {
+function assistant(code, messages, prenom, page) {
   verifier_(code);
   var cle = iaCle_(); if (!cle) throw new Error("L'assistant n'est pas encore branché : il manque la clé IA.");
   var msgs = (messages || []).slice(-12).map(function (m) { return { role: m.role === 'assistant' ? 'assistant' : 'user', content: String(m.text || '').slice(0, 2000) }; })
     .filter(function (m) { return m.content; });
   while (msgs.length && msgs[0].role !== 'user') msgs.shift();
   if (!msgs.length) throw new Error('Rien à envoyer.');
-  var sys = iaSysteme_(prenom), actions = [], use = { in: 0, out: 0 }, texte = '';
+  var sys = iaSysteme_(prenom) + (page ? "\nIl a ouvert l'assistant depuis la page : " + String(page).slice(0, 30) + " (c'est sans doute le sujet, sauf s'il dit autre chose)." : ''), actions = [], use = { in: 0, out: 0 }, texte = '';
   for (var tour = 0; tour < 6; tour++) {
     var r = iaAppel_(cle, sys, msgs);
     if (r.usage) { use.in += r.usage.input_tokens || 0; use.out += r.usage.output_tokens || 0; }
