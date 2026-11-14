@@ -74,7 +74,7 @@ function doGet() {
 
 /* ------------------------------------------------------------ Accès depuis la page de l'équipe (hors Google) */
 // La page hébergée à part appelle ces fonctions par l'adresse /exec : ça marche même avec plusieurs comptes Google connectés.
-var API_ = {donnees: donnees, importerDonnees: importerDonnees, photoBase64: photoBase64, mouvement: mouvement, comptage: comptage, enregistrerArticle: enregistrerArticle, supprimerArticle: supprimerArticle, ajouterPhoto: ajouterPhoto, retirerPhoto: retirerPhoto, enregistrerPrep: enregistrerPrep, cocher: cocher, validerPrep: validerPrep, supprimerPrep: supprimerPrep, creerCommande: creerCommande, prendreCommande: prendreCommande, livrerCommande: livrerCommande, supprimerCommande: supprimerCommande, ajouterRubrique: ajouterRubrique, ajouterVideo: ajouterVideo, supprimerVideo: supprimerVideo, enregistrerEvenement: enregistrerEvenement, supprimerEvenement: supprimerEvenement, enregistrerDemande: enregistrerDemande, statutDemande: statutDemande, supprimerDemande: supprimerDemande, ajouterPhotoDemande: ajouterPhotoDemande, retirerPhotoDemande: retirerPhotoDemande, enregistrerPlanning: enregistrerPlanning, enregistrerTache: enregistrerTache, prendreTache: prendreTache, terminerTache: terminerTache, rouvrirTache: rouvrirTache, supprimerTache: supprimerTache, ordonnerTaches: ordonnerTaches, ajouterPhotoTache: ajouterPhotoTache, retirerPhotoTache: retirerPhotoTache, enregistrerBilan: enregistrerBilan, supprimerBilan: supprimerBilan, enregistrerAvalanche: enregistrerAvalanche, supprimerAvalanche: supprimerAvalanche, ajouterPhotoAvalanche: ajouterPhotoAvalanche, retirerPhotoAvalanche: retirerPhotoAvalanche, enregistrerRecco: enregistrerRecco, supprimerRecco: supprimerRecco, enregistrerPanneau: enregistrerPanneau, meteoPanneau: meteoPanneau, bibleFichier: bibleFichier, assistant: assistant, annulerAssistant: annulerAssistant, enregistrerCleIA: enregistrerCleIA, etatIA: etatIA, enregistrerPente: enregistrerPente, supprimerPente: supprimerPente, photoPente: photoPente, importerPentes: importerPentes, historiquePente: historiquePente, vignettesPentes: vignettesPentes, notePente: notePente, supprimerPhotoPente: supprimerPhotoPente, deposerPreuve: deposerPreuve, listePreuves: listePreuves, marquerPreuve: marquerPreuve, verifierPreuves: verifierPreuves, heureServeur: heureServeur};
+var API_ = {donnees: donnees, importerDonnees: importerDonnees, photoBase64: photoBase64, mouvement: mouvement, comptage: comptage, enregistrerArticle: enregistrerArticle, supprimerArticle: supprimerArticle, ajouterPhoto: ajouterPhoto, retirerPhoto: retirerPhoto, enregistrerPrep: enregistrerPrep, cocher: cocher, validerPrep: validerPrep, supprimerPrep: supprimerPrep, creerCommande: creerCommande, prendreCommande: prendreCommande, livrerCommande: livrerCommande, supprimerCommande: supprimerCommande, ajouterRubrique: ajouterRubrique, ajouterVideo: ajouterVideo, supprimerVideo: supprimerVideo, enregistrerEvenement: enregistrerEvenement, supprimerEvenement: supprimerEvenement, enregistrerDemande: enregistrerDemande, statutDemande: statutDemande, supprimerDemande: supprimerDemande, ajouterPhotoDemande: ajouterPhotoDemande, retirerPhotoDemande: retirerPhotoDemande, enregistrerPlanning: enregistrerPlanning, enregistrerTache: enregistrerTache, prendreTache: prendreTache, terminerTache: terminerTache, rouvrirTache: rouvrirTache, supprimerTache: supprimerTache, ordonnerTaches: ordonnerTaches, ajouterPhotoTache: ajouterPhotoTache, retirerPhotoTache: retirerPhotoTache, enregistrerBilan: enregistrerBilan, supprimerBilan: supprimerBilan, enregistrerAvalanche: enregistrerAvalanche, supprimerAvalanche: supprimerAvalanche, ajouterPhotoAvalanche: ajouterPhotoAvalanche, retirerPhotoAvalanche: retirerPhotoAvalanche, enregistrerRecco: enregistrerRecco, supprimerRecco: supprimerRecco, enregistrerPanneau: enregistrerPanneau, meteoPanneau: meteoPanneau, bibleFichier: bibleFichier, assistant: assistant, annulerAssistant: annulerAssistant, enregistrerCleIA: enregistrerCleIA, etatIA: etatIA, enregistrerPente: enregistrerPente, supprimerPente: supprimerPente, photoPente: photoPente, traitsPente: traitsPente, importerPentes: importerPentes, historiquePente: historiquePente, vignettesPentes: vignettesPentes, notePente: notePente, supprimerPhotoPente: supprimerPhotoPente, deposerPreuve: deposerPreuve, listePreuves: listePreuves, marquerPreuve: marquerPreuve, verifierPreuves: verifierPreuves, heureServeur: heureServeur};
 function doPost(e) {
   var out;
   try {
@@ -1392,10 +1392,26 @@ function ongletPentes_() {
   if (String(s.getRange(1, 7).getValue()) !== 'secteur') s.getRange(1, 7).setValue('secteur');
   return s;
 }
-var ONGLET_PPH = 'Pentes photos', COL_PPH = ['id', 'spot', 'date', 'par', 'note', 'fichier', 'lat', 'lng', 'sha256', 'heure_tel', 'vignette'];
+var ONGLET_PPH = 'Pentes photos', COL_PPH = ['id', 'spot', 'date', 'par', 'note', 'fichier', 'lat', 'lng', 'sha256', 'heure_tel', 'vignette', 'traits'];
+function ongletPph_() {
+  var s = ongletCree_(ONGLET_PPH, COL_PPH);
+  if (String(s.getRange(1, 12).getValue()) !== 'traits') s.getRange(1, 12).setValue('traits');
+  return s;
+}
+// Traits dessinés au doigt : [{i: id, p: [[x, y], …] entre 0 et 1, e: date de fin (facultatif)}]
+function traits_(t) {
+  var L = Array.isArray(t) ? t : json_(String(t || ''), []);
+  if (!Array.isArray(L)) return [];
+  var out = L.slice(0, 60).map(function (x) {
+    var pts = (x && x.p || []).slice(0, 800).map(function (q) { return [Math.round(Math.min(1, Math.max(0, Number(q[0]) || 0)) * 1e4) / 1e4, Math.round(Math.min(1, Math.max(0, Number(q[1]) || 0)) * 1e4) / 1e4]; });
+    var o = { i: String(x.i || '').replace(/[^A-Za-z0-9]/g, '').slice(0, 16), p: pts }; if (Number(x.e)) o.e = Number(x.e); return o;
+  }).filter(function (x) { return x.i && x.p.length > 1; });
+  if (JSON.stringify(out).length > 45000) throw new Error('Dessin trop long : fais des traits plus courts.');
+  return out;
+}
 function pentes_() {
   if (!classeur_().getSheetByName(ONGLET_PENTES)) return [];
-  var ph = lireCols_(ONGLET_PPH, COL_PPH.length - 1), par = {};
+  var ph = lireCols_(ONGLET_PPH, 10), par = {};
   ph.forEach(function (p) {
     var k = String(p.spot), o = par[k] || (par[k] = { n: 0, last: null });
     o.n++; if (!o.last || Number(p.date) > o.last.at) o.last = { id: String(p.id), at: Number(p.date), by: String(p.par || ''), note: String(p.note || ''), f: String(p.fichier || '') };
@@ -1418,7 +1434,7 @@ function enregistrerPente(code, sp, par) {
       if (sp.sect != null) s.getRange(o._ligne, 7).setValue(sect);
       if (sp.lat && sp.lng) s.getRange(o._ligne, 3, 1, 2).setValues([[coord_(sp.lat), coord_(sp.lng)]]);
     } else s.appendRow([id, nom, coord_(sp.lat), coord_(sp.lng), Date.now(), String(par || '').slice(0, 60), sect]);
-    ongletCree_(ONGLET_PPH, COL_PPH);
+    ongletPph_();
     return { pentes: pentes_() };
   });
 }
@@ -1434,7 +1450,7 @@ function importerPentes(code, liste, par) {
       lignes.push(['s' + (t + i).toString(36) + Math.random().toString(36).slice(2, 5), nom, '', '', t + i, String(par || '').slice(0, 60), sect]);
     });
     if (lignes.length) s.getRange(s.getLastRow() + 1, 1, lignes.length, 7).setValues(lignes);
-    ongletCree_(ONGLET_PPH, COL_PPH);
+    ongletPph_();
     return { pentes: pentes_(), ajoutes: lignes.length };
   });
 }
@@ -1442,7 +1458,7 @@ function supprimerPente(code, id) {
   verifier_(code);
   return verrou_(function () {
     var ph = classeur_().getSheetByName(ONGLET_PPH);
-    if (ph) lireCols_(ONGLET_PPH, COL_PPH.length - 1).reverse().forEach(function (p) {
+    if (ph) lireCols_(ONGLET_PPH, 10).reverse().forEach(function (p) {
       if (String(p.spot) !== String(id)) return;
       try { DriveApp.getFileById(String(p.fichier)).setTrashed(true); } catch (e) {}
       ph.deleteRow(p._ligne);
@@ -1463,14 +1479,15 @@ function photoPente(code, spotId, dataUrl, vign, meta, par) {
   f.setDescription('Suivi des pentes · ' + sp.nom + ' · ' + Utilities.formatDate(new Date(t), 'Europe/Zurich', 'dd.MM.yyyy HH:mm:ss') + ' (heure serveur) · SHA-256 ' + sha);
   var id = 'q' + t.toString(36) + Math.random().toString(36).slice(2, 5), note = String(meta.note || '').slice(0, 300);
   return verrou_(function () {
-    ongletCree_(ONGLET_PPH, COL_PPH).appendRow([id, String(sp.id), t, String(par || '').slice(0, 60), note, f.getId(), coord_(meta.lat), coord_(meta.lng), sha, Number(meta.tel) || '', vignette_(vign)]);
-    return { pentes: pentes_(), photo: { id: id, at: t, by: String(par || ''), note: note, f: f.getId(), sha: sha, thumb: vignette_(vign) } };
+    var tr = traits_(meta.traits);
+    ongletPph_().appendRow([id, String(sp.id), t, String(par || '').slice(0, 60), note, f.getId(), coord_(meta.lat), coord_(meta.lng), sha, Number(meta.tel) || '', vignette_(vign), tr.length ? JSON.stringify(tr) : '']);
+    return { pentes: pentes_(), photo: { id: id, at: t, by: String(par || ''), note: note, f: f.getId(), sha: sha, thumb: vignette_(vign), traits: tr } };
   });
 }
 function historiquePente(code, spotId) {
   verifier_(code);
   return lire_(ONGLET_PPH).filter(function (p) { return String(p.spot) === String(spotId); }).map(function (p) {
-    return { id: String(p.id), at: Number(p.date), by: String(p.par || ''), note: String(p.note || ''), f: String(p.fichier), lat: Number(p.lat) || null, lng: Number(p.lng) || null, sha: String(p.sha256 || ''), thumb: String(p.vignette || '') };
+    return { id: String(p.id), at: Number(p.date), by: String(p.par || ''), note: String(p.note || ''), f: String(p.fichier), lat: Number(p.lat) || null, lng: Number(p.lng) || null, sha: String(p.sha256 || ''), thumb: String(p.vignette || ''), traits: traits_(p.traits) };
   }).sort(function (a, b) { return b.at - a.at; });
 }
 function vignettesPentes(code) {
@@ -1487,6 +1504,16 @@ function notePente(code, photoId, note) {
     if (!p) throw new Error('Photo introuvable. Elle a peut-être été supprimée : recharge la page.');
     onglet_(ONGLET_PPH).getRange(p._ligne, 5).setValue(String(note || '').slice(0, 300));
     return { pentes: pentes_() };
+  });
+}
+function traitsPente(code, photoId, traits) {
+  verifier_(code);
+  var tr = traits_(traits);
+  return verrou_(function () {
+    var p = lireCols_(ONGLET_PPH, 2).filter(function (x) { return String(x.id) === String(photoId); })[0];
+    if (!p) throw new Error('Photo introuvable. Elle a peut-être été supprimée : recharge la page.');
+    ongletPph_().getRange(p._ligne, 12).setValue(tr.length ? JSON.stringify(tr) : '');
+    return { traits: tr };
   });
 }
 function supprimerPhotoPente(code, photoId) {

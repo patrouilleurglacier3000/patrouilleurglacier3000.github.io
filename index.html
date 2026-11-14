@@ -1132,9 +1132,19 @@ body:has(#view.bl) { background: #fff; }
 .pp-chip.on { background: var(--tc, #2b7a78); border-color: transparent; color: #fff; }
 .pp-sheet .pp-chip.on { background: #2b7a78; }
 .pv-note { margin: 0; padding: 8px 14px; min-height: 1.4em; font: 700 16px var(--body); color: #ffe57a; background: #000; }
-.pv-bar { display: grid; grid-template-columns: 58px repeat(4, 1fr) 58px; gap: 6px; padding: 8px 8px calc(10px + env(safe-area-inset-bottom)); background: #000; }
+.pv-bar { display: grid; grid-template-columns: 58px 1fr 1fr 58px; gap: 6px; padding: 8px 8px calc(10px + env(safe-area-inset-bottom)); background: #000; }
 .pv-btn { min-height: 58px; border: 0; border-radius: 12px; background: #262626; color: #fff; font: 800 15px var(--body); cursor: pointer; padding: 0 4px; }
 .pv-btn:not(.w) { font-size: 30px; } .pv-btn:disabled { opacity: .3; } .pv-btn.danger { color: #ff8a80; }
+.pz-lay { position: absolute; inset: 0; overflow: hidden; }
+.pz-w { position: absolute; transform-origin: 0 0; will-change: transform; }
+.pz-w img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; -webkit-user-select: none; pointer-events: none; }
+.pz-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.pz-hit { pointer-events: stroke; }
+.pz-svg path { stroke-width: calc(var(--sw) * 1px / var(--k, 1)); }
+.pv-bar.two, .pd-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: 6px; padding: 0 8px calc(10px + env(safe-area-inset-bottom)); background: #000; }
+.pv-bar:has(+ .pv-bar.two) { padding-bottom: 6px; } .pd-bar { padding-top: 8px; }
+.pv-btn.on { background: #14532d; } .pv-btn.ok { background: #2b7a78; }
+.pv-wipe.on { display: block; width: calc(100% - 28px); margin: 8px 14px 0; height: 40px; }
 .pv-wipe, .pv-pick { display: none; }
 .pv.cmp .pv-wipe { display: block; width: calc(100% - 28px); margin: 8px 14px 0; height: 40px; }
 .pv.cmp .pv-pick { display: block; margin: 6px 14px 0; min-height: 48px; font: 700 16px var(--body); border-radius: 10px; }
@@ -1176,7 +1186,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794645602";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794646682";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -5251,13 +5261,17 @@ body:has(#view.bl) { background: #fff; }
     return Math.round(2 * R * Math.asin(Math.sqrt(h)));
   }
   // Tampon gravé dans l'image (pour partager ou imprimer ; l'original reste intact sur le serveur)
-  function ppBurn(src, lines) {
+  function ppBurn(src, lines, red, green) {
     return new Promise(function (resolve, reject) {
       var im = new Image();
       im.onload = function () {
         var c = document.createElement("canvas"), w = im.naturalWidth, h = im.naturalHeight; c.width = w; c.height = h;
         var g = c.getContext("2d"); g.drawImage(im, 0, 0);
-        var fs = Math.max(16, Math.round(w / 34)), pad = Math.round(fs * .6), bh = lines.length * fs * 1.3 + pad * 2;
+        var lw = Math.max(3, w / 260);
+        [[green || [], PE_GREEN], [(red || []).map(function (s) { return { s: s }; }), PE_RED]].forEach(function (G) {
+          G[0].forEach(function (o) { var P = o.s.p; [["rgba(0,0,0,.55)", lw * 1.9], [G[1], lw]].forEach(function (st) { g.beginPath(); P.forEach(function (q, k) { g[k ? "lineTo" : "moveTo"](q[0] * w, q[1] * h); }); g.strokeStyle = st[0]; g.lineWidth = st[1]; g.lineCap = g.lineJoin = "round"; g.stroke(); }); });
+        });
+        var fs = Math.max(16, Math.round(w / 34)), pad = Math.round(fs * .6), bh = lines.length ? lines.length * fs * 1.3 + pad * 2 : 0;
         g.fillStyle = "rgba(0,0,0,.62)"; g.fillRect(0, h - bh, w, bh);
         g.fillStyle = "#fff"; g.textBaseline = "top";
         lines.forEach(function (l, i) { g.font = (i ? "600 " + Math.round(fs * .8) : "800 " + fs) + "px system-ui, sans-serif"; g.fillText(l, pad, h - bh + pad + i * fs * 1.3, w - pad * 2); });
@@ -5420,8 +5434,10 @@ body:has(#view.bl) { background: #fff; }
     v.appendChild(hd);
     var go = el("button", "pp-big", peToday(s) ? "📷 Reprendre une photo" : "📷 Photo du jour"); go.type = "button"; go.style.background = PE_C;
     go.addEventListener("click", function () { peShoot(s); }); v.appendChild(go);
-    var g = el("div", "pe-grid"); v.appendChild(g);
+    var g = el("div", "pe-grid");
     var H = peHist[s.id];
+    if (H && H.length > 1) { var fm = el("button", "pp-big ghost", "▶ Film : " + H.length + " jours d'évolution"); fm.type = "button"; fm.addEventListener("click", function () { ppFilm(s, H); }); v.appendChild(fm); }
+    v.appendChild(g);
     if (H && H.length !== s.n) { H = null; delete peHist[s.id]; }
     if (!H) { g.appendChild(el("p", "empty", "Chargement de l'historique…")); peLoadHist(s.id).then(function () { if (area === "pentes" && peSel === s.id) renderPentes(); }, function (e) { g.textContent = ""; g.appendChild(el("p", "empty", "Historique indisponible : " + String(e && e.message || e))); }); }
     else if (!H.length) g.appendChild(el("p", "empty", "Aucune photo pour l'instant."));
@@ -5461,6 +5477,7 @@ body:has(#view.bl) { background: #fff; }
       return Promise.all([ppShrink(f, 1600, .85), ppShrink(f, 320, .6)]).then(function (u) { return peNoteSheet(s, u, posP, tel); });
     }).catch(function (e) { ppLock = false; showStatus(String(e && e.message || e), true); });
   }
+  function ppDrawPrev(im, src, S) { ppBurn(src, [], S, []).then(function (b) { var o = im.dataset.u; if (o) URL.revokeObjectURL(o); im.dataset.u = URL.createObjectURL(b); im.src = im.dataset.u; }, function () {}); }
   // Après la photo : une note rapide (ou rien), puis envoi
   function peNoteSheet(s, u, posP, tel) {
     var ov = el("div", "pp-sheet"), box = el("div", "pp-sbox"), im = document.createElement("img"); im.src = u[0]; im.alt = ""; im.className = "pp-prev";
@@ -5473,6 +5490,13 @@ body:has(#view.bl) { background: #fff; }
     });
     box.appendChild(chips);
     var tx = document.createElement("input"); tx.className = "pp-in"; tx.placeholder = "Note (facultatif)"; tx.maxLength = 200; box.appendChild(tx);
+    var S = [], dw = el("button", "pp-big ghost", "✏️ Dessiner sur la photo"); dw.type = "button"; box.insertBefore(dw, chips);
+    dw.addEventListener("click", function () {
+      peLoadHist(s.id).catch(function () { return []; }).then(function (H) { return ppDraw(u[0], S, peGreen(H, Infinity), s.name); }).then(function (R) {
+        if (!R) return; S = R; dw.textContent = S.length ? "✏️ Dessin : " + S.length + " trait" + (S.length > 1 ? "s" : "") + " rouge" + (S.length > 1 ? "s" : "") : "✏️ Dessiner sur la photo";
+        ppDrawPrev(im, u[0], S);
+      });
+    });
     var row = el("div", "pp-row"), no = el("button", "pp-big ghost", "Jeter"), ok = el("button", "pp-big", "Enregistrer"); no.type = ok.type = "button"; ok.style.background = PE_C;
     row.appendChild(no); row.appendChild(ok); box.appendChild(row); ov.appendChild(box); document.body.appendChild(ov);
     function end() { ov.remove(); ppLock = false; }
@@ -5480,7 +5504,7 @@ body:has(#view.bl) { background: #fff; }
     ok.addEventListener("click", function () {
       var note = sel.concat(tx.value.trim() ? [tx.value.trim()] : []).join(" · ");
       ok.disabled = no.disabled = true; ok.textContent = "Envoi…";
-      ppCall("photoPente", [s.id, u[0], u[1], { note: note, tel: tel }, myName()], "Envoi de la photo…").then(function (d) {
+      ppCall("photoPente", [s.id, u[0], u[1], { note: note, tel: tel, traits: S }, myName()], "Envoi de la photo…").then(function (d) {
         data.pentes = d.pentes; saveCache(data);
         if (peHist[s.id]) peHist[s.id].unshift(d.photo);
         if (peThumbs && d.photo.thumb) peThumbs[s.id] = d.photo.thumb;
@@ -5488,48 +5512,195 @@ body:has(#view.bl) { background: #fff; }
       }, function () { ok.disabled = no.disabled = false; ok.textContent = "Réessayer"; });
     });
   }
-  // Visionneuse : glisser pour passer d'un jour à l'autre, comparer avec un autre jour
+  // ----- Zoom à deux doigts + dessin au doigt (commun : visionneuse, dessin, film) -----
+  var PE_RED = "#ff2b2b", PE_GREEN = "#19e07a";
+  function ppLayerEl() {
+    var lay = el("div", "pz-lay"), w = el("div", "pz-w"), im = document.createElement("img"), sv = document.createElementNS(NS, "svg");
+    im.alt = ""; im.draggable = false; sv.setAttribute("viewBox", "0 0 1 1"); sv.setAttribute("preserveAspectRatio", "none"); sv.setAttribute("class", "pz-svg");
+    w.appendChild(im); w.appendChild(sv); lay.appendChild(w);
+    return { lay: lay, w: w, img: im, svg: sv, nw: 4, nh: 3, bx: 0, by: 0, bw: 1, bh: 1 };
+  }
+  function ppPath(pts) { return pts.map(function (q, i) { return (i ? "L" : "M") + q[0] + " " + q[1]; }).join(""); }
+  // Dessine les traits : rouges (ceux du jour) et verts (ceux des jours d'avant)
+  function ppStrokes(L, red, green, showGreen) {
+    var sv = L.svg; while (sv.firstChild) sv.removeChild(sv.firstChild);
+    function add(d, col, w, cls, data) {
+      var p = document.createElementNS(NS, "path"); p.setAttribute("d", d); p.setAttribute("fill", "none"); p.setAttribute("stroke", col); p.setAttribute("stroke-width", w); p.style.setProperty("--sw", w);
+      p.setAttribute("stroke-linecap", "round"); p.setAttribute("stroke-linejoin", "round"); p.setAttribute("vector-effect", "non-scaling-stroke");
+      if (cls) p.setAttribute("class", cls); if (data) { p.dataset.ph = data[0]; p.dataset.i = data[1]; } sv.appendChild(p);
+    }
+    if (showGreen) (green || []).forEach(function (g) { var d = ppPath(g.s.p); add(d, "rgba(0,0,0,.55)", 8); add(d, PE_GREEN, 4.5); add(d, "rgba(0,0,0,0)", 30, "pz-hit", [g.ph, g.s.i]); });
+    (red || []).forEach(function (s) { var d = ppPath(s.p); add(d, "rgba(0,0,0,.55)", 8); add(d, PE_RED, 4.5); });
+  }
+  // Traits verts à montrer sur la photo du jour t : ceux des photos plus anciennes, pas encore « terminés »
+  function peGreen(H, t) {
+    var out = []; (H || []).forEach(function (p) { if (p.at >= t) return; (p.traits || []).forEach(function (s) { if (!s.e || s.e > t) out.push({ s: s, ph: p.id }); }); });
+    return out;
+  }
+  function ppZoomer(stage, layers, o) {
+    var T = { k: 1, x: 0, y: 0 }, P = {}, n = 0, g = null, lastTap = 0;
+    stage.style.touchAction = "none";
+    function fit() {
+      var r = stage.getBoundingClientRect();
+      layers.forEach(function (L) {
+        var s = Math.min(r.width / L.nw, r.height / L.nh); L.bw = L.nw * s; L.bh = L.nh * s; L.bx = (r.width - L.bw) / 2; L.by = (r.height - L.bh) / 2;
+        L.w.style.left = L.bx + "px"; L.w.style.top = L.by + "px"; L.w.style.width = L.bw + "px"; L.w.style.height = L.bh + "px";
+      });
+      apply();
+    }
+    function clamp() {
+      if (T.k <= 1.001) { T.k = 1; T.x = 0; T.y = 0; return; }
+      var L = layers[0]; T.x = Math.min(0, Math.max(L.bw * (1 - T.k), T.x)); T.y = Math.min(0, Math.max(L.bh * (1 - T.k), T.y));
+    }
+    function apply() { clamp(); layers.forEach(function (L) { L.w.style.transform = "translate(" + T.x + "px," + T.y + "px) scale(" + T.k + ")"; L.svg.style.setProperty("--k", T.k); }); if (o.onZoom) o.onZoom(T.k); }
+    function norm(cx, cy) { var r = stage.getBoundingClientRect(), L = layers[0]; return [Math.min(1, Math.max(0, (cx - r.left - L.bx - T.x) / T.k / L.bw)), Math.min(1, Math.max(0, (cy - r.top - L.by - T.y) / T.k / L.bh))]; }
+    function pts() { return Object.keys(P).map(function (k) { return P[k]; }); }
+    stage.addEventListener("pointerdown", function (e) {
+      try { stage.setPointerCapture(e.pointerId); } catch (x) {}
+      P[e.pointerId] = { x: e.clientX, y: e.clientY }; n = pts().length;
+      if (n === 2) {
+        if (g && g.draw && o.onDrawCancel) o.onDrawCancel();
+        var a = pts(), r = stage.getBoundingClientRect();
+        g = { pinch: true, d: Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y) || 1, m: [(a[0].x + a[1].x) / 2 - r.left, (a[0].y + a[1].y) / 2 - r.top], T: { k: T.k, x: T.x, y: T.y } };
+      } else if (n === 1) {
+        g = { x0: e.clientX, y0: e.clientY, t0: Date.now(), T: { k: T.k, x: T.x, y: T.y }, draw: !!(o.drawing && o.drawing()), moved: 0 };
+        if (g.draw && o.onDrawStart) o.onDrawStart(norm(e.clientX, e.clientY));
+      }
+    });
+    stage.addEventListener("pointermove", function (e) {
+      if (!P[e.pointerId] || !g) return; P[e.pointerId] = { x: e.clientX, y: e.clientY };
+      if (g.pinch) {
+        var a = pts(); if (a.length < 2) return;
+        var r = stage.getBoundingClientRect(), d = Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y), m = [(a[0].x + a[1].x) / 2 - r.left, (a[0].y + a[1].y) / 2 - r.top], L = layers[0];
+        var k = Math.min(8, Math.max(1, g.T.k * d / g.d)), px = (g.m[0] - L.bx - g.T.x) / g.T.k, py = (g.m[1] - L.by - g.T.y) / g.T.k;
+        T.k = k; T.x = m[0] - L.bx - k * px; T.y = m[1] - L.by - k * py; apply(); return;
+      }
+      g.moved = Math.max(g.moved, Math.hypot(e.clientX - g.x0, e.clientY - g.y0));
+      if (g.draw) { if (o.onDrawMove) o.onDrawMove(norm(e.clientX, e.clientY), T.k); return; }
+      if (T.k > 1) { T.x = g.T.x + e.clientX - g.x0; T.y = g.T.y + e.clientY - g.y0; apply(); }
+    });
+    function up(e) {
+      if (!P[e.pointerId]) return; delete P[e.pointerId];
+      var left = pts().length;
+      if (g && g.pinch) { if (!left) g = null; else g = { x0: pts()[0].x, y0: pts()[0].y, t0: Date.now(), T: { k: T.k, x: T.x, y: T.y }, draw: false, moved: 99 }; return; }
+      if (!g) return;
+      var G = g; g = null;
+      if (G.draw) { if (o.onDrawEnd) o.onDrawEnd(); return; }
+      var dx = e.clientX - G.x0;
+      if (G.moved < 10 && Date.now() - G.t0 < 400) {
+        if (Date.now() - lastTap < 320) { lastTap = 0; if (T.k > 1) { T.k = 1; apply(); } else { var r = stage.getBoundingClientRect(), L = layers[0], px = (e.clientX - r.left - L.bx) / 1, py = (e.clientY - r.top - L.by); T.k = 3; T.x = -px * 2; T.y = -py * 2; apply(); } return; }
+        lastTap = Date.now(); if (o.onTap) o.onTap(e.clientX, e.clientY);
+      } else if (T.k === 1 && Math.abs(dx) > 60 && o.onSwipe) o.onSwipe(dx);
+    }
+    stage.addEventListener("pointerup", up); stage.addEventListener("pointercancel", up);
+    window.addEventListener("resize", fit);
+    return {
+      fit: fit, reset: function () { T.k = 1; apply(); }, k: function () { return T.k; },
+      size: function (L, w, h) { if (w && h) { L.nw = w; L.nh = h; } fit(); },
+      off: function () { window.removeEventListener("resize", fit); }
+    };
+  }
+  function ppSetImg(L, Z, p, after) {
+    L.img.dataset.k = p.id;
+    function set(u) { if (L.img.dataset.k !== p.id) return; L.img.onload = function () { Z.size(L, L.img.naturalWidth, L.img.naturalHeight); if (after) after(); }; L.img.src = u; }
+    if (p.thumb) set(p.thumb);
+    ppPhoto(p.f).then(set, function () {});
+  }
+
+  // Dessin au doigt sur une photo : 1 doigt dessine en rouge, 2 doigts zooment
+  function ppDraw(src, mine, green, title) {
+    return new Promise(function (res) {
+      var ov = el("div", "pv pd"), top = el("div", "pv-top"), x = el("button", "cam-x", "✕"); x.type = "button"; x.setAttribute("aria-label", "Annuler");
+      top.appendChild(el("b", null, title || "Dessiner")); top.appendChild(x);
+      var stage = el("div", "pv-stage"), L = ppLayerEl(); stage.appendChild(L.lay);
+      var tip = el("p", "pv-note", "1 doigt : dessiner en rouge · 2 doigts : zoomer");
+      var bar = el("div", "pd-bar"), und = el("button", "pv-btn w", "↶ Annuler"), clr = el("button", "pv-btn w", "Tout effacer"), gr = el("button", "pv-btn w on", "Anciens ✓"), ok = el("button", "pv-btn w ok", "✓ OK");
+      [und, clr, gr, ok].forEach(function (b) { b.type = "button"; bar.appendChild(b); });
+      if (!green || !green.length) gr.remove();
+      ov.appendChild(top); ov.appendChild(stage); ov.appendChild(tip); ov.appendChild(bar); document.body.appendChild(ov);
+      var S = JSON.parse(JSON.stringify(mine || [])), cur = null, showG = true;
+      function draw() { ppStrokes(L, S.concat(cur ? [cur] : []), green, showG); }
+      var Z = ppZoomer(stage, [L], {
+        drawing: function () { return true; },
+        onDrawStart: function (q) { cur = { i: Date.now().toString(36) + Math.random().toString(36).slice(2, 4), p: [q] }; draw(); },
+        onDrawMove: function (q, k) { if (!cur) return; var l = cur.p[cur.p.length - 1]; if (Math.hypot(q[0] - l[0], q[1] - l[1]) > .003 / k) { cur.p.push([Math.round(q[0] * 1e4) / 1e4, Math.round(q[1] * 1e4) / 1e4]); draw(); } },
+        onDrawEnd: function () { if (cur && cur.p.length > 1) S.push(cur); cur = null; draw(); },
+        onDrawCancel: function () { cur = null; draw(); }
+      });
+      L.img.onload = function () { Z.size(L, L.img.naturalWidth, L.img.naturalHeight); }; L.img.src = src;
+      draw();
+      function close(v) { Z.off(); ov.remove(); res(v); }
+      x.addEventListener("click", function () { close(null); });
+      und.addEventListener("click", function () { S.pop(); draw(); });
+      clr.addEventListener("click", function () { if (S.length && confirm("Effacer tous les traits rouges ?")) { S = []; draw(); } });
+      gr.addEventListener("click", function () { showG = !showG; gr.classList.toggle("on", showG); gr.textContent = showG ? "Anciens ✓" : "Anciens ✗"; draw(); });
+      ok.addEventListener("click", function () { close(S); });
+    });
+  }
+
+  // Visionneuse : zoom, glisser d'un jour à l'autre, comparer, dessiner, marquer « terminée »
+  var peShowG = true;
   function ppViewer(s, H, i) {
     var ov = el("div", "pv"), top = el("div", "pv-top"), cnt = el("b"), x = el("button", "cam-x", "✕"); x.type = "button"; x.setAttribute("aria-label", "Fermer");
     top.appendChild(cnt); top.appendChild(x);
-    var stage = el("div", "pv-stage"), img = document.createElement("img"), img2 = document.createElement("img"), st = el("span", "pp-stamp big"), st2 = el("span", "pp-stamp big left");
-    img.alt = ""; img2.alt = ""; img2.className = "pv-b"; stage.appendChild(img2); stage.appendChild(img); stage.appendChild(st); stage.appendChild(st2);
-    var note = el("p", "pv-note"), bar = el("div", "pv-bar");
-    var prev = el("button", "pv-btn", "‹"), next = el("button", "pv-btn", "›"), cmp = el("button", "pv-btn w", "Comparer"), shr = el("button", "pv-btn w", "Partager"), ed = el("button", "pv-btn w", "Note"), del = el("button", "pv-btn w danger", "Suppr.");
-    [prev, next, cmp, shr, ed, del].forEach(function (b) { b.type = "button"; });
-    bar.appendChild(prev); bar.appendChild(cmp); bar.appendChild(shr); bar.appendChild(ed); bar.appendChild(del); bar.appendChild(next);
+    var stage = el("div", "pv-stage"), B = ppLayerEl(), A = ppLayerEl(), st = el("span", "pp-stamp big"), st2 = el("span", "pp-stamp big left");
+    B.lay.classList.add("pz-b"); stage.appendChild(B.lay); stage.appendChild(A.lay); stage.appendChild(st); stage.appendChild(st2);
+    var note = el("p", "pv-note"), bar = el("div", "pv-bar"), bar2 = el("div", "pv-bar two");
+    var prev = el("button", "pv-btn", "‹"), next = el("button", "pv-btn", "›"), cmp = el("button", "pv-btn w", "Comparer"), drw = el("button", "pv-btn w", "✏️ Dessiner"),
+      grn = el("button", "pv-btn w", ""), shr = el("button", "pv-btn w", "Partager"), ed = el("button", "pv-btn w", "Note"), del = el("button", "pv-btn w danger", "Suppr.");
+    [prev, next, cmp, drw, grn, shr, ed, del].forEach(function (b) { b.type = "button"; });
+    bar.appendChild(prev); bar.appendChild(cmp); bar.appendChild(drw); bar.appendChild(next);
+    bar2.appendChild(grn); bar2.appendChild(shr); bar2.appendChild(ed); bar2.appendChild(del);
     var wipe = document.createElement("input"); wipe.type = "range"; wipe.min = "0"; wipe.max = "100"; wipe.value = "50"; wipe.className = "pv-wipe"; wipe.setAttribute("aria-label", "Glisser pour comparer");
     var pick = document.createElement("select"); pick.className = "pv-pick"; pick.setAttribute("aria-label", "Comparer avec");
-    ov.appendChild(top); ov.appendChild(stage); ov.appendChild(wipe); ov.appendChild(pick); ov.appendChild(note); ov.appendChild(bar); document.body.appendChild(ov);
+    ov.appendChild(top); ov.appendChild(stage); ov.appendChild(wipe); ov.appendChild(pick); ov.appendChild(note); ov.appendChild(bar); ov.appendChild(bar2); document.body.appendChild(ov);
     ppLock = true;
     var cmpOn = false, j = Math.min(H.length - 1, i + 1);
-    function close() { ov.remove(); ppLock = false; if (area === "pentes") renderPentes(); }
-    function load(imEl, p) { imEl.src = p.thumb || ""; ppPhoto(p.f).then(function (u) { if (imEl.dataset.k === p.id) imEl.src = u; }, function () {}); imEl.dataset.k = p.id; }
+    var Z = ppZoomer(stage, [A, B], {
+      onSwipe: function (dx) { if (cmpOn) return; if (dx > 0) prev.click(); else next.click(); },
+      onTap: function (cx, cy) {
+        var hit = document.elementsFromPoint(cx, cy).filter(function (e) { return e.classList && e.classList.contains("pz-hit") && A.svg.contains(e); })[0];
+        if (!hit) return;
+        var ph = H.filter(function (q) { return q.id === hit.dataset.ph; })[0], tr = ph && (ph.traits || []).filter(function (q) { return q.i === hit.dataset.i; })[0], p = H[i];
+        if (!tr || !confirm("Reptation dessinée le " + zDate(ph.at) + " : terminée (purgée, partie) à partir du " + zDate(p.at) + " ?\nLe trait vert ne s'affichera plus à partir de ce jour.")) return;
+        tr.e = p.at;
+        ppCall("traitsPente", [ph.id, ph.traits]).then(function (d) { ph.traits = d.traits; show(); showStatus("Marquée terminée"); });
+      }
+    });
+    function close() { Z.off(); ov.remove(); ppLock = false; if (area === "pentes") renderPentes(); }
+    function strokes(L, p) { ppStrokes(L, p.traits || [], peGreen(H, p.at), peShowG); }
     function show() {
       var p = H[i]; if (!p) return close();
       cnt.textContent = s.name + " · " + (i + 1) + "/" + H.length;
-      load(img, p); st.textContent = zDate(p.at) + "  " + zHeure(p.at);
+      ppSetImg(A, Z, p); strokes(A, p); st.textContent = zDate(p.at) + "  " + zHeure(p.at);
       note.textContent = (p.note ? "« " + p.note + " »  " : "") + (p.by ? "— " + p.by : "");
       prev.disabled = i >= H.length - 1; next.disabled = i <= 0;
+      var nG = peGreen(H, p.at).length; grn.textContent = peShowG ? "Anciens ✓" : "Anciens ✗"; grn.classList.toggle("on", peShowG); grn.disabled = !nG;
       ov.classList.toggle("cmp", cmpOn); cmp.textContent = cmpOn ? "Fin compar." : "Comparer";
       if (cmpOn) {
         pick.textContent = ""; H.forEach(function (q, k) { if (k === i) return; var o = el("option", null, zJour(q.at) + " " + zHeure(q.at)); o.value = k; if (k === j) o.selected = true; pick.appendChild(o); });
-        load(img2, H[j]); st2.textContent = zDate(H[j].at) + "  " + zHeure(H[j].at); clip();
-      } else img.style.clipPath = "";
+        ppSetImg(B, Z, H[j]); ppStrokes(B, H[j].traits || [], [], false); st2.textContent = zDate(H[j].at) + "  " + zHeure(H[j].at);
+      }
+      clip();
     }
-    function clip() { img.style.clipPath = cmpOn ? "inset(0 0 0 " + wipe.value + "%)" : ""; }
+    function clip() { A.lay.style.clipPath = cmpOn ? "inset(0 0 0 " + wipe.value + "%)" : ""; }
     wipe.addEventListener("input", clip);
     pick.addEventListener("change", function () { j = +pick.value; show(); });
     x.addEventListener("click", close);
     prev.addEventListener("click", function () { if (i < H.length - 1) { i++; show(); } });
     next.addEventListener("click", function () { if (i > 0) { i--; show(); } });
     cmp.addEventListener("click", function () { if (H.length < 2) return showStatus("Il faut au moins 2 photos.", true); cmpOn = !cmpOn; j = i < H.length - 1 ? i + 1 : i - 1; show(); });
-    var sx = null;
-    stage.addEventListener("touchstart", function (e) { if (!cmpOn && e.touches.length === 1) sx = e.touches[0].clientX; }, { passive: true });
-    stage.addEventListener("touchend", function (e) { if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; sx = null; if (dx > 50) prev.click(); else if (dx < -50) next.click(); });
+    grn.addEventListener("click", function () { peShowG = !peShowG; show(); });
+    drw.addEventListener("click", function () {
+      var p = H[i]; showStatus("Ouverture…", false, true);
+      ppPhoto(p.f).catch(function () { return p.thumb; }).then(function (u) { showStatus("Prêt"); return ppDraw(u, p.traits, peGreen(H, p.at), s.name + " · " + zJour(p.at)); }).then(function (S) {
+        if (!S) return;
+        ppCall("traitsPente", [p.id, S], "Enregistrement…").then(function (d) { p.traits = d.traits; show(); showStatus("Dessin enregistré"); });
+      });
+    });
     shr.addEventListener("click", function () {
       var p = H[i]; showStatus("Préparation…", false, true);
-      ppPhoto(p.f).then(function (u) { return ppBurn(u, [zDate(p.at) + "  " + zHeure(p.at) + "  ·  " + s.name, (p.note ? p.note + "  ·  " : "") + (p.by || "") + "  ·  heure serveur"]); })
+      ppPhoto(p.f).then(function (u) { return ppBurn(u, [zDate(p.at) + "  " + zHeure(p.at) + "  ·  " + s.name, (p.note ? p.note + "  ·  " : "") + (p.by || "") + "  ·  heure serveur"], p.traits, peShowG ? peGreen(H, p.at) : []); })
         .then(function (b) { showStatus("Prêt"); return ppShare(b, "pente-" + fileName(s.name) + "-" + zKey(p.at).split(".").reverse().join("-") + ".jpg", s.name + " · " + zStamp(p.at)); })
         .catch(function (e) { showStatus(String(e && e.message || e), true); });
     });
@@ -5541,7 +5712,36 @@ body:has(#view.bl) { background: #fff; }
       var p = H[i]; if (!confirm("Supprimer la photo du " + zStamp(p.at) + " ?")) return;
       ppCall("supprimerPhotoPente", [p.id], "Suppression…").then(function (d) { data.pentes = d.pentes; saveCache(data); H.splice(i, 1); peThumbs = null; if (!H.length) return close(); if (i >= H.length) i = H.length - 1; cmpOn = false; show(); showStatus("Photo supprimée"); });
     });
-    show();
+    show(); setTimeout(Z.fit, 0);
+  }
+
+  // Film : toutes les photos du point, de la plus ancienne à la plus récente
+  function ppFilm(s, H) {
+    var L0 = H.slice().reverse(); if (L0.length < 2) return showStatus("Il faut au moins 2 photos.", true);
+    var ov = el("div", "pv"), top = el("div", "pv-top"), cnt = el("b"), x = el("button", "cam-x", "✕"); x.type = "button"; x.setAttribute("aria-label", "Fermer");
+    top.appendChild(cnt); top.appendChild(x);
+    var stage = el("div", "pv-stage"), A = ppLayerEl(), st = el("span", "pp-stamp big"); stage.appendChild(A.lay); stage.appendChild(st);
+    var pos = document.createElement("input"); pos.type = "range"; pos.min = "0"; pos.max = String(L0.length - 1); pos.value = "0"; pos.className = "pv-wipe on"; pos.setAttribute("aria-label", "Position dans le film");
+    var note = el("p", "pv-note"), bar = el("div", "pv-bar two"), play = el("button", "pv-btn w ok", "⏸ Pause"), spd = el("button", "pv-btn w", "Vitesse ×1"), grn = el("button", "pv-btn w on", "Anciens ✓");
+    [play, spd, grn].forEach(function (b) { b.type = "button"; bar.appendChild(b); });
+    ov.appendChild(top); ov.appendChild(stage); ov.appendChild(pos); ov.appendChild(note); ov.appendChild(bar); document.body.appendChild(ov);
+    ppLock = true;
+    var k = 0, on = true, sp = 1, tm = null, showG = true;
+    var Z = ppZoomer(stage, [A], { onTap: function () { play.click(); } });
+    // pré-chargement des photos en grand
+    L0.reduce(function (c, p) { return c.then(function () { return ppPhoto(p.f).catch(function () {}); }); }, Promise.resolve());
+    function show() {
+      var p = L0[k]; cnt.textContent = s.name + " · " + (k + 1) + "/" + L0.length; pos.value = String(k);
+      ppSetImg(A, Z, p); ppStrokes(A, p.traits || [], peGreen(H, p.at), showG);
+      st.textContent = zDate(p.at) + "  " + zHeure(p.at); note.textContent = p.note ? "« " + p.note + " »" : "";
+    }
+    function tick() { clearTimeout(tm); if (!on) return; tm = setTimeout(function () { if (!ov.isConnected) return; if (k < L0.length - 1) { k++; show(); tick(); } else { on = false; play.textContent = "▶ Revoir"; } }, 1400 / sp); }
+    play.addEventListener("click", function () { on = !on; if (on && k >= L0.length - 1) { k = 0; show(); } play.textContent = on ? "⏸ Pause" : "▶ Lecture"; tick(); });
+    spd.addEventListener("click", function () { sp = sp === 1 ? 2 : sp === 2 ? 4 : 1; spd.textContent = "Vitesse ×" + sp; tick(); });
+    grn.addEventListener("click", function () { showG = !showG; grn.textContent = showG ? "Anciens ✓" : "Anciens ✗"; grn.classList.toggle("on", showG); show(); });
+    pos.addEventListener("input", function () { k = +pos.value; on = false; play.textContent = "▶ Lecture"; show(); });
+    x.addEventListener("click", function () { clearTimeout(tm); Z.off(); ov.remove(); ppLock = false; });
+    show(); setTimeout(Z.fit, 0); tick();
   }
 
   /* ----- Preuves : photo datée par le serveur, empreinte SHA-256, journal enchaîné ----- */
