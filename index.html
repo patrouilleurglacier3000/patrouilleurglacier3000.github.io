@@ -1172,7 +1172,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794641326";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794642566";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -5359,16 +5359,13 @@ body:has(#view.bl) { background: #fff; }
     inp.value = peNew.name; inp.placeholder = "Ex. Face nord Sex Rouge, depuis la station"; inp.maxLength = 60; inp.className = "pp-in";
     inp.addEventListener("input", function () { peNew.name = inp.value; });
     lb.appendChild(inp); f.appendChild(lb);
-    f.appendChild(el("p", "pp-hint", "Ta position actuelle est enregistrée : mets-toi à l'endroit d'où tu prendras la photo chaque jour."));
     var row = el("div", "pp-row"), ok = el("button", "pp-big", "Créer"), no = el("button", "pp-big ghost", "Annuler"); ok.type = no.type = "button"; ok.style.background = PE_C;
     no.addEventListener("click", function () { peNew = null; renderPentes(); });
     ok.addEventListener("click", function () {
       var n = inp.value.trim(); if (!n) { inp.focus(); return showStatus("Écris le nom du point de vue.", true); }
-      ok.disabled = true; showStatus("Position GPS…", false, true);
-      ppPos(8000).then(function (p) {
-        var sp = { id: "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), name: n, lat: p && p.lat, lng: p && p.lng };
-        return ppCall("enregistrerPente", [sp, myName()], "Enregistrement…").then(function (d) { data.pentes = d.pentes; saveCache(data); peNew = null; peSel = sp.id; showStatus(p ? "Point de vue créé" : "Point créé (sans position GPS)"); renderPentes(); });
-      }).catch(function () { ok.disabled = false; });
+      ok.disabled = true;
+      var sp = { id: "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), name: n };
+      ppCall("enregistrerPente", [sp, myName()], "Enregistrement…").then(function (d) { data.pentes = d.pentes; saveCache(data); peNew = null; peSel = sp.id; showStatus("Point de vue créé"); renderPentes(); }, function () { ok.disabled = false; });
     });
     row.appendChild(no); row.appendChild(ok); f.appendChild(row);
     setTimeout(function () { inp.focus(); }, 60);
@@ -5378,12 +5375,6 @@ body:has(#view.bl) { background: #fff; }
     var hd = el("div", "pe-hd"); hd.appendChild(el("h2", null, s.name));
     var meta = el("p", "pmeta", s.n ? s.n + " photo" + (s.n > 1 ? "s" : "") + " depuis le " + (peHist[s.id] && peHist[s.id].length ? zDate(peHist[s.id][peHist[s.id].length - 1].at) : "…") : "Pas encore de photo");
     hd.appendChild(meta);
-    var dist = el("p", "pe-dist"); hd.appendChild(dist);
-    if (s.lat) ppPos(6000).then(function (p) {
-      var d = ppDist(p, s); if (d == null || !dist.isConnected) return;
-      dist.textContent = d <= 25 ? "📍 Tu es au point (" + d + " m)" : "📍 Tu es à " + (d < 1000 ? d + " m" : (d / 1000).toFixed(1) + " km") + " du point";
-      dist.className = "pe-dist" + (d <= 25 ? " ok" : "");
-    });
     v.appendChild(hd);
     var go = el("button", "pp-big", peToday(s) ? "📷 Reprendre une photo" : "📷 Photo du jour"); go.type = "button"; go.style.background = PE_C;
     go.addEventListener("click", function () { peShoot(s); }); v.appendChild(go);
@@ -5400,18 +5391,11 @@ body:has(#view.bl) { background: #fff; }
     });
     // Réglages du point de vue
     var more = el("details", "pe-more"); more.appendChild(el("summary", null, "Réglages du point de vue"));
-    var rn = el("button", "pbtn", "Renommer"), here = el("button", "pbtn", "📍 Mettre le point ici (ma position)"), del = el("button", "pbtn danger", "Supprimer ce point et ses photos");
-    [rn, here, del].forEach(function (b) { b.type = "button"; more.appendChild(b); });
+    var rn = el("button", "pbtn", "Renommer"), del = el("button", "pbtn danger", "Supprimer ce point et ses photos");
+    [rn, del].forEach(function (b) { b.type = "button"; more.appendChild(b); });
     rn.addEventListener("click", function () {
       var n = prompt("Nouveau nom :", s.name); if (!n || !n.trim()) return;
       ppCall("enregistrerPente", [{ id: s.id, name: n.trim() }, myName()]).then(function (d) { data.pentes = d.pentes; saveCache(data); renderPentes(); showStatus("Renommé"); });
-    });
-    here.addEventListener("click", function () {
-      showStatus("Position GPS…", false, true);
-      ppPos(10000).then(function (p) {
-        if (!p) return showStatus("Position introuvable.", true);
-        ppCall("enregistrerPente", [{ id: s.id, name: s.name, lat: p.lat, lng: p.lng }, myName()]).then(function (d) { data.pentes = d.pentes; saveCache(data); renderPentes(); showStatus("Position du point enregistrée (± " + Math.round(p.acc) + " m)"); });
-      });
     });
     del.addEventListener("click", function () {
       if (!confirm("Supprimer « " + s.name + " » et ses " + (s.n || 0) + " photo(s) ? C'est définitif.")) return;
@@ -5423,7 +5407,7 @@ body:has(#view.bl) { background: #fff; }
     if (ppLock) return; ppLock = true;
     var ghostP = s.last && s.last.f ? ppPhoto(s.last.f).catch(function () { return null; }) : Promise.resolve(null);
     showStatus("Ouverture de l'appareil…", false, true);
-    var posP = ppPos(15000);
+    var posP = null;
     ghostP.then(function (gu) { return camOpen({ ghost: gu, title: s.name }); }).then(function (f) {
       if (!f) { ppLock = false; return; }
       var tel = Date.now();
@@ -5449,9 +5433,7 @@ body:has(#view.bl) { background: #fff; }
     ok.addEventListener("click", function () {
       var note = sel.concat(tx.value.trim() ? [tx.value.trim()] : []).join(" · ");
       ok.disabled = no.disabled = true; ok.textContent = "Envoi…";
-      Promise.race([posP, new Promise(function (r) { setTimeout(function () { r(null); }, 1500); })]).then(function (p) {
-        return ppCall("photoPente", [s.id, u[0], u[1], { note: note, lat: p && p.lat, lng: p && p.lng, tel: tel }, myName()], "Envoi de la photo…");
-      }).then(function (d) {
+      ppCall("photoPente", [s.id, u[0], u[1], { note: note, tel: tel }, myName()], "Envoi de la photo…").then(function (d) {
         data.pentes = d.pentes; saveCache(data);
         if (peHist[s.id]) peHist[s.id].unshift(d.photo);
         if (peThumbs && d.photo.thumb) peThumbs[s.id] = d.photo.thumb;
