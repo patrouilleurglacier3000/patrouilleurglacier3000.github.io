@@ -1046,7 +1046,7 @@ function supprimerRecco(code, id) {
 
 // ---------- La bible du patrouilleur : les 2 PDF rangés dans le Drive (dossier des photos), ouverts seulement avec le code de l'équipe ----------
 // À la 1re ouverture, le script les copie une fois depuis l'ancienne version de l'appli, puis garde leurs identifiants.
-var BIBLE_SRC = 'https://raw.githubusercontent.com/patrouilleurglacier3000/patrouilleurglacier3000.github.io/tmp-recco/';
+var BIBLE_SRC = 'https://raw.githubusercontent.com/vigo-rescue/vigo-rescue.github.io/tmp-recco/';
 var BIBLE_FICHIERS = ['L-essentiel-des-directives-Patrouilleurs.pdf', 'Le-saviez-vous-Jurisprudence-Patrouilleurs.pdf',
   'RECCO-Classeur-formation-R9.pdf', 'RECCO-Fiche-controle-detecteurs.pdf', 'RECCO-Fiche-suivi-equipe.pdf', 'Bible-texte.json'];
 // Changer ce numéro quand un PDF est mis à jour : les anciens partent à la corbeille et les nouveaux arrivent tout seuls
@@ -1095,7 +1095,7 @@ function installerTout() {
 }
 
 // ---------- RECCO : pages du classeur (images) rangées dans le Drive, servies seulement avec le code de l'équipe ----------
-var RECCO_PAGES_SRC = 'https://raw.githubusercontent.com/patrouilleurglacier3000/patrouilleurglacier3000.github.io/tmp-recco/', RECCO_NB_PAGES = 28;
+var RECCO_PAGES_SRC = 'https://raw.githubusercontent.com/vigo-rescue/vigo-rescue.github.io/tmp-recco/', RECCO_NB_PAGES = 28;
 var RECCO_VERSION = 'v18-chargeur'; // changer ce numéro = installerRecco remplace toutes les pages
 function reccoPages_() { try { return JSON.parse(PropertiesService.getScriptProperties().getProperty('recco_pages') || '[]'); } catch (e) { return []; } }
 // À lancer une fois depuis l'éditeur (choisir « installerRecco », puis ▶ Exécuter)
