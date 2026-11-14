@@ -938,6 +938,37 @@ body:has(#view.bl) { background: #fff; }
 /* Micro */
 .vx-btn { position: fixed; right: 16px; bottom: calc(18px + env(safe-area-inset-bottom)); width: 72px; height: 72px; border-radius: 50%; border: 0; background: #d63a3a; color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.35); z-index: 58; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .vx-btn:active { transform: scale(.94); }
+.ia-btn { position: fixed; right: 16px; bottom: calc(18px + env(safe-area-inset-bottom)); width: 76px; height: 76px; border-radius: 50%; border: 0; background: #1f5fae; color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.35); z-index: 57; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font: 800 13px var(--body); }
+.ia-btn.up { bottom: calc(102px + env(safe-area-inset-bottom)); }
+.ia-box { position: fixed; inset: 0; z-index: 72; background: rgba(15,25,35,.55); display: flex; align-items: stretch; justify-content: center; }
+.ia-card { background: #fff; color: #0b1620; width: 100%; max-width: 640px; display: flex; flex-direction: column; padding: calc(10px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom)); box-sizing: border-box; height: 100%; }
+.ia-wait { margin: auto; color: #fff; font: 800 30px var(--body); }
+.ia-hd { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 2px solid #e3e8ee; }
+.ia-hd b { flex: 1; font: 800 22px var(--body); }
+.ia-key { flex: none; }
+.ia-v { white-space: nowrap; min-height: 48px; border: 2px solid #8a98a5; border-radius: 12px; background: #fff; color: #0b1620; font: 700 16px var(--body); padding: 0 12px; cursor: pointer; }
+.ia-v.on { border-color: #1f5fae; background: #e8f1fb; }
+.ia-x { width: 52px; height: 48px; border: 0; border-radius: 12px; background: #eef2f5; color: #0b1620; font: 800 22px var(--body); cursor: pointer; }
+.ia-log { flex: 1; overflow-y: auto; padding: 10px 2px; display: flex; flex-direction: column; gap: 10px; }
+.ia-hint { color: #4a5562; font: 600 16px/1.45 var(--body); background: #f2f6f9; border-radius: 12px; padding: 12px; }
+.ia-m { max-width: 88%; padding: 10px 13px; border-radius: 16px; font: 600 18px/1.4 var(--body); white-space: pre-wrap; }
+.ia-m.me { align-self: flex-end; background: #1f5fae; color: #fff; border-bottom-right-radius: 4px; }
+.ia-m.ai { align-self: flex-start; background: #eef2f5; color: #0b1620; border-bottom-left-radius: 4px; }
+.ia-m.err { background: #fde8e6; color: #8f1d1d; }
+.ia-m.busy { font-size: 26px; letter-spacing: 3px; }
+.ia-act { display: flex; align-items: center; gap: 8px; margin-top: 8px; background: #fff; border: 2px solid #2e9461; border-radius: 10px; padding: 6px 8px; font: 700 15px/1.3 var(--body); }
+.ia-act span { flex: 1; }
+.ia-act.undone { border-color: #8a98a5; color: #5b6b78; text-decoration: line-through; }
+.ia-u { min-height: 42px; border: 0; border-radius: 9px; background: #c62828; color: #fff; font: 800 15px var(--body); padding: 0 12px; cursor: pointer; }
+.ia-bar { display: flex; gap: 8px; align-items: flex-end; }
+.ia-in { flex: 1; box-sizing: border-box; min-height: 52px; font: 600 18px/1.35 var(--body); padding: 12px; border: 2px solid #8a98a5; border-radius: 12px; background: #fff; color: #0b1620; resize: none; width: 100%; }
+.ia-send { width: 58px; min-height: 52px; border: 0; border-radius: 12px; background: #1f5fae; color: #fff; font: 800 22px var(--body); cursor: pointer; }
+.ia-mic { margin-top: 10px; min-height: 76px; border: 0; border-radius: 18px; background: #1f5fae; color: #fff; font: 800 22px var(--body); cursor: pointer; }
+.ia-mic.on { background: #c62828; }
+.ia-mic:disabled { opacity: .5; }
+.ia-p { font: 600 16px/1.4 var(--body); color: #33424e; }
+.ia-err { color: #c62828; font: 700 15px var(--body); min-height: 1em; }
+.ia-big { min-height: 60px; font-size: 19px; }
 .vx-box { position: fixed; inset: 0; z-index: 70; background: rgba(15,25,35,.55); display: flex; align-items: flex-end; justify-content: center; }
 .vx-card { background: var(--paper, #fff); color: var(--ink, #1d2b36); width: 100%; max-width: 640px; border-radius: 20px 20px 0 0; padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); box-shadow: 0 -6px 24px rgba(0,0,0,.3); }
 .vx-t { font: 800 22px var(--body); margin-bottom: 6px; }
@@ -1050,7 +1081,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Patrouilleurs">
-<script>window.APP_V="1794599630";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794633873";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1154,7 +1185,7 @@ body:has(#view.bl) { background: #fff; }
   function call(fn) {
     var args = Array.prototype.slice.call(arguments, 1);
     // délai max : sans réponse au bout de 25 s, on abandonne (sinon l'écran peut rester bloqué)
-    var ac = window.AbortController ? new AbortController() : null, to = ac ? setTimeout(function () { ac.abort(); }, 25000) : null;
+    var ac = window.AbortController ? new AbortController() : null, to = ac ? setTimeout(function () { ac.abort(); }, fn === "assistant" ? 70000 : 25000) : null;
     if (window.API_URL) return fetch(window.API_URL, { method: "POST", body: JSON.stringify({ fn: fn, args: args }), headers: { "Content-Type": "text/plain;charset=utf-8" }, credentials: "omit", redirect: "follow", signal: ac ? ac.signal : undefined })
       .then(function (r) { clearTimeout(to); return r; }, function (e) { clearTimeout(to); throw new Error(e && e.name === "AbortError" ? "Pas de réponse (réseau lent)" : "Pas de connexion"); })
       .then(function (r) { if (!r.ok) throw new Error("Pas de connexion"); return r.json(); })
@@ -4366,6 +4397,94 @@ body:has(#view.bl) { background: #fff; }
   }
   // --- bouton et fenêtre ---
   var vxBtn = null, vxRec = null, vxBox = null;
+  /* ---------- Assistant IA : on parle (ou on écrit), il répond, il agit sur le stock, les tâches, l'agenda, et cherche dans la Bible ---------- */
+  var iaBtn = null, iaBox = null, iaMsgs = [], iaBusy = false, iaRec = null, iaReady = null;
+  var iaVoice = true; try { iaVoice = localStorage.getItem("stock-pistes-iavoix") !== "0"; } catch (e) {}
+  function iaSay(t) {
+    if (!iaVoice || !window.speechSynthesis) return;
+    try { speechSynthesis.cancel(); var u = new SpeechSynthesisUtterance(String(t).replace(/[«»]/g, "")); u.lang = "fr-FR"; u.rate = 1.05;
+      var vs = speechSynthesis.getVoices().filter(function (v) { return /^fr/i.test(v.lang); }); if (vs.length) u.voice = vs[0]; speechSynthesis.speak(u); } catch (e) {}
+  }
+  function iaClose() { try { if (iaRec) iaRec.abort(); } catch (e) {} iaRec = null; try { speechSynthesis.cancel(); } catch (e) {} if (iaBox) iaBox.remove(); iaBox = null; vxSync(); }
+  function iaOpen() {
+    iaBox = el("div", "ia-box"); document.body.appendChild(iaBox); vxSync();
+    if (iaReady) return iaRender();
+    iaBox.appendChild(el("div", "ia-wait", "…"));
+    call("etatIA", code).then(function (r) { iaReady = !!(r && r.pret); iaRender(); }, function (e) { iaReady = false; iaRender(String(e.message || e)); });
+  }
+  function iaKey(err) {
+    var c = el("div", "ia-card");
+    var hd = el("div", "ia-hd"); hd.appendChild(el("b", null, "Brancher l'assistant")); var x = el("button", "ia-x", "✕"); x.type = "button"; x.addEventListener("click", iaClose); hd.appendChild(x); c.appendChild(hd);
+    c.appendChild(el("p", "ia-p", "Colle ici la clé API (elle commence par sk-ant-). Elle est gardée sur le serveur et n'est plus jamais affichée."));
+    var t = document.createElement("input"); t.type = "password"; t.className = "ia-in ia-key"; t.placeholder = "sk-ant-…"; t.autocomplete = "off"; c.appendChild(t);
+    var m = el("p", "ia-err", err || ""); c.appendChild(m);
+    var ok = el("button", "pbtn main ia-big", "Enregistrer la clé"); ok.type = "button"; c.appendChild(ok);
+    ok.addEventListener("click", function () {
+      ok.disabled = true; ok.textContent = "…";
+      call("enregistrerCleIA", code, t.value).then(function () { iaReady = true; iaRender(); }, function (e) { ok.disabled = false; ok.textContent = "Enregistrer la clé"; m.textContent = String(e.message || e); });
+    });
+    return c;
+  }
+  function iaRender(err) {
+    if (!iaBox) return; iaBox.textContent = "";
+    if (!iaReady) { iaBox.appendChild(iaKey(err)); return; }
+    var c = el("div", "ia-card");
+    var hd = el("div", "ia-hd"); hd.appendChild(el("b", null, "Assistant"));
+    var vb = el("button", "ia-v" + (iaVoice ? " on" : ""), iaVoice ? "🔊 Voix" : "🔇 Silencieux"); vb.type = "button";
+    vb.addEventListener("click", function () { iaVoice = !iaVoice; try { localStorage.setItem("stock-pistes-iavoix", iaVoice ? "1" : "0"); speechSynthesis.cancel(); } catch (e) {} iaRender(); });
+    hd.appendChild(vb);
+    if (iaMsgs.length) { var nw = el("button", "ia-v", "Nouvelle"); nw.type = "button"; nw.addEventListener("click", function () { iaMsgs = []; iaRender(); }); hd.appendChild(nw); }
+    var x = el("button", "ia-x", "✕"); x.type = "button"; x.addEventListener("click", iaClose); hd.appendChild(x); c.appendChild(hd);
+    var log = el("div", "ia-log");
+    if (!iaMsgs.length) log.appendChild(el("div", "ia-hint", "« J'ai pris 10 jalons gauche au Scex Rouge » · « Il reste des filets où ? » · « Ajoute une tâche urgente… » · « A-t-on le droit de damer au treuil sur une piste ouverte ? »"));
+    iaMsgs.forEach(function (m) {
+      var b = el("div", "ia-m " + (m.role === "user" ? "me" : "ai") + (m.err ? " err" : "")); b.appendChild(el("div", null, m.text));
+      (m.actions || []).forEach(function (a) {
+        var r = el("div", "ia-act" + (a.undone ? " undone" : "")); r.appendChild(el("span", null, (a.undone ? "Annulé : " : "✓ ") + a.fait));
+        if (!a.undone && a.annuler) { var u = el("button", "ia-u", "Annuler"); u.type = "button"; u.addEventListener("click", function () {
+          u.disabled = true; call("annulerAssistant", code, a.annuler).then(function () { a.undone = true; iaRender(); load(true); }, function (e) { u.disabled = false; showStatus(String(e.message || e), true); }); }); r.appendChild(u); }
+        b.appendChild(r);
+      });
+      log.appendChild(b);
+    });
+    if (iaBusy) log.appendChild(el("div", "ia-m ai busy", "…"));
+    c.appendChild(log);
+    var bar = el("div", "ia-bar"), t = document.createElement("textarea"); t.className = "ia-in"; t.rows = 1; t.placeholder = "Écrire…"; bar.appendChild(t);
+    var snd = el("button", "ia-send", "➤"); snd.type = "button"; snd.setAttribute("aria-label", "Envoyer"); bar.appendChild(snd);
+    snd.addEventListener("click", function () { iaSend(t.value); });
+    t.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); iaSend(t.value); } });
+    c.appendChild(bar);
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    var mic = el("button", "ia-mic" + (iaRec ? " on" : ""), iaRec ? "● J'écoute… (touche pour envoyer)" : "🎤 Parler"); mic.type = "button"; mic.disabled = iaBusy;
+    if (!SR) mic.style.display = "none";
+    mic.addEventListener("click", function () {
+      if (iaRec) { try { iaRec.stop(); } catch (e) {} return; }
+      try { speechSynthesis.cancel(); } catch (e) {}
+      var r = new SR(), heard = ""; iaRec = r; r.lang = "fr-FR"; r.continuous = false; r.interimResults = true;
+      r.onresult = function (e) { heard = e.results[e.results.length - 1][0].transcript.trim(); t.value = heard; };
+      r.onerror = function (e) { if (e.error === "not-allowed" || e.error === "service-not-allowed") showStatus("Micro refusé : écris, ou utilise le micro du clavier", true); };
+      r.onend = function () { iaRec = null; if (heard) iaSend(heard); else iaRender(); };
+      try { r.start(); } catch (e) { iaRec = null; }
+      mic.className = "ia-mic on"; mic.textContent = "● J'écoute… (touche pour envoyer)";
+    });
+    c.appendChild(mic);
+    iaBox.appendChild(c);
+    log.scrollTop = log.scrollHeight;
+  }
+  function iaSend(txt) {
+    txt = String(txt || "").trim(); if (!txt || iaBusy) return;
+    iaMsgs.push({ role: "user", text: txt }); iaBusy = true; iaRender();
+    var who = ""; try { who = localStorage.getItem("stock-pistes-avobs") || ""; } catch (e) {}
+    call("assistant", code, iaMsgs.filter(function (m) { return !m.err; }).map(function (m) { return { role: m.role, text: m.text }; }), who).then(function (r) {
+      iaBusy = false; iaMsgs.push({ role: "assistant", text: r.texte, actions: r.actions || [] });
+      if (r.actions && r.actions.length) load(true);
+      iaRender(); iaSay(r.texte);
+    }, function (e) {
+      iaBusy = false; var m = String(e.message || e);
+      if (/clé IA/.test(m)) { iaReady = false; iaRender(m); return; }
+      iaMsgs.push({ role: "assistant", text: m, err: true }); iaRender();
+    });
+  }
   function vxWhere() {
     if (area === "taches") return "taches";
     if (area === "aval" && avEdit && avEdit.step === "map") return "aval";
@@ -4378,6 +4497,14 @@ body:has(#view.bl) { background: #fff; }
       vxBtn.addEventListener("click", vxOpen); document.body.appendChild(vxBtn);
     }
     vxBtn.style.display = vxWhere() && !vxBox ? "" : "none";
+    if (!iaBtn) {
+      iaBtn = el("button", "ia-btn"); iaBtn.type = "button"; iaBtn.setAttribute("aria-label", "Assistant");
+      iaBtn.innerHTML = '<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4M8 22h8"/></svg><b>IA</b>';
+      iaBtn.addEventListener("click", iaOpen); document.body.appendChild(iaBtn);
+    }
+    var iaOk = ["home", "stock", "plan", "taches", "achat", "form"].indexOf(area) >= 0 && !iaBox && !vxBox && !(typeof code === "undefined" || !code);
+    iaBtn.style.display = iaOk ? "" : "none";
+    iaBtn.classList.toggle("up", !!vxWhere());
   }
   var VX_HELP = {
     taches: "Dis ta note, elle sera créée directement. Ex. : « note urgente, remettre le filet au bas du Glacier » ou « attention, plaque de glace sur Red Run ».",

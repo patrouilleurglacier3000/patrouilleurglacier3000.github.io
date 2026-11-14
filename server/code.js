@@ -74,7 +74,7 @@ function doGet() {
 
 /* ------------------------------------------------------------ Accès depuis la page de l'équipe (hors Google) */
 // La page hébergée à part appelle ces fonctions par l'adresse /exec : ça marche même avec plusieurs comptes Google connectés.
-var API_ = {donnees: donnees, importerDonnees: importerDonnees, photoBase64: photoBase64, mouvement: mouvement, comptage: comptage, enregistrerArticle: enregistrerArticle, supprimerArticle: supprimerArticle, ajouterPhoto: ajouterPhoto, retirerPhoto: retirerPhoto, enregistrerPrep: enregistrerPrep, cocher: cocher, validerPrep: validerPrep, supprimerPrep: supprimerPrep, creerCommande: creerCommande, prendreCommande: prendreCommande, livrerCommande: livrerCommande, supprimerCommande: supprimerCommande, ajouterRubrique: ajouterRubrique, ajouterVideo: ajouterVideo, supprimerVideo: supprimerVideo, enregistrerEvenement: enregistrerEvenement, supprimerEvenement: supprimerEvenement, enregistrerDemande: enregistrerDemande, statutDemande: statutDemande, supprimerDemande: supprimerDemande, ajouterPhotoDemande: ajouterPhotoDemande, retirerPhotoDemande: retirerPhotoDemande, enregistrerPlanning: enregistrerPlanning, enregistrerTache: enregistrerTache, prendreTache: prendreTache, terminerTache: terminerTache, rouvrirTache: rouvrirTache, supprimerTache: supprimerTache, ordonnerTaches: ordonnerTaches, ajouterPhotoTache: ajouterPhotoTache, retirerPhotoTache: retirerPhotoTache, enregistrerBilan: enregistrerBilan, supprimerBilan: supprimerBilan, enregistrerAvalanche: enregistrerAvalanche, supprimerAvalanche: supprimerAvalanche, ajouterPhotoAvalanche: ajouterPhotoAvalanche, retirerPhotoAvalanche: retirerPhotoAvalanche, enregistrerRecco: enregistrerRecco, supprimerRecco: supprimerRecco, enregistrerPanneau: enregistrerPanneau, meteoPanneau: meteoPanneau, bibleFichier: bibleFichier};
+var API_ = {donnees: donnees, importerDonnees: importerDonnees, photoBase64: photoBase64, mouvement: mouvement, comptage: comptage, enregistrerArticle: enregistrerArticle, supprimerArticle: supprimerArticle, ajouterPhoto: ajouterPhoto, retirerPhoto: retirerPhoto, enregistrerPrep: enregistrerPrep, cocher: cocher, validerPrep: validerPrep, supprimerPrep: supprimerPrep, creerCommande: creerCommande, prendreCommande: prendreCommande, livrerCommande: livrerCommande, supprimerCommande: supprimerCommande, ajouterRubrique: ajouterRubrique, ajouterVideo: ajouterVideo, supprimerVideo: supprimerVideo, enregistrerEvenement: enregistrerEvenement, supprimerEvenement: supprimerEvenement, enregistrerDemande: enregistrerDemande, statutDemande: statutDemande, supprimerDemande: supprimerDemande, ajouterPhotoDemande: ajouterPhotoDemande, retirerPhotoDemande: retirerPhotoDemande, enregistrerPlanning: enregistrerPlanning, enregistrerTache: enregistrerTache, prendreTache: prendreTache, terminerTache: terminerTache, rouvrirTache: rouvrirTache, supprimerTache: supprimerTache, ordonnerTaches: ordonnerTaches, ajouterPhotoTache: ajouterPhotoTache, retirerPhotoTache: retirerPhotoTache, enregistrerBilan: enregistrerBilan, supprimerBilan: supprimerBilan, enregistrerAvalanche: enregistrerAvalanche, supprimerAvalanche: supprimerAvalanche, ajouterPhotoAvalanche: ajouterPhotoAvalanche, retirerPhotoAvalanche: retirerPhotoAvalanche, enregistrerRecco: enregistrerRecco, supprimerRecco: supprimerRecco, enregistrerPanneau: enregistrerPanneau, meteoPanneau: meteoPanneau, bibleFichier: bibleFichier, assistant: assistant, annulerAssistant: annulerAssistant, enregistrerCleIA: enregistrerCleIA, etatIA: etatIA};
 function doPost(e) {
   var out;
   try {
@@ -1048,9 +1048,9 @@ function supprimerRecco(code, id) {
 // À la 1re ouverture, le script les copie une fois depuis l'ancienne version de l'appli, puis garde leurs identifiants.
 var BIBLE_SRC = 'https://raw.githubusercontent.com/patrouilleurglacier3000/patrouilleurglacier3000.github.io/tmp-recco/';
 var BIBLE_FICHIERS = ['L-essentiel-des-directives-Patrouilleurs.pdf', 'Le-saviez-vous-Jurisprudence-Patrouilleurs.pdf',
-  'RECCO-Classeur-formation-R9.pdf', 'RECCO-Fiche-controle-detecteurs.pdf', 'RECCO-Fiche-suivi-equipe.pdf'];
+  'RECCO-Classeur-formation-R9.pdf', 'RECCO-Fiche-controle-detecteurs.pdf', 'RECCO-Fiche-suivi-equipe.pdf', 'Bible-texte.json'];
 // Changer ce numéro quand un PDF est mis à jour : les anciens partent à la corbeille et les nouveaux arrivent tout seuls
-var BIBLE_VERSION = 'v2.2-2026-11-13';
+var BIBLE_VERSION = 'v2.3-2026-11-14';
 function bible_() {
   var pr = PropertiesService.getScriptProperties(), ids = {};
   try { ids = JSON.parse(pr.getProperty('bible_ids') || '{}'); } catch (e) {}
@@ -1180,4 +1180,171 @@ function bibleFichier(code, f) {
   var x = bible_().filter(function (b) { return b.f === f && b.id; })[0];
   if (!x) throw new Error('Document pas encore installé : lance « installerTout » dans le script.');
   return { f: f, b64: Utilities.base64Encode(DriveApp.getFileById(x.id).getBlob().getBytes()) };
+}
+
+/* ------------------------------------------------------------ Assistant IA (Claude) */
+// La clé API reste dans les propriétés du script : jamais dans le code, jamais renvoyée à l'appli.
+var IA_MODELE = 'claude-haiku-5-5', IA_URL = 'https://api.anthropic.com/v1/messages';
+function iaCle_() { return PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY') || ''; }
+function enregistrerCleIA(code, cle) {
+  verifier_(code);
+  cle = String(cle || '').trim();
+  if (!/^sk-ant-[A-Za-z0-9_\-]{20,}$/.test(cle)) throw new Error("Ce n'est pas une clé valide (elle commence par sk-ant-).");
+  PropertiesService.getScriptProperties().setProperty('ANTHROPIC_API_KEY', cle);
+  return { ok: true };
+}
+function etatIA(code) { verifier_(code); return { pret: !!iaCle_() }; }
+function iaNorm_(t) { return String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim(); }
+var IA_VIDES = ' le la les un une des de du au aux et ou a en sur dans pour par avec est il elle on je tu nous vous ils que qui quoi ce cet cette ces se sa son ses mon ma mes ton ta tes y a t pas ne plus encore reste restent combien quel quelle quels quelles est ce que il y '.split(' ').reduce(function (o, w) { if (w) o[w] = 1; return o; }, {});
+function iaMots_(t) { return iaNorm_(t).split(' ').filter(function (w) { return w.length > 1 && !IA_VIDES[w]; }); }
+
+// --- outils ---
+function iaStock_(texte) {
+  var lieux = listeLieux_().map(function (l) { return l.name; }), q = quantites_(), mots = iaMots_(texte);
+  var arts = lire_(ONGLET_STOCK).map(function (o) {
+    var id = String(o.id), nom = String(o.nom), n = iaNorm_(nom + ' ' + o.categorie), sc = 0;
+    mots.forEach(function (w) { var r = w.replace(/s$/, ''); if (n.indexOf(r) >= 0) sc += 2; });
+    var par = {}; lieux.forEach(function (l) { var v = q[id] && q[id][l] ? q[id][l].n : 0; if (v) par[l] = v; });
+    return { id: id, nom: nom, categorie: String(o.categorie), par_lieu: par, sc: sc };
+  });
+  var bons = arts.filter(function (a) { return a.sc > 0; }).sort(function (a, b) { return b.sc - a.sc; }).slice(0, 12);
+  if (!bons.length) bons = arts.slice(0, 40);
+  return { lieux: lieux, articles: bons.map(function (a) { delete a.sc; return a; }) };
+}
+function iaMouvement_(id, lieu, delta, prenom) {
+  return verrou_(function () {
+    var a = article_(id), L = lieuValide_(lieu).name, q = quantites_();
+    var avant = q[a.id] && q[a.id][L] ? q[a.id][L].n : 0, apres = Math.max(0, avant + Math.round(nombre_(delta)));
+    ecrireQte_(q, String(a.id), L, apres); majTotal_(q, a); noterMouvement_(a, apres - avant, 'Assistant' + (prenom ? ' · ' + prenom : ''), L);
+    return { fait: String(a.nom) + ' · ' + L + ' : ' + avant + ' → ' + apres, annuler: { t: 'mvt', id: String(a.id), lieu: L, delta: avant - apres } };
+  });
+}
+function iaCommande_(de, vers, lignes, note) {
+  var arts = lire_(ONGLET_STOCK), propres = (lignes || []).map(function (l) {
+    var a = arts.filter(function (o) { return String(o.id) === String(l.article_id); })[0];
+    return a ? { id: String(a.id), name: String(a.nom).slice(0, 60), qty: Math.max(1, Math.round(nombre_(l.quantite))) } : null;
+  }).filter(Boolean);
+  if (!propres.length) throw new Error('Aucun article reconnu pour la commande.');
+  var cible = (vers === 'pistes' || vers === VERS_PISTE) ? VERS_PISTE : vers;
+  var id = 'c' + Date.now().toString(36);
+  verrou_(function () {
+    lieuValide_(de); if (cible !== VERS_PISTE) lieuValide_(cible);
+    if (cible === de) throw new Error('Départ et arrivée identiques.');
+    onglet_(ONGLET_CMD).appendRow([id, de, cible, String(note || '').trim().slice(0, 120), JSON.stringify(propres), 'a_monter', new Date(), '', '']);
+  });
+  return { fait: 'Commande : ' + propres.map(function (p) { return p.qty + ' × ' + p.name; }).join(', ') + ' · ' + de + ' → ' + (cible === VERS_PISTE ? 'pistes' : cible), annuler: { t: 'cmd', id: id } };
+}
+function iaTache_(texte, zone, prio, prenom) {
+  var id = 't' + Date.now().toString(36), zones = zones_();
+  var z = zones.filter(function (x) { return iaNorm_(x) === iaNorm_(zone); })[0] || 'Tableau';
+  var p = PRIOS.indexOf(prio) >= 0 ? prio : 'normal';
+  texte = String(texte || '').trim().slice(0, 300); if (!texte) throw new Error('Tâche vide.');
+  verrou_(function () { onglet_(ONGLET_TACHES).appendRow([id, texte, z, p, 'afaire', '', '', '', String(prenom || 'Assistant').slice(0, 30), Date.now(), '', Date.now()]); });
+  return { fait: 'Tâche' + (p === 'urgent' ? ' urgente' : '') + ' : ' + texte + ' (' + z + ')', annuler: { t: 'tache', id: id } };
+}
+function iaEvenement_(e) {
+  var titre = String(e.titre || '').trim().slice(0, 80), date = txtDate_(e.date);
+  if (!titre || !date) throw new Error('Il manque le titre ou le jour.');
+  var cat = CATS_PLAN.indexOf(e.categorie) >= 0 ? e.categorie : 'autre', id = 'e' + Date.now().toString(36);
+  verrou_(function () { onglet_(ONGLET_PLAN).appendRow([id, date, txtHeure_(e.debut), txtHeure_(e.fin), titre, cat, 'non', String(e.qui || '').slice(0, 80), String(e.note || '').slice(0, 300), new Date()]); });
+  return { fait: 'Agenda : ' + titre + ' · ' + date + (e.debut ? ' ' + txtHeure_(e.debut) : ''), annuler: { t: 'evt', id: id } };
+}
+function iaBibleTexte_() {
+  var c = CacheService.getScriptCache(), k = 'bible_txt_' + BIBLE_VERSION, v = c.get(k);
+  if (v) { try { return JSON.parse(v); } catch (e) {} }
+  var ids = json_(PropertiesService.getScriptProperties().getProperty('bible_ids'), {}), id = ids['Bible-texte.json'];
+  if (!id) { bible_(); ids = json_(PropertiesService.getScriptProperties().getProperty('bible_ids'), {}); id = ids['Bible-texte.json']; }
+  if (!id) return [];
+  var t = DriveApp.getFileById(id).getBlob().getDataAsString('UTF-8'), j = json_(t, []);
+  try { if (t.length < 95000) c.put(k, t, 21600); } catch (e) {}
+  return j;
+}
+function iaBible_(question) {
+  var mots = iaMots_(question).map(function (w) { return w.length > 4 ? w.slice(0, w.length - 1) : w; }), ch = iaBibleTexte_();
+  var docs = ch.map(function (c) { return { c: c, n: iaNorm_(c.texte), ti: iaNorm_(c.titre) }; }), N = docs.length || 1;
+  var idf = mots.map(function (w) { var df = docs.filter(function (d) { return d.n.indexOf(w) >= 0; }).length; return Math.log((N + 1) / (df + 1)); });
+  var r = docs.map(function (d) {
+    var sc = 0;
+    mots.forEach(function (w, k) { var tf = d.n.split(w).length - 1; if (tf) sc += idf[k] * (1 + Math.log(tf)); if (d.ti.indexOf(w) >= 0) sc += idf[k]; });
+    return { c: d.c, sc: sc };
+  }).filter(function (x) { return x.sc > 0; }).sort(function (a, b) { return b.sc - a.sc; });
+  // 3 extraits des directives + 2 de la jurisprudence, les meilleurs de chaque
+  var ess = r.filter(function (x) { return /essentiel/i.test(x.c.doc); }).slice(0, 3), jur = r.filter(function (x) { return !/essentiel/i.test(x.c.doc); }).slice(0, 2);
+  r = ess.concat(jur);
+  return { extraits: r.map(function (x) { return { document: x.c.doc, page: x.c.page, titre: x.c.titre, texte: x.c.texte.slice(0, 1800) }; }) };
+}
+
+var IA_OUTILS = [
+  { name: 'chercher_stock', description: "Cherche des articles du stock (nom, catégorie) et donne les quantités par lieu. Toujours l'utiliser avant une action sur le stock ou une commande.", input_schema: { type: 'object', properties: { texte: { type: 'string', description: "Ce qu'on cherche, ex. « filet », « jalons gauche »" } }, required: ['texte'] } },
+  { name: 'mouvement_stock', description: "Change la quantité d'un article dans un lieu. delta négatif = matériel pris/sorti, positif = rangé/ramené. Seulement si l'article et le lieu sont sûrs.", input_schema: { type: 'object', properties: { article_id: { type: 'string' }, lieu: { type: 'string' }, delta: { type: 'integer' } }, required: ['article_id', 'lieu', 'delta'] } },
+  { name: 'creer_commande', description: "Commande de matériel à faire monter d'un lieu vers un autre lieu, ou vers « pistes ».", input_schema: { type: 'object', properties: { de: { type: 'string' }, vers: { type: 'string' }, lignes: { type: 'array', items: { type: 'object', properties: { article_id: { type: 'string' }, quantite: { type: 'integer' } }, required: ['article_id', 'quantite'] } }, note: { type: 'string' } }, required: ['de', 'vers', 'lignes'] } },
+  { name: 'ajouter_tache', description: "Ajoute une tâche pour l'équipe.", input_schema: { type: 'object', properties: { texte: { type: 'string' }, zone: { type: 'string' }, priorite: { type: 'string', enum: ['urgent', 'normal', 'tard', 'attention'] } }, required: ['texte'] } },
+  { name: 'ajouter_agenda', description: "Ajoute un événement à l'agenda. date au format AAAA-MM-JJ, heures HH:MM.", input_schema: { type: 'object', properties: { titre: { type: 'string' }, date: { type: 'string' }, debut: { type: 'string' }, fin: { type: 'string' }, categorie: { type: 'string', enum: CATS_PLAN }, qui: { type: 'string' }, note: { type: 'string' } }, required: ['titre', 'date'] } },
+  { name: 'chercher_bible', description: "Cherche dans nos documents (L'essentiel des directives SKUS/RMS et Le saviez-vous, jurisprudence). À utiliser pour toute question sur les règles, les obligations, ce qui est autorisé, les signaux, les jugements.", input_schema: { type: 'object', properties: { question: { type: 'string' } }, required: ['question'] } }
+];
+function iaSysteme_(prenom) {
+  var tz = Session.getScriptTimeZone(), now = new Date();
+  var jours = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+  return "Tu es l'assistant des patrouilleurs du domaine skiable de Glacier 3000. Tu parles à " + (prenom || 'un patrouilleur') + ", sur le terrain, souvent avec des gants.\n" +
+    "Aujourd'hui : " + jours[now.getDay()] + ' ' + Utilities.formatDate(now, tz, 'yyyy-MM-dd HH:mm') + ".\n" +
+    "Lieux de stock : " + listeLieux_().map(function (l) { return l.name; }).join(', ') + ".\nZones des tâches : " + zones_().join(', ') + ".\n" +
+    "Règles :\n- Réponds en français, très court (1 à 3 phrases), sans politesse inutile ni explication. Pas de markdown.\n" +
+    "- Stock : cherche d'abord avec chercher_stock. Si l'article ou le lieu est ambigu, pose UNE question courte au lieu d'agir. « J'ai pris » = delta négatif, « j'ai ramené / rangé » = delta positif.\n" +
+    "- Commande : « je veux / fais monter X qui est à tel endroit » = creer_commande du lieu où il est vers le lieu demandé (demande la destination si elle manque).\n" +
+    "- Après une action, confirme en une phrase ce qui a été fait.\n" +
+    "- Règles, directives, ce qui est autorisé, jugements : utilise chercher_bible et réponds UNIQUEMENT avec les extraits trouvés, en citant (document, page). Si les extraits ne répondent pas : « Ce n'est pas dans nos documents. » N'invente jamais une règle.\n" +
+    "- Pas de conseil médical ni de bilan victime.";
+}
+function iaAppel_(cle, sys, msgs) {
+  var r = UrlFetchApp.fetch(IA_URL, { method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+    headers: { 'x-api-key': cle, 'anthropic-version': '2023-06-01' },
+    payload: JSON.stringify({ model: IA_MODELE, max_tokens: 700, system: sys, tools: IA_OUTILS, messages: msgs }) });
+  var c = r.getResponseCode(), j = json_(r.getContentText(), {});
+  if (c === 400 && /credit/i.test(r.getContentText())) throw new Error("Plus de crédit IA : recharge le compte sur platform.claude.com.");
+  if (c === 401) throw new Error("La clé IA n'est pas valide.");
+  if (c === 429) throw new Error("Limite IA atteinte (dépense ou trop de demandes). Réessaie plus tard.");
+  if (c >= 300) throw new Error('IA indisponible (' + c + ').');
+  return j;
+}
+// messages = [{role:'user'|'assistant', text:'…'}] (la conversation visible)
+function assistant(code, messages, prenom) {
+  verifier_(code);
+  var cle = iaCle_(); if (!cle) throw new Error("L'assistant n'est pas encore branché : il manque la clé IA.");
+  var msgs = (messages || []).slice(-12).map(function (m) { return { role: m.role === 'assistant' ? 'assistant' : 'user', content: String(m.text || '').slice(0, 2000) }; })
+    .filter(function (m) { return m.content; });
+  while (msgs.length && msgs[0].role !== 'user') msgs.shift();
+  if (!msgs.length) throw new Error('Rien à envoyer.');
+  var sys = iaSysteme_(prenom), actions = [], use = { in: 0, out: 0 }, texte = '';
+  for (var tour = 0; tour < 6; tour++) {
+    var r = iaAppel_(cle, sys, msgs);
+    if (r.usage) { use.in += r.usage.input_tokens || 0; use.out += r.usage.output_tokens || 0; }
+    var blocs = r.content || [], outils = blocs.filter(function (b) { return b.type === 'tool_use'; });
+    texte = blocs.filter(function (b) { return b.type === 'text'; }).map(function (b) { return b.text; }).join(' ').trim();
+    if (!outils.length || r.stop_reason !== 'tool_use') break;
+    msgs.push({ role: 'assistant', content: blocs });
+    msgs.push({ role: 'user', content: outils.map(function (o) {
+      var res, err = false, x = o.input || {};
+      try {
+        if (o.name === 'chercher_stock') res = iaStock_(x.texte);
+        else if (o.name === 'mouvement_stock') { res = iaMouvement_(x.article_id, x.lieu, x.delta, prenom); actions.push(res); }
+        else if (o.name === 'creer_commande') { res = iaCommande_(x.de, x.vers, x.lignes, x.note); actions.push(res); }
+        else if (o.name === 'ajouter_tache') { res = iaTache_(x.texte, x.zone, x.priorite, prenom); actions.push(res); }
+        else if (o.name === 'ajouter_agenda') { res = iaEvenement_(x); actions.push(res); }
+        else if (o.name === 'chercher_bible') res = iaBible_(x.question);
+        else { res = { erreur: 'outil inconnu' }; err = true; }
+      } catch (e) { res = { erreur: String(e.message || e) }; err = true; }
+      return { type: 'tool_result', tool_use_id: o.id, content: JSON.stringify(res), is_error: err };
+    }) });
+  }
+  var P = PropertiesService.getScriptProperties(), tot = json_(P.getProperty('ia_tokens'), { in: 0, out: 0, n: 0 });
+  tot.in += use.in; tot.out += use.out; tot.n += 1; P.setProperty('ia_tokens', JSON.stringify(tot));
+  return { texte: texte || (actions.length ? 'Fait.' : '…'), actions: actions.map(function (a) { return { fait: a.fait, annuler: a.annuler }; }), usage: use, total: tot };
+}
+function annulerAssistant(code, a) {
+  verifier_(code); a = a || {};
+  if (a.t === 'mvt') iaMouvement_(a.id, a.lieu, a.delta, 'annulation');
+  else if (a.t === 'cmd') verrou_(function () { var o = lire_(ONGLET_CMD).filter(function (x) { return String(x.id) === String(a.id); })[0]; if (o) onglet_(ONGLET_CMD).deleteRow(o._ligne); });
+  else if (a.t === 'tache') verrou_(function () { var o = lire_(ONGLET_TACHES).filter(function (x) { return String(x.id) === String(a.id); })[0]; if (o) onglet_(ONGLET_TACHES).deleteRow(o._ligne); });
+  else if (a.t === 'evt') verrou_(function () { var o = lire_(ONGLET_PLAN).filter(function (x) { return String(x.id) === String(a.id); })[0]; if (o) onglet_(ONGLET_PLAN).deleteRow(o._ligne); });
+  return { ok: true };
 }
