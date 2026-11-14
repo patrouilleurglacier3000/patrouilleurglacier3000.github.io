@@ -939,10 +939,11 @@ body:has(#view.bl) { background: #fff; }
 .vx-btn { position: fixed; right: 16px; bottom: calc(18px + env(safe-area-inset-bottom)); width: 72px; height: 72px; border-radius: 50%; border: 0; background: #d63a3a; color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.35); z-index: 58; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .vx-btn:active { transform: scale(.94); }
 .vigo { display: inline-flex; } .vigo svg { width: 100%; height: 100%; display: block; }
-.ia-btn .vigo { width: 50px; height: 44px; margin-top: 2px; }
+.ia-btn .vigo { width: 46px; height: 46px; margin-top: 0; }
 .ia-btn b { font-size: 12px; margin-top: -1px; letter-spacing: .3px; }
-.ia-av { width: 44px; height: 40px; flex: none; }
-.gate-av { width: 120px; height: 106px; justify-self: center; }
+.ia-av { width: 42px; height: 42px; flex: none; }
+.hb-av { width: 42px; height: 42px; flex: none; margin-right: 8px; }
+.gate-av { width: 110px; height: 110px; justify-self: center; }
 .gate-sub { margin-top: -6px; font-weight: 700; opacity: .8; }
 .ia-btn { position: fixed; right: 16px; bottom: calc(18px + env(safe-area-inset-bottom)); width: 80px; height: 80px; border-radius: 50%; border: 3px solid #fff; background: #17324a; color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.35); z-index: 57; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font: 800 13px var(--body); }
 .ia-btn.up { bottom: calc(102px + env(safe-area-inset-bottom)); }
@@ -1082,12 +1083,12 @@ body:has(#view.bl) { background: #fff; }
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#17324a">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png?v=4">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=4">
+<link rel="icon" href="icon-192.png?v=5">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=5">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794635176";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794635324";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1333,7 +1334,7 @@ body:has(#view.bl) { background: #fff; }
   function renderHomebar() {
     var b = $("homebar"); b.textContent = "";
     if (area === "home") {
-      var br = el("div", "brand"); var lg = document.createElement("img"); lg.className = "logo"; lg.alt = ""; lg.src = window.__LOGO || ""; if (window.__LOGO) b.appendChild(lg); br.appendChild(el("small", null, "Glacier 3000 · Patrouilleurs")); br.appendChild(document.createTextNode("Vigo")); b.appendChild(br);
+      var br = el("div", "brand"); b.appendChild(vigoImg("vigo hb-av")); br.appendChild(el("small", null, "Glacier 3000 · Patrouilleurs")); br.appendChild(document.createTextNode("Vigo")); b.appendChild(br);
       return;
     }
     var back = el("button"); back.type = "button";
@@ -4404,7 +4405,7 @@ body:has(#view.bl) { background: #fff; }
   // --- bouton et fenêtre ---
   var vxBtn = null, vxRec = null, vxBox = null;
   /* ---------- Assistant IA : on parle (ou on écrit), il répond, il agit sur le stock, les tâches, l'agenda, et cherche dans la Bible ---------- */
-  var VIGO_SVG = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"76 108 360 320\"><defs><radialGradient id=\"vbg\" cx=\"50%\" cy=\"38%\" r=\"75%\"><stop offset=\"0\" stop-color=\"#25507a\"/><stop offset=\"1\" stop-color=\"#132a40\"/></radialGradient><radialGradient id=\"vfur\" cx=\"50%\" cy=\"40%\" r=\"60%\"><stop offset=\"0\" stop-color=\"#e2a35f\"/><stop offset=\"1\" stop-color=\"#c47c35\"/></radialGradient></defs><path d=\"M150 170 C95 165 70 250 92 315 C104 350 140 352 156 322 C172 290 178 225 182 196 Z\" fill=\"#6b3d1f\"/><path d=\"M362 170 C417 165 442 250 420 315 C408 350 372 352 356 322 C340 290 334 225 330 196 Z\" fill=\"#6b3d1f\"/><path d=\"M256 120 C330 120 372 168 372 238 C372 310 330 360 256 360 C182 360 140 310 140 238 C140 168 182 120 256 120 Z\" fill=\"url(#vfur)\"/><path d=\"M256 128 C268 160 270 200 276 228 C320 236 342 268 338 302 C332 344 296 366 256 366 C216 366 180 344 174 302 C170 268 192 236 236 228 C242 200 244 160 256 128 Z\" fill=\"#fff6ea\"/><ellipse cx=\"208\" cy=\"226\" rx=\"17\" ry=\"20\" fill=\"#1c1410\"/><ellipse cx=\"304\" cy=\"226\" rx=\"17\" ry=\"20\" fill=\"#1c1410\"/><circle cx=\"214\" cy=\"219\" r=\"6\" fill=\"#fff\"/><circle cx=\"310\" cy=\"219\" r=\"6\" fill=\"#fff\"/><path d=\"M188 196 Q206 186 224 194\" stroke=\"#6b3d1f\" stroke-width=\"7\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M288 194 Q306 186 324 196\" stroke=\"#6b3d1f\" stroke-width=\"7\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M232 268 C232 254 280 254 280 268 C280 284 266 292 256 292 C246 292 232 284 232 268 Z\" fill=\"#1c1410\"/><ellipse cx=\"248\" cy=\"264\" rx=\"7\" ry=\"4\" fill=\"#fff\" opacity=\".55\"/><path d=\"M256 292 L256 306\" stroke=\"#1c1410\" stroke-width=\"6\" stroke-linecap=\"round\"/><path d=\"M220 306 Q238 326 256 306 Q274 326 292 306\" stroke=\"#1c1410\" stroke-width=\"6\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M242 316 Q256 312 270 316 L268 336 Q256 350 244 336 Z\" fill=\"#e8576b\"/><path d=\"M256 318 L256 336\" stroke=\"#c43a50\" stroke-width=\"3\" stroke-linecap=\"round\"/><path d=\"M176 330 Q256 372 336 330 L346 356 Q256 404 166 356 Z\" fill=\"#d63a3a\"/><circle cx=\"256\" cy=\"392\" r=\"24\" fill=\"#f4c542\" stroke=\"#b98a12\" stroke-width=\"4\"/><g stroke=\"#7a5a08\" stroke-width=\"4\" stroke-linecap=\"round\"><path d=\"M256 378 V406\"/><path d=\"M244 385 L268 399\"/><path d=\"M268 385 L244 399\"/></g></svg>";
+  var VIGO_SVG = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 512 512\"><circle cx=\"256\" cy=\"256\" r=\"256\" fill=\"#17324a\"/><g fill=\"#ffffff\"><ellipse cx=\"256\" cy=\"292\" rx=\"82\" ry=\"70\"/><ellipse cx=\"160\" cy=\"214\" rx=\"34\" ry=\"44\" transform=\"rotate(-18 160 214)\"/><ellipse cx=\"220\" cy=\"158\" rx=\"34\" ry=\"46\" transform=\"rotate(-6 220 158)\"/><ellipse cx=\"292\" cy=\"158\" rx=\"34\" ry=\"46\" transform=\"rotate(6 292 158)\"/><ellipse cx=\"352\" cy=\"214\" rx=\"34\" ry=\"44\" transform=\"rotate(18 352 214)\"/></g><g stroke=\"#d63a3a\" stroke-width=\"9\" stroke-linecap=\"round\" fill=\"none\"><path d=\"M256 258 V326\"/><path d=\"M227 275 L285 309\"/><path d=\"M285 275 L227 309\"/><path d=\"M247 262 L256 272 L265 262 M247 322 L256 312 L265 322\"/></g></svg>";
   function vigoImg(cls) { var d = el("span", cls || "vigo"); d.innerHTML = VIGO_SVG; return d; }
   var iaBtn = null, iaBox = null, iaMsgs = [], iaBusy = false, iaRec = null, iaReady = null;
   var iaVoice = true; try { iaVoice = localStorage.getItem("stock-pistes-iavoix") !== "0"; } catch (e) {}
