@@ -941,6 +941,15 @@ body:has(#view.bl) { background: #fff; }
 .av-tl-track { position: relative; height: 58px; touch-action: none; }
 .av-tl-track::before { content: ""; position: absolute; left: 0; right: 0; top: 22px; height: 4px; border-radius: 2px; background: #c9d3dc; }
 .av-tl-sel { position: absolute; top: 18px; height: 12px; background: rgba(122,95,176,.35); border-radius: 6px; }
+.tl-days { display: grid; grid-template-columns: 52px minmax(0, 1fr) 52px; gap: 6px; align-items: stretch; margin: -4px 0 14px; }
+.tl-step { border: 2px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 12px; font: 800 30px var(--body); cursor: pointer; }
+.tl-step:disabled { opacity: .3; }
+.tl-row { display: flex; gap: 6px; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 2px; scrollbar-width: none; }
+.tl-row::-webkit-scrollbar { display: none; }
+.tl-day { flex: none; min-width: 70px; min-height: 66px; border: 2px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 12px; display: grid; justify-items: center; align-content: center; gap: 1px; cursor: pointer; scroll-snap-align: center; padding: 4px 6px; }
+.tl-day small { font: 700 12px var(--body); color: var(--muted); } .tl-day b { font: 800 15px var(--body); } .tl-day span { font: 800 13px var(--body); color: #e02020; }
+.tl-day.zero span { color: var(--muted); }
+.tl-day.on { background: #17324a; border-color: #17324a; color: #fff; } .tl-day.on small { color: rgba(255,255,255,.8); } .tl-day.on span { color: #ffd600; }
 .av-tl-dot { position: absolute; top: 24px; transform: translate(-50%, -50%); border-radius: 50%; background: #9aa8b4; border: 1.5px solid #fff; }
 .av-tl-dot.in { background: #e02020; z-index: 1; }
 .av-tl-m { position: absolute; top: 36px; transform: translateX(-50%); font: 700 11px var(--body); color: #6b7a87; border-left: 1px solid #9aa8b4; padding-left: 2px; }
@@ -1224,7 +1233,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794656807";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794657083";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -4167,6 +4176,29 @@ body:has(#view.bl) { background: #fff; }
     return a.at >= r[0] && a.at <= r[1] && (!avSect || (a.f && (a.f.piste || []).indexOf(avSect) >= 0));
   }
   function avDTxt(t) { var d = new Date(t); return d.getDate() + " " + MOIS_C2[d.getMonth()] + (d.getFullYear() !== new Date().getFullYear() ? " " + d.getFullYear() : ""); }
+  // Choisir UN jour facilement : ‹ jour › + les jours où il s'est passé quelque chose (gros boutons)
+  var JOURS_C = ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."];
+  function tlDays(times, r, pick) {
+    var one = avDay0(r[0]) === avDay0(r[1]), cur = avDay0(one ? r[0] : r[1]), today = avDay0(Date.now());
+    var w = el("div", "tl-days"), prev = el("button", "tl-step", "‹"), next = el("button", "tl-step", "›"), row = el("div", "tl-row");
+    prev.type = next.type = "button"; prev.setAttribute("aria-label", "Jour d'avant"); next.setAttribute("aria-label", "Jour d'après");
+    function day(t) { t = avDay0(t); pick([t, t + 864e5 - 1]); }
+    prev.addEventListener("click", function () { day(cur - 864e5 / 2); });
+    next.disabled = one && cur >= today; next.addEventListener("click", function () { day(Math.min(today, cur + 864e5 * 1.5)); });
+    var n = {}; times.forEach(function (t) { var d = avDay0(t); n[d] = (n[d] || 0) + 1; });
+    if (!n[today]) n[today] = 0;
+    if (one && n[cur] == null) n[cur] = 0;
+    var sel = null;
+    Object.keys(n).map(Number).sort(function (a, b) { return a - b; }).forEach(function (d) {
+      var dt = new Date(d), b = el("button", "tl-day" + (one && d === cur ? " on" : "") + (n[d] ? "" : " zero")); b.type = "button";
+      b.appendChild(el("small", null, d === today ? "auj." : JOURS_C[dt.getDay()])); b.appendChild(el("b", null, dt.getDate() + " " + MOIS_C2[dt.getMonth()]));
+      b.appendChild(el("span", null, n[d] ? String(n[d]) : "–"));
+      b.addEventListener("click", function () { day(d); }); row.appendChild(b); if (one && d === cur) sel = b;
+    });
+    w.appendChild(prev); w.appendChild(row); w.appendChild(next);
+    setTimeout(function () { if (sel) sel.scrollIntoView({ inline: "center", block: "nearest" }); else row.scrollLeft = row.scrollWidth; }, 0);
+    return w;
+  }
   function avTimeline(onEnd) {
     var b = avBounds(), r = avGetRange(), span = b[1] - b[0];
     var w = el("div", "av-tl"), lab = el("div", "av-tl-lab"), tr = el("div", "av-tl-track"), sel = el("div", "av-tl-sel");
@@ -4400,6 +4432,7 @@ body:has(#view.bl) { background: #fff; }
     sec.classList.add("av-per", "av-sec"); v.appendChild(sec);
     var wrap = avMapBlock(v, true);
     wrap.classList.add("has-tl"); wrap.appendChild(avTimeline(function () { renderAval(); }));
+    v.appendChild(tlDays((data.avalanches || []).filter(function (a) { return !avSect || (a.f && (a.f.piste || []).indexOf(avSect) >= 0); }).map(function (a) { return a.at; }), avGetRange(), function (R) { avRange = R; avChip = ""; renderAval(); }));
     var L = avList().filter(avInSel);
     v.appendChild(el("h3", "av-h3", L.length ? L.length + " avalanche" + (L.length > 1 ? "s" : "") + " sur la période" : "Aucune avalanche sur cette période"));
     L.forEach(function (a) {
@@ -6015,6 +6048,7 @@ body:has(#view.bl) { background: #fff; }
     }
     var wrap = avMapBlock(v, false);
     wrap.classList.add("has-tl"); wrap.appendChild(prTimeline());
+    v.appendChild(tlDays((prAll || []).filter(function (p) { return !prF.cat || (p.cat || "") === prF.cat; }).map(function (p) { return p.at; }), prRange(), function (R) { prR = R; prChip = ""; prItems = null; renderPreuves(); }));
     if (avReady) prPaint(); else avMap.once("load", prPaint);
   }
 
