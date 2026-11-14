@@ -1567,7 +1567,7 @@ function listePreuves(code, avant, n) {
   verifier_(code);
   n = Math.min(60, Number(n) || 30);
   var s = classeur_().getSheetByName(ONGLET_PREUVES); if (!s || s.getLastRow() < 2) return { items: [], plus: false };
-  var L = lireCols_(ONGLET_PREUVES, NB_PREUVE_COLS).sort(function (a, b) { return Number(b.date) - Number(a.date); });
+  var L = lireCols_(ONGLET_PREUVES, NB_PREUVE_COLS).sort(function (a, b) { return Number(b.date) - Number(a.date) || b._ligne - a._ligne; });
   if (avant) L = L.filter(function (o) { return Number(o.date) < Number(avant); });
   var page = L.slice(0, n), lignes = page.map(function (o) { return o._ligne; });
   var vg = {}; if (lignes.length) { var a = Math.min.apply(null, lignes), b = Math.max.apply(null, lignes), v = s.getRange(a, 16, b - a + 1, 1).getValues(); lignes.forEach(function (l) { vg[l] = String(v[l - a][0] || ''); }); }
