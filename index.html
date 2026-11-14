@@ -1239,7 +1239,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794660221";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794660514";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -5706,7 +5706,7 @@ body:has(#view.bl) { background: #fff; }
     var hd = el("div", "pe-hd"); if (s.sect) hd.appendChild(el("small", "pe-sk", s.sect)); hd.appendChild(el("h2", null, s.name));
     var meta = el("p", "pmeta", s.n ? s.n + " photo" + (s.n > 1 ? "s" : "") + " depuis le " + (peHist[s.id] && peHist[s.id].length ? zDate(peHist[s.id][peHist[s.id].length - 1].at) : "…") : "Pas encore de photo");
     hd.appendChild(meta);
-    hd.appendChild(el("p", "pe-pt" + (s.lat ? " ok" : ""), s.lat ? "📍 Point de prise enregistré" + (s.acc ? " (± " + Math.round(s.acc) + " m)" : "") + " · guidage actif" + (s.cap != null ? " · direction ✓" : "") : "📍 Pas encore de point de prise : il sera enregistré à la prochaine photo, à l'endroit où tu la prends."));
+    hd.appendChild(el("p", "pe-pt" + (s.lat && s.n ? " ok" : ""), s.lat && s.n ? "📍 Point de prise enregistré" + (s.acc ? " (± " + Math.round(s.acc) + " m)" : "") + " · guidage actif" + (s.cap != null ? " · direction ✓" : "") : "📍 Pas encore de point de prise : il sera enregistré à la prochaine photo, à l'endroit où tu la prends."));
     v.appendChild(hd);
     var go = el("button", "pp-big", peToday(s) ? "📷 Reprendre une photo" : "📷 Photo du jour"); go.type = "button"; go.style.background = PE_C;
     go.addEventListener("click", function () { peShoot(s); }); v.appendChild(go);
@@ -5752,11 +5752,11 @@ body:has(#view.bl) { background: #fff; }
     ppCompass();
     var ghostP = s.last && s.last.f ? ppPhoto(s.last.f).catch(function () { return null; }) : Promise.resolve(null);
     // Point de prise connu : on guide d'abord jusqu'au bon endroit
-    (s.lat && !peRedef[s.id] ? peGuide(s) : Promise.resolve(true)).then(function (go) {
+    (s.lat && s.n > 0 && !peRedef[s.id] ? peGuide(s) : Promise.resolve(true)).then(function (go) {
       if (!go) { ppLock = false; return; }
       showStatus("Ouverture de l'appareil…", false, true);
       var posP = ppPos(20000, 3000), cap = null;
-      return ghostP.then(function (gu) { return camOpen({ ghost: gu, title: s.name, zoomKey: s.id, aim: s.lat && s.cap != null && !peRedef[s.id] ? s.cap : null }); }).then(function (f) {
+      return ghostP.then(function (gu) { return camOpen({ ghost: gu, title: s.name, zoomKey: s.id, aim: s.lat && s.n > 0 && s.cap != null && !peRedef[s.id] ? s.cap : null }); }).then(function (f) {
         if (!f) { ppLock = false; return; }
         var tel = Date.now(); cap = ppHead;
         return Promise.all([ppShrink(f, 1600, .85), ppShrink(f, 320, .6)]).then(function (u) { return peNoteSheet(s, u, posP, tel, cap); });
@@ -5801,7 +5801,7 @@ body:has(#view.bl) { background: #fff; }
         bqAdd("pente", "photoPente", [s.id, u[0], u[1], { note: note, tel: tel, traits: S, lat: p && p.lat, lng: p && p.lng, cid: cid }, myName()], "Photo " + s.name, { spot: s.id, tmp: cid, name: s.name });
       });
       // Point de prise de vue : on attend le GPS aussi longtemps qu'il faut (sans bloquer l'écran)
-      if (!s.lat || peRedef[s.id]) posP.then(function (p) {
+      if (!s.lat || !s.n || peRedef[s.id]) posP.then(function (p) {
         if (!p) return showStatus("📍 GPS introuvable : le point de prise sera enregistré à la prochaine photo (active la localisation).", true);
         if (p.acc > 50) return showStatus("📍 GPS trop imprécis (± " + Math.round(p.acc) + " m) : point de prise pas enregistré, réessaie à la prochaine photo.", true);
         delete peRedef[s.id];
