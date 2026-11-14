@@ -1224,7 +1224,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794656056";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794656807";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1518,7 +1518,7 @@ body:has(#view.bl) { background: #fff; }
     var avT = (data.avalanches || []).filter(function (a) { return a.at >= avDayStart(Date.now()); }).length, avS = (data.avalanches || []).filter(function (a) { return a.at >= avSeasonStart(); }).length;
     g.appendChild(bigTile("aval", AV_C, "Avalanches", avT ? avT + " notée" + (avT > 1 ? "s" : "") + " aujourd'hui · " + avS + " cette saison" : "Carte 3D · dessine la coulée" + (avS ? " · " + avS + " cette saison" : ""), function () { avEdit = null; avView = null; goArea("aval"); }));
     g.appendChild(bigTile("cam", PE_C, "Suivi des pentes", peTile(), function () { peSel = null; peNew = null; peThumbs = null; goArea("pentes"); }));
-    g.appendChild(bigTile("shield", PR_C, "Preuves", prTile(), function () { prOpen = null; prItems = null; goArea("preuve"); }));
+    g.appendChild(bigTile("shield", PR_C, "Preuves", prTile(), function () { prOpen = null; prItems = null; prAll = null; goArea("preuve"); }));
     // Lien vers le logiciel WAC.3 de Wyssen (ouvert à part, chacun se connecte avec son propre compte)
     g.appendChild(bigTile("ext", "#1f4e79", "WAC.3 · Wyssen", "Ouvre le site Wyssen · connexion avec ton compte", function () { var a = document.createElement("a"); a.href = "https://control.wyssenavalanche.com"; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove(); }));
     g.appendChild(bigTile("box", "#d63a3a", "Stock matériel", subS, function () { goArea("stock"); }));
@@ -3799,6 +3799,13 @@ body:has(#view.bl) { background: #fff; }
   }
   function avPaint() {
     if (!avReady) return;
+    if (avMap.getLayer("prs-c")) avMap.setLayoutProperty("prs-c", "visibility", area === "preuve" ? "visible" : "none");
+    if (area === "preuve") {
+      avMarks.forEach(function (m) { m.remove(); }); avMarks = []; avShowMe(null);
+      avMap.getSource("avs").setData(avPolyGeo([])); avMap.getSource("cur").setData(avPolyGeo([], true));
+      avMap.setLayoutProperty("slope", "visibility", avSlope ? "visible" : "none");
+      return prPaint();
+    }
     avMarks.forEach(function (m) { m.remove(); }); avMarks = [];
     var shown = avEdit ? avList().filter(function (a) { return a.id !== avEdit.id && a.at >= Date.now() - 7 * 864e5; }) : avView ? avList().filter(function (a) { return a.id === avView; }) : avList().filter(avInSel);
     avMap.getSource("avs").setData(avPolyGeo(shown));
@@ -3830,7 +3837,7 @@ body:has(#view.bl) { background: #fff; }
     avBase = k; try { localStorage.setItem("stock-pistes-avbase2", k); } catch (e) {}
     var b = AV_BASES.filter(function (x) { return x[0] === k; })[0];
     if (avMap && avMap.getSource("base")) { avMap.getSource("base").setTiles([avTiles(b)]); avSnow(); }
-    renderAval();
+    renderAll();
   }
   // point du relief sous le doigt : on suit le rayon de la caméra jusqu'à toucher le terrain
   function avRay(p) {
@@ -4103,7 +4110,7 @@ body:has(#view.bl) { background: #fff; }
     B("📍", "", avLocate).setAttribute("aria-label", "Ma position");
     B("Fond : " + (AV_BASES.filter(function (x) { return x[0] === avBase; })[0] || AV_BASES[0])[1], "", function () { var i = AV_BASES.map(function (x) { return x[0]; }).indexOf(avBase); avSetBase(AV_BASES[(i + 1) % AV_BASES.length][0]); });
     B("Pentes > 30°", avSlope ? "on" : "", function () { avSlope = !avSlope; avPaint(); avBar(); });
-    B(avFull ? "✕ Réduire" : "⛶ Plein écran", "", function () { avFull = !avFull; renderAval(); });
+    B(avFull ? "✕ Réduire" : "⛶ Plein écran", "", function () { avFull = !avFull; renderAll(); });
     return bar;
   }
   function avMapBlock(v, tall) {
@@ -5486,6 +5493,7 @@ body:has(#view.bl) { background: #fff; }
   var PE_NOTES = ["RAS", "Reptation", "Fissure", "Gueule de baleine", "Coulée", "Corniche", "Neige fraîche", "Vent"];
   // Secteurs et points de vue repris du Discord « Patrouilleur Glacier 3000 »
   var PE_SEED = {
+    "Glacier": [],
     "Combe d'Audon": ["Face sud", "Télé 1", "Télé 2", "Épaule gauche Gégé", "Gaz-Ex 3", "Gaz-Ex 2", "Gaz-Ex 1", "RG direction Nagelihore", "RG plat Oldenalp", "Nagelihore", "RD télé 3", "RD du télé 3 à la Conduite", "RD de la Conduite au Super-G", "RD du Super-G au TS1", "RD Tablar 1 bas", "RD Tablar 2 haut", "RD haut Sanetschhorn", "Gstellihore", "Schluchhore"],
     "Black Wall": ["McDonald's", "Le Reposoir"],
     "Red Run": ["Rive droite", "Sablier"],
@@ -5917,13 +5925,106 @@ body:has(#view.bl) { background: #fff; }
   }
 
   /* ----- Preuves : photo datée par le serveur, empreinte SHA-256, journal enchaîné ----- */
+  // ----- Preuves : carte de la station + frise des dates (même carte que les avalanches) -----
+  var prAll = null, prChip = "7j", prR = null, prFitK = "";
+  function prLoadAll() {
+    return call("cartePreuves", code).then(function (L) { prAll = (L || []).sort(function (a, b) { return b.at - a.at; }); if (area === "preuve" && !prOpen) renderPreuves(); }, function (e) { if (!prAll) prAll = []; handleError(e); });
+  }
+  function prBounds() {
+    var t0 = avSeasonStart(); (prAll || []).forEach(function (p) { if (p.at < t0) t0 = p.at; });
+    return [avDay0(t0), avDay0(Date.now()) + 864e5 - 1];
+  }
+  function prChipRange(k) {
+    var now = avDay0(Date.now()) + 864e5 - 1, b = prBounds();
+    if (k === "jour") return [avDay0(Date.now()), now];
+    if (k === "7j") return [avDay0(Date.now() - 6 * 864e5), now];
+    if (k === "30j") return [avDay0(Date.now() - 29 * 864e5), now];
+    if (k === "saison") return [Math.max(b[0], avSeasonStart()), now];
+    return b;
+  }
+  function prRange() { if (!prR) prR = prChipRange(prChip); return prR; }
+  function prIn(p) { var r = prRange(); return p.at >= r[0] && p.at <= r[1] && (!prF.cat || (p.cat || "") === prF.cat); }
+  function prPaint() {
+    if (!avReady || !avMap) return;
+    if (!avMap.getSource("prs")) {
+      avMap.addSource("prs", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+      avMap.addLayer({ id: "prs-c", type: "circle", source: "prs", paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 12, 6, 16, 11], "circle-color": ["case", ["==", ["get", "bad"], 1], "#9aa4ad", "#ff3b30"], "circle-stroke-color": "#fff", "circle-stroke-width": 2.5 } });
+      avMap.on("click", "prs-c", function (ev) {
+        if (area !== "preuve") return; var f = ev.features && ev.features[0]; if (!f) return;
+        prOpen = f.properties.id; renderPreuves(); goTop();
+      });
+    }
+    var L = (prAll || []).filter(function (p) { return p.lat && prIn(p); });
+    avMap.getSource("prs").setData({ type: "FeatureCollection", features: L.map(function (p) { return { type: "Feature", properties: { id: p.id, bad: p.st ? 1 : 0 }, geometry: { type: "Point", coordinates: [p.lng, p.lat] } }; }) });
+    avMap.setLayoutProperty("prs-c", "visibility", area === "preuve" ? "visible" : "none");
+    // recadre la carte sur les preuves affichées (une fois par changement de filtre)
+    var k = prRange().join("-") + prF.cat + L.length;
+    if (L.length && k !== prFitK) {
+      prFitK = k; var b = new maplibregl.LngLatBounds(); L.forEach(function (p) { b.extend([p.lng, p.lat]); });
+      setTimeout(function () { avMap.fitBounds(b, { padding: 70, maxZoom: 15.5, duration: 600 }); }, 80);
+    }
+  }
+  function prTimeline() {
+    var b = prBounds(), r = prRange(), span = b[1] - b[0];
+    var w = el("div", "av-tl"), lab = el("div", "av-tl-lab"), tr = el("div", "av-tl-track"), sel = el("div", "av-tl-sel");
+    tr.appendChild(sel);
+    var m = new Date(b[0]); m.setDate(1); m.setMonth(m.getMonth() + 1);
+    for (; m.getTime() < b[1]; m.setMonth(m.getMonth() + 1)) { var tk = el("div", "av-tl-m", MOIS_C2[m.getMonth()]); tk.style.left = ((m.getTime() - b[0]) / span * 100) + "%"; tr.appendChild(tk); }
+    (prAll || []).forEach(function (p) {
+      if (prF.cat && (p.cat || "") !== prF.cat) return;
+      var d = el("div", "av-tl-dot"); d.style.width = d.style.height = "10px"; d.style.left = ((p.at - b[0]) / span * 100) + "%"; d.dataset.at = p.at; tr.appendChild(d);
+    });
+    var h1 = el("div", "av-tl-h"), h2 = el("div", "av-tl-h"); tr.appendChild(h1); tr.appendChild(h2);
+    function paint() {
+      var x1 = (r[0] - b[0]) / span * 100, x2 = (r[1] - b[0]) / span * 100;
+      h1.style.left = x1 + "%"; h2.style.left = x2 + "%"; sel.style.left = x1 + "%"; sel.style.width = Math.max(0, x2 - x1) + "%";
+      tr.querySelectorAll(".av-tl-dot").forEach(function (d) { var t = +d.dataset.at; d.classList.toggle("in", t >= r[0] && t <= r[1]); });
+      var n = (prAll || []).filter(prIn).length;
+      lab.textContent = "";
+      lab.appendChild(el("b", null, avDay0(r[0]) === avDay0(r[1]) ? "Le " + avDTxt(r[0]) : "Du " + avDTxt(r[0]) + " au " + avDTxt(r[1])));
+      lab.appendChild(el("span", null, n + " preuve" + (n > 1 ? "s" : "")));
+    }
+    function drag(h, i) {
+      h.addEventListener("pointerdown", function (ev) {
+        ev.preventDefault(); ev.stopPropagation(); try { h.setPointerCapture(ev.pointerId); } catch (e) {}
+        h.classList.add("on");
+        function mv(e2) {
+          var R = tr.getBoundingClientRect(), f = Math.max(0, Math.min(1, (e2.clientX - R.left) / R.width)), dT = avDay0(b[0] + f * span);
+          if (i === 0) { if (dT > avDay0(r[1])) r[1] = dT + 864e5 - 1; else r[0] = dT; }
+          else { if (dT < avDay0(r[0])) r[0] = dT; else r[1] = dT + 864e5 - 1; }
+          r[1] = Math.min(r[1], b[1]); prR = r; prChip = ""; paint(); prPaint();
+        }
+        function up() { h.classList.remove("on"); h.removeEventListener("pointermove", mv); h.removeEventListener("pointerup", up); h.removeEventListener("pointercancel", up); prItems = null; renderPreuves(); }
+        h.addEventListener("pointermove", mv); h.addEventListener("pointerup", up); h.addEventListener("pointercancel", up);
+      });
+    }
+    drag(h1, 0); drag(h2, 1);
+    w.appendChild(lab); w.appendChild(tr); paint();
+    return w;
+  }
+  function prMapSection(v) {
+    var per = avChoice([["jour", "Aujourd'hui"], ["7j", "7 jours"], ["30j", "30 jours"], ["saison", "Saison"], ["tout", "Tout"]], prChip, function (k) { prChip = k; prR = prChipRange(k); prItems = null; renderPreuves(); }, PR_C);
+    per.classList.add("av-per"); v.appendChild(per);
+    var S = {}; (prAll || []).forEach(function (p) { var k = p.cat || ""; S[k] = (S[k] || 0) + 1; });
+    var sec = avChoice([["", "Tous secteurs"]].concat(Object.keys(S).sort().map(function (k) { return [k, (k || "Autre") + " · " + S[k]]; })), prF.cat, function (k) { prF.cat = k; prItems = null; renderPreuves(); }, PR_C);
+    sec.classList.add("av-per", "av-sec"); v.appendChild(sec);
+    if (!window.maplibregl || !avMap) {
+      var ph = el("div", "av-wrap"); ph.appendChild(el("p", "pmeta", "Chargement de la carte…")); v.appendChild(ph);
+      avLoad().then(function () { avInitMap(); if (area === "preuve" && !prOpen) renderPreuves(); }).catch(function (e) { ph.textContent = ""; ph.appendChild(el("p", "pmeta", e.message)); });
+      return;
+    }
+    var wrap = avMapBlock(v, false);
+    wrap.classList.add("has-tl"); wrap.appendChild(prTimeline());
+    if (avReady) prPaint(); else avMap.once("load", prPaint);
+  }
+
   var PR_C = "#37474f", prItems = null, prMore = false, prOpen = null, prCheck = null, prPending = [], prCats = {}, prTotal = 0;
   var prF = { cat: "", jour: "", near: null }, prPosP = null, prPos = null;
   function prTile() { var i = data.preuvesInfo || {}; return i.n ? i.n + " preuve" + (i.n > 1 ? "s" : "") + " · dernière le " + zDate(i.last) : "Touche un secteur, prends la photo, c'est tout"; }
   // Secteurs : ceux du suivi des pentes + ceux de base
   function prSects() { var o = peSects ? peSects() : []; Object.keys(PE_SEED).forEach(function (k) { if (o.indexOf(k) < 0) o.push(k); }); return o; }
   function prLoad(more) {
-    var f = { cat: prF.cat, jour: prF.jour, near: prF.near, skip: more && prItems ? prItems.length : 0 };
+    var r = prRange(), f = { cat: prF.cat, de: r[0], a: r[1], skip: more && prItems ? prItems.length : 0 };
     return call("listePreuves", code, 0, 30, f).then(function (r) {
       prItems = (more ? prItems || [] : []).concat(r.items || []); prMore = !!r.plus; prCats = r.cats || {}; prTotal = r.total || 0;
       if (area === "preuve") renderPreuves();
@@ -5952,30 +6053,12 @@ body:has(#view.bl) { background: #fff; }
       }
       v.appendChild(pb);
     });
-    // 2) Retrouver : secteur, jour, près d'ici
+    // 2) Retrouver : carte de la station + frise des dates + secteur
     v.appendChild(el("h3", "pr-h", "🔎 Retrouver une preuve"));
-    var fl = el("div", "pr-filt");
-    var cs = el("div", "pp-chips"), all = el("button", "pp-chip" + (!prF.cat ? " on" : ""), "Tous"); all.type = "button";
-    all.addEventListener("click", function () { prF.cat = ""; prRefresh(); }); cs.appendChild(all);
-    Object.keys(prCats).sort().forEach(function (k) {
-      var c = el("button", "pp-chip" + (prF.cat === k ? " on" : ""), (k || "Autre") + " · " + prCats[k]); c.type = "button";
-      c.addEventListener("click", function () { prF.cat = prF.cat === k ? "" : k; prRefresh(); }); cs.appendChild(c);
-    });
-    fl.appendChild(cs);
-    var row = el("div", "pr-frow"), dj = document.createElement("input"); dj.type = "date"; dj.className = "pp-in"; dj.value = prF.jour; dj.setAttribute("aria-label", "Jour");
-    dj.addEventListener("change", function () { prF.jour = dj.value; prRefresh(); });
-    var nr = el("button", "pbtn" + (prF.near ? " on" : ""), prF.near ? "📍 Près d'ici ✓" : "📍 Près d'ici"); nr.type = "button";
-    nr.addEventListener("click", function () {
-      if (prF.near) { prF.near = null; return prRefresh(); }
-      showStatus("Position GPS…", false, true);
-      ppPos(15000, 3000).then(function (p) { if (!p) return showStatus("Position introuvable : active la localisation.", true); prF.near = [p.lat, p.lng]; showStatus("Les plus proches d'abord"); prRefresh(); });
-    });
-    row.appendChild(dj); row.appendChild(nr);
-    if (prF.jour || prF.cat || prF.near) { var cl = el("button", "pbtn", "✕"); cl.type = "button"; cl.setAttribute("aria-label", "Enlever les filtres"); cl.addEventListener("click", function () { prF = { cat: "", jour: "", near: null }; prRefresh(); }); row.appendChild(cl); }
-    fl.appendChild(row); v.appendChild(fl);
+    if (!prAll) { v.appendChild(el("p", "empty", "Chargement de la carte…")); prLoadAll(); return; }
+    prMapSection(v);
     if (!prItems) { v.appendChild(el("p", "empty", "Chargement du journal…")); prLoad(false); return; }
-    if (!prItems.length) v.appendChild(el("p", "empty", prF.cat || prF.jour || prF.near ? "Aucune preuve avec ces filtres." : "Aucune preuve pour l'instant."));
-    else v.appendChild(el("p", "pp-hint", prTotal + " preuve" + (prTotal > 1 ? "s" : "") + (prF.near ? ", de la plus proche à la plus loin" : "")));
+    if (!prItems.length) v.appendChild(el("p", "empty", (prAll || []).length ? "Aucune preuve sur cette période." : "Aucune preuve pour l'instant."));
     var day = "";
     prItems.forEach(function (p) {
       if (!prF.near) { var k = zDate(p.at); if (k !== day) { day = k; v.appendChild(el("h3", "pr-day", zf(p.at, { weekday: "long", day: "numeric", month: "long", year: "numeric" }))); } }
@@ -6018,7 +6101,7 @@ body:has(#view.bl) { background: #fff; }
       prPending = prPending.filter(function (x) { return x !== P; });
       data.preuvesInfo = d.preuvesInfo; saveCache(data); ppFull[d.preuve.f] = P.img;
       showStatus("✓ Preuve " + d.preuve.num + " · " + zHeure(d.preuve.at, true) + (d.preuve.lat ? "" : " · sans GPS"));
-      prItems = null; if (area === "preuve") renderPreuves();
+      prItems = null; prAll = null; if (area === "preuve") renderPreuves();
     }, function () { P.err = true; if (area === "preuve") renderPreuves(); });
   }
   function prLines(p) { return [p.num + "  ·  " + zDate(p.at) + "  " + zHeure(p.at, true) + " (heure serveur)", p.obj + (p.lieu ? "  ·  " + p.lieu : "") + (p.by ? "  ·  " + p.by : ""), "SHA-256 " + String(p.sha).slice(0, 16) + "…" + (p.lat ? "  ·  " + p.lat.toFixed(5) + ", " + p.lng.toFixed(5) : "")]; }
