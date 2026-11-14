@@ -10,7 +10,7 @@
 /* Barre d'onglets en haut, puis une colonne de cartes : même style que la page « Ma journée » */
 :root {
   /* Mêmes couleurs que la page « Ma journée » : claires le jour, sombres si le téléphone est en mode sombre */
-  --bg: #eef3f6; --paper: #ffffff; --ink: #17242e; --muted: #5b6c78; --line: #d5e0e7;
+  --bg: #eef3f6; --paper: #ffffff; --ink: #17242e; --muted: #3f4e59; --line: #c3d0d9;
   --accent: #e8622c; --sky: #2f7fb8; --ok: #2e9461;
   --bar: #17324a; --bar-fg: #c9d8e4; --bar-on: #ffffff;
   --red: #d63a3a; --red-bg: #fde8e6; --yel: #b06d00; --yel-bg: #fff1d6; --grn: #2e9461; --grn-bg: #e6f4ec;
@@ -19,7 +19,7 @@
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) { :root {
-  --bg: #0f171d; --paper: #18232b; --ink: #e8eff4; --muted: #96a8b5; --line: #2a3a46;
+  --bg: #0f171d; --paper: #18232b; --ink: #e8eff4; --muted: #b9c7d1; --line: #34485a;
   --accent: #f08354; --sky: #6db3e4; --ok: #5fcf93;
   --bar: #142a3d; --bar-fg: #8fa7ba; --bar-on: #ffffff;
   --red: #f27a74; --red-bg: #3a1f20; --yel: #f0c46e; --yel-bg: #3a2c12; --grn: #5fcf93; --grn-bg: #16301f;
@@ -27,7 +27,9 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; }
-body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.5; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; font-weight: 500; line-height: 1.45; }
+/* Lisible au soleil et avec des gants : tout un peu plus grand et plus gras sur téléphone */
+@media (max-width: 999px) { body { zoom: 1.08; } b, strong, h1, h2, h3, button { letter-spacing: .01em; } }
 :focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
 
 .topbar { position: sticky; top: 0; z-index: 5; background: var(--bar); padding-top: env(safe-area-inset-top, 0px); }
@@ -36,6 +38,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--body); font-
 .tab { flex: 1; min-width: 0; display: grid; justify-items: center; gap: 2px; padding: 8px 2px 6px; border: 0; background: none; color: var(--bar-fg);
   font: 700 11.5px var(--body); border-radius: 12px; cursor: pointer; position: relative; white-space: nowrap; }
 .tab svg { width: 24px; height: 24px; }
+@media (max-width: 420px) { .tabs { overflow-x: auto; scrollbar-width: none; } .tabs::-webkit-scrollbar { display: none; } .tab { flex: 1 0 auto; min-width: 66px; padding-left: 6px; padding-right: 6px; } }
 .tab[aria-selected="true"] { color: var(--bar-on); background: rgba(255,255,255,.1); }
 .tab[aria-selected="true"]::after { content: ""; position: absolute; left: 25%; right: 25%; bottom: 0; height: 3px; border-radius: 3px; background: var(--tc); }
 .tab .badge { position: absolute; top: 3px; right: calc(50% - 26px); min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px;
@@ -1145,8 +1148,11 @@ body:has(#view.bl) { background: #fff; }
 .pg-info .pg-ar { width: 100%; height: auto; aspect-ratio: 1; }
 .pg-txt { display: grid; gap: 4px; text-align: left; }
 .pg-txt .pg-dist { font-size: 42px; } .pg-txt .pg-dir { font-size: 19px; } .pg-txt .pg-alt { font-size: 16px; min-height: 0; } .pg-txt .pg-acc { font-size: 13px; }
-.pg-mk { width: 22px; height: 22px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 1px 6px rgba(0,0,0,.5); }
-.pg-mk.tg { background: #ff3b30; } .pg-mk.you { background: #4fc3f7; }
+.pg-mk { width: 26px; height: 26px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 1px 6px rgba(0,0,0,.5); }
+.pg-mk.tg { background: #ff3b30; } .pg-mk.you { background: #1e88e5; width: 34px; height: 34px; } .pg-mk.you svg { width: 100%; height: 100%; display: block; }
+.pg-map { position: relative; } .pg-nb { position: absolute; z-index: 2; left: 8px; top: 8px; min-height: 44px; padding: 6px 12px; border: 0; border-radius: 10px; background: rgba(0,0,0,.7); color: #fff; font: 800 14px var(--body); cursor: pointer; }
+.pg .pg-alt { font: 900 22px var(--body); color: #8fd3ff; background: rgba(0,0,0,.35); border-radius: 12px; padding: 8px 12px; text-align: center; min-height: 0; }
+.pg .pg-alt:empty { display: none; } .pg .pg-alt b { display: block; font-size: 27px; line-height: 1.1; white-space: nowrap; } .pg .pg-alt small { display: block; font: 700 14px var(--body); color: #cfe3f2; } .pg .pg-alt.ok { color: #7be0a6; }
 .pg-ar { width: min(62vw, 300px); height: min(62vw, 300px); }
 .pg-rot { transition: transform .25s; }
 .pg-dist { font: 900 54px var(--body); line-height: 1.05; }
@@ -1253,7 +1259,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794669014";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794669362";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -5567,30 +5573,46 @@ body:has(#view.bl) { background: #fff; }
   function ppCard(d) { return ["au nord", "au nord-est", "à l'est", "au sud-est", "au sud", "au sud-ouest", "à l'ouest", "au nord-ouest"][Math.round(d / 45) % 8]; }
   function ppDiff(a, b) { return ((a - b + 540) % 360) - 180; }
   // Écran « Aller au point » : flèche, distance, altitude ; au bon endroit l'appareil s'ouvre tout seul
+  // Petit bonhomme (toi) pour la cible et la carte
+  var PG_MAN = '<circle cx="0" cy="-5.2" r="2.6" fill="#fff"/><path d="M-3.2 -1.8 h6.4 l-1 6 h-1.2 l-.6 5 h-2.8 l-.6 -5 h-1.2 z" fill="#fff"/>';
   function peGuide(s) {
     return new Promise(function (res) {
       var ov = el("div", "pg"), top = el("div", "pv-top"), x = el("button", "cam-x", "✕"); x.type = "button"; x.setAttribute("aria-label", "Fermer");
       top.appendChild(el("b", null, "Aller au point · " + s.name)); top.appendChild(x);
-      // Cible : toi au centre (le haut = là où tu regardes), le point rouge = l'endroit de la photo
+      // Cible : le centre = l'endroit de la photo ; le bonhomme bleu = toi ; la flèche = où aller (le haut = là où tu regardes)
       var mid = el("div", "pg-mid"), ar = document.createElementNS(NS, "svg");
       ar.setAttribute("viewBox", "-50 -50 100 100"); ar.setAttribute("class", "pg-ar");
-      ar.innerHTML = '<g class="pg-rings"></g><path class="pg-cone" d="M0 0 L-14 -40 A42 42 0 0 1 14 -40 Z" fill="rgba(255,214,0,.13)"/><circle r="4.5" fill="#4fc3f7" stroke="#fff" stroke-width="1.5"/>'
-        + '<g class="pg-n"><text x="0" y="-44" text-anchor="middle" font-size="7" font-weight="800" fill="#ff8a80">N</text></g>'
-        + '<g class="pg-tg"><circle r="7" fill="#ff3b30" stroke="#fff" stroke-width="2"/><circle r="2.2" fill="#fff"/></g>';
+      ar.innerHTML = '<g class="pg-rings"></g>'
+        + '<circle r="9" fill="#ff3b30" stroke="#fff" stroke-width="2"/><circle r="3" fill="#fff"/>'
+        + '<g class="pg-n"><text x="0" y="-44.5" text-anchor="middle" font-size="7" font-weight="800" fill="#ff8a80">N</text></g>'
+        + '<line class="pg-line" x1="0" y1="0" x2="0" y2="0" stroke="#ffd600" stroke-width="2.4" stroke-dasharray="3 2.2"/>'
+        + '<g class="pg-you"><g class="pg-arw"><path d="M0 -17 L5.5 -9.5 L-5.5 -9.5 Z" fill="#ffd600" stroke="#000" stroke-width=".8"/></g><circle r="8.5" fill="#1e88e5" stroke="#fff" stroke-width="2"/>' + PG_MAN + '</g>';
       var dist = el("div", "pg-dist", "…"), dir = el("div", "pg-dir", "Recherche du GPS…"), alt = el("div", "pg-alt"), acc = el("div", "pg-acc");
-      // carte de la station (dans l'appli) + cible et distance à côté
       var mapBox = el("div", "pg-map"), info = el("div", "pg-info"), txt = el("div", "pg-txt");
-      txt.appendChild(dist); txt.appendChild(dir); txt.appendChild(alt); txt.appendChild(acc);
-      info.appendChild(ar); info.appendChild(txt); mid.appendChild(mapBox); mid.appendChild(info);
-      var gm = null, gmYou = null, gmTouched = false;
+      txt.appendChild(dist); txt.appendChild(dir); txt.appendChild(acc);
+      info.appendChild(ar); info.appendChild(txt);
+      var nb = el("button", "pg-nb", "Carte : ma direction"); nb.type = "button";
+      mapBox.appendChild(nb);
+      mid.appendChild(mapBox); mid.appendChild(alt); mid.appendChild(info);
+      var bot = el("div", "pg-bot"), go = el("button", "pp-big", "Ouvrir l'appareil maintenant"); go.type = "button"; go.style.background = PE_C;
+      bot.appendChild(go);
+      ov.appendChild(top); ov.appendChild(mid); ov.appendChild(bot); document.body.appendChild(ov);
+      var you = ar.querySelector(".pg-you"), arw = ar.querySelector(".pg-arw"), line = ar.querySelector(".pg-line"), nn = ar.querySelector(".pg-n"), rings = ar.querySelector(".pg-rings");
+      var ringR = 0, wid = null, pos = null, okN = 0, done = false, raf = null, gm = null, gmYou = null, gmTouched = false, headUp = true, lastBear = null, zDem = null, demAt = 0;
+      function close(v) { if (done) return; done = true; if (wid != null) navigator.geolocation.clearWatch(wid); cancelAnimationFrame(raf); if (gm) try { gm.remove(); } catch (e) {} ov.remove(); res(v); }
+      x.addEventListener("click", function () { close(false); });
+      go.addEventListener("click", function () { close(true); });
+      nb.addEventListener("click", function () { headUp = !headUp; nb.textContent = headUp ? "Carte : ma direction" : "Carte : nord en haut"; if (!headUp && gm) gm.easeTo({ bearing: 0, duration: 300 }); lastBear = null; });
+      // carte de la station : tourne avec toi (ta direction en haut), bonhomme = toi, point rouge = photo
       avLoad().then(function () {
         if (done) return;
-        var b = AV_BASES.filter(function (x) { return x[0] === "hiver"; })[0];
-        gm = new maplibregl.Map({ container: mapBox, center: [s.lng, s.lat], zoom: 15.5, attributionControl: { compact: true }, fadeDuration: 0,
+        var b = AV_BASES.filter(function (q) { return q[0] === "hiver"; })[0];
+        gm = new maplibregl.Map({ container: mapBox, center: [s.lng, s.lat], zoom: 15.5, attributionControl: { compact: true }, fadeDuration: 0, pitchWithRotate: false,
           style: { version: 8, sources: { base: { type: "raster", tiles: [avTiles(b)], tileSize: 256, maxzoom: b[4], attribution: "© swisstopo" }, ln: { type: "geojson", data: { type: "FeatureCollection", features: [] } } },
-            layers: [{ id: "base", type: "raster", source: "base" }, { id: "ln", type: "line", source: "ln", paint: { "line-color": "#ff3b30", "line-width": 3, "line-dasharray": [2, 1.5] } }] } });
+            layers: [{ id: "base", type: "raster", source: "base" }, { id: "ln", type: "line", source: "ln", paint: { "line-color": "#ffd600", "line-width": 4, "line-dasharray": [2, 1.4] } }] } });
         var te = el("div", "pg-mk tg"); new maplibregl.Marker({ element: te }).setLngLat([s.lng, s.lat]).addTo(gm);
-        var ye = el("div", "pg-mk you"); gmYou = new maplibregl.Marker({ element: ye }).setLngLat([s.lng, s.lat]);
+        var ye = el("div", "pg-mk you"); ye.innerHTML = '<svg viewBox="-10 -10 20 20">' + PG_MAN + '</svg>';
+        gmYou = new maplibregl.Marker({ element: ye }).setLngLat([s.lng, s.lat]);
         gm.on("dragstart", function () { gmTouched = true; }); gm.on("zoomstart", function (e) { if (e.originalEvent) gmTouched = true; });
         gm.on("load", function () { if (pos) gmUpd(); });
       }).catch(function () { mapBox.remove(); });
@@ -5598,40 +5620,52 @@ body:has(#view.bl) { background: #fff; }
         if (!gm || !pos || !gm.getSource("ln")) return;
         gmYou.setLngLat([pos.lng, pos.lat]).addTo(gm);
         gm.getSource("ln").setData({ type: "Feature", geometry: { type: "LineString", coordinates: [[pos.lng, pos.lat], [s.lng, s.lat]] } });
-        if (!gmTouched) { var bb = new maplibregl.LngLatBounds([pos.lng, pos.lat], [pos.lng, pos.lat]); bb.extend([s.lng, s.lat]); gm.fitBounds(bb, { padding: 48, maxZoom: 17, duration: 400 }); }
+        if (!gmTouched) { var bb = new maplibregl.LngLatBounds([pos.lng, pos.lat], [pos.lng, pos.lat]); bb.extend([s.lng, s.lat]); gm.fitBounds(bb, { padding: 56, maxZoom: 17.5, bearing: headUp && ppHead != null ? ppHead : 0, duration: 400 }); }
       }
-      var bot = el("div", "pg-bot"), go = el("button", "pp-big", "Ouvrir l'appareil maintenant"); go.type = "button"; go.style.background = PE_C;
-      bot.appendChild(go);
-      ov.appendChild(top); ov.appendChild(mid); ov.appendChild(bot); document.body.appendChild(ov);
-      var tg = ar.querySelector(".pg-tg"), nn = ar.querySelector(".pg-n"), rings = ar.querySelector(".pg-rings"), ringR = 0, wid = null, pos = null, okN = 0, done = false, raf = null;
-      function close(v) { if (done) return; done = true; if (wid != null) navigator.geolocation.clearWatch(wid); cancelAnimationFrame(raf); if (gm) try { gm.remove(); } catch (e) {} ov.remove(); res(v); }
-      x.addEventListener("click", function () { close(false); });
-      go.addEventListener("click", function () { close(true); });
       function draw() {
         raf = requestAnimationFrame(draw);
         if (!pos) return;
         var b = ppBearing(pos, s), h = ppHead, a = (h == null ? b : ppDiff(b, h)) * Math.PI / 180, d = ppDist(pos, s);
-        // échelle des cercles adaptée à la distance (5 m … 1 km)
-        var R = [10, 25, 50, 100, 250, 500, 1000, 5000].filter(function (x) { return x >= d * 1.15; })[0] || 5000;
+        var R = [10, 25, 50, 100, 250, 500, 1000, 5000].filter(function (q) { return q >= d * 1.15; })[0] || 5000;
         if (R !== ringR) {
           ringR = R; rings.innerHTML = "";
           [1, .5].forEach(function (f) { var c = document.createElementNS(NS, "circle"); c.setAttribute("r", 42 * f); c.setAttribute("fill", "none"); c.setAttribute("stroke", "rgba(255,255,255,.25)"); c.setAttribute("stroke-width", ".8"); rings.appendChild(c);
             var t = document.createElementNS(NS, "text"); t.setAttribute("x", 42 * f * .72 + 1); t.setAttribute("y", 42 * f * .72 + 3); t.setAttribute("font-size", "5"); t.setAttribute("fill", "rgba(255,255,255,.6)"); t.textContent = Math.round(R * f) + " m"; rings.appendChild(t); });
         }
-        var r = Math.min(42, 42 * d / R);
-        tg.setAttribute("transform", "translate(" + (r * Math.sin(a)).toFixed(2) + "," + (-r * Math.cos(a)).toFixed(2) + ")");
-        nn.setAttribute("transform", h == null ? "" : "rotate(" + (-h) + ")"); ar.querySelector(".pg-cone").style.display = h == null ? "none" : "";
+        // toi = à l'opposé de la direction du point ; la flèche pointe vers le centre
+        var r = Math.min(40, 42 * d / R), ux = -r * Math.sin(a), uy = r * Math.cos(a);
+        you.setAttribute("transform", "translate(" + ux.toFixed(2) + "," + uy.toFixed(2) + ")");
+        arw.setAttribute("transform", "rotate(" + (a * 180 / Math.PI).toFixed(1) + ")");
+        line.setAttribute("x1", ux.toFixed(2)); line.setAttribute("y1", uy.toFixed(2));
+        nn.setAttribute("transform", h == null ? "" : "rotate(" + (-h) + ")");
+        // la carte tourne avec toi (en douceur)
+        if (gm && headUp && h != null && !gmTouched && (lastBear == null || Math.abs(ppDiff(h, lastBear)) > 4)) { lastBear = h; gm.easeTo({ bearing: h, duration: 250 }); }
       }
       draw();
+      // Altitude : lue sur le relief (modèle de terrain) pour toi et pour le point — plus fiable que l'altitude du GPS
+      function altUpd() {
+        if (!pos || Date.now() - demAt < 3000) return; demAt = Date.now();
+        var pad = 0.003;
+        avDem(Math.min(pos.lng, s.lng) - pad, Math.min(pos.lat, s.lat) - pad, Math.max(pos.lng, s.lng) + pad, Math.max(pos.lat, s.lat) + pad, 14).then(function (Z) { zDem = Z; showAlt(); }, function () { zDem = null; showAlt(); });
+      }
+      function showAlt() {
+        if (!pos) return;
+        var zy = null, zt = null;
+        if (zDem) { zy = zDem(pos.lng, pos.lat); zt = zDem(s.lng, s.lat); if (isNaN(zy) || isNaN(zt)) zy = zt = null; }
+        if (zy == null && s.alt != null && pos.alt != null && (pos.aa == null || pos.aa < 30)) { zy = pos.alt; zt = s.alt; }
+        if (zy == null) { alt.textContent = ""; return; }
+        var da = Math.round(zt - zy);
+        alt.className = "pg-alt" + (Math.abs(da) < 5 ? " ok" : "");
+        alt.textContent = ""; alt.appendChild(el("b", null, Math.abs(da) < 5 ? "✓ Bonne altitude" : da < 0 ? "▼ Descends " + -da + " m" : "▲ Monte " + da + " m"));
+        alt.appendChild(el("small", null, "toi " + Math.round(zy) + " m · point " + Math.round(zt) + " m"));
+      }
       function upd(p) {
         pos = { lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy, alt: p.coords.altitude, aa: p.coords.altitudeAccuracy };
-        var d = ppDist(pos, s), b = ppBearing(pos, s), lim = Math.max(6, Math.min(pos.acc, 12)); gmUpd();
+        var d = ppDist(pos, s), b = ppBearing(pos, s), lim = Math.max(6, Math.min(pos.acc, 12)); gmUpd(); altUpd(); showAlt();
         dist.textContent = d < 1000 ? d + " m" : (d / 1000).toFixed(1) + " km";
         if (ppHead != null) { var t = ppDiff(b, ppHead); dir.textContent = Math.abs(t) <= 25 ? "▲ Devant toi" : Math.abs(t) >= 150 ? "▼ Derrière toi" : t < 0 ? "◀ À ta gauche" + (t < -110 ? ", un peu derrière" : "") : "À ta droite ▶" + (t > 110 ? ", un peu derrière" : ""); }
         else dir.textContent = "Le point est " + ppCard(b) + " (nord en haut)";
-        alt.textContent = "";
-        if (s.alt != null && pos.alt != null && (pos.aa == null || pos.aa < 25)) { var da = Math.round(s.alt - pos.alt); if (Math.abs(da) >= 6) alt.textContent = (da > 0 ? "▲ Monte d'environ " : "▼ Descends d'environ ") + Math.abs(da) + " m"; }
-        acc.textContent = "Précision GPS ± " + Math.round(pos.acc) + " m" + (pos.acc > 20 ? " : attends un peu, ça s'affine" : "");
+        acc.textContent = "Précision GPS ± " + Math.round(pos.acc) + " m" + (pos.acc > 20 ? " : attends un peu" : "");
         if (d <= lim) okN++; else okN = 0;
         ov.classList.toggle("ok", okN > 0);
         if (okN >= 2) {
