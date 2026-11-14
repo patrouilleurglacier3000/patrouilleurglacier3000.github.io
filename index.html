@@ -497,11 +497,23 @@ h2.cat { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppe
 .tile b { font-size: 21px; }
 .tile span { color: var(--muted); opacity: 1; font-size: 14px; }
 .tile::after { content: "›"; font: 700 28px var(--body); color: var(--muted); }
+/* Accueil groupé : bilan en grand, puis cases 2 × 2 par thème */
+.tile.hero { width: 100%; padding: 18px; border: 0; background: #C62828; color: #fff; }
+.tile.hero > svg { color: #fff; background: rgba(255,255,255,.18); }
+.tile.hero b { font-size: 26px; } .tile.hero span { color: rgba(255,255,255,.9); } .tile.hero::after { color: #fff; }
+.hm-h { margin: 22px 2px 8px; font: 800 13px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.tiles.sq { grid-template-columns: 1fr 1fr; }
+.tiles.sq .tile { grid-template-columns: 1fr; align-content: start; gap: 10px; padding: 14px; min-height: 138px; }
+.tiles.sq .tile::after { display: none; }
+.tiles.sq .tile > svg { width: 26px; height: 26px; padding: 10px; }
+.tiles.sq .tile b { font-size: 18px; line-height: 1.15; }
+.tiles.sq .tile span { font-size: 13px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+#view:has(.tile.hero) { padding-bottom: 96px; }
 /* Ordinateur et tablette : l'appli prend la largeur de l'écran, en plus grand */
 @media (min-width: 1000px) {
   .wrap, .tabs, .homebar { max-width: 1180px; }
   body { zoom: 1.25; }
-  .tiles { grid-template-columns: repeat(3, 1fr); }
+  .tiles { grid-template-columns: repeat(3, 1fr); } .tiles.sq { grid-template-columns: repeat(4, 1fr); }
 }
 @media (min-width: 1700px) { body { zoom: 1.4; } }
 
@@ -1212,7 +1224,7 @@ body:has(#view.bl) { background: #fff; }
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Vigo">
-<script>window.APP_V="1794655800";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
+<script>window.APP_V="1794656056";(function(){function chk(){fetch("version.txt?"+Date.now(),{cache:"no-store"}).then(function(r){return r.ok?r.text():""}).then(function(t){t=(t||"").trim();if(t&&t!==window.APP_V){var u=location.pathname+"?v="+t+location.hash;if(location.search!=="?v="+t)location.replace(u)}}).catch(function(){})}chk();document.addEventListener("visibilitychange",function(){if(!document.hidden)chk()})})();</script>
 <script>window.API_URL="https://script.google.com/macros/s/AKfycbzV0EptaaDgKMQA_mhoQj_NUd1EETOzPd67pGgm-bEyjiaEebD59HVqoO0BJ4jinl_t/exec";</script>
 </head>
 <body>
@@ -1517,7 +1529,13 @@ body:has(#view.bl) { background: #fff; }
     g.appendChild(bigTile("tool", "#c27a12", "Achats & fabrication", subA, function () { goArea("achat"); }));
     var nv = (data.formation || []).filter(function (x) { return x.url; }).length;
     g.appendChild(bigTile("grad", "#2f7fb8", "Formation", ["La bible"].concat(rubriques()).join(" · ") + (nv ? " · " + nv + " vidéo" + (nv > 1 ? "s" : "") : ""), function () { goArea("form"); }));
-    v.appendChild(g);
+    // Disposition : le bilan en grand, puis 3 groupes de cases 2 × 2
+    var T = {}; Array.prototype.slice.call(g.children).forEach(function (t) { T[t.querySelector("b").textContent] = t; });
+    var hero = T["Bilan victime"]; hero.classList.add("hero"); v.appendChild(hero);
+    [["Terrain", ["Avalanches", "Suivi des pentes", "Preuves", "WAC.3 · Wyssen"]], ["Équipe", ["Tâches équipe", "Agenda", "Planning", "Formation"]], ["Matériel", ["Stock matériel", "Achats & fabrication"]]].forEach(function (G) {
+      v.appendChild(el("h3", "hm-h", G[0]));
+      var gg = el("div", "tiles sq"); G[1].forEach(function (k) { if (T[k]) gg.appendChild(T[k]); }); v.appendChild(gg);
+    });
     // Transfert unique : appli Claude -> site Google (le bouton disparaît une fois le site rempli)
     if (window.__PHOTO_URL) {
       var ex = el("button", "pbtn", "⇪ Transférer toutes les données vers le site Google"); ex.type = "button"; ex.style.cssText = "width:100%;margin-top:18px";
